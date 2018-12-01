@@ -2,49 +2,35 @@ package Declaration;
 
 public class Filters {
 
-//**********Getters**********//
+	public Filters(String name, String time, String descript, String point) {
+		this._Name = name;
+		this._Time = time;
+		this._Descript = descript;
+		this._Point = point;
+	}
 
-public String getPoint() {
-	return _Point;
-}
+	//**********Getters**********//
 
-public String getName() {
-	return _Name;
-}
+	public String getPoint() {
+		return _Point;
+	}
 
-public String getTime() {
-	return _Time;
-}
+	public String getName() {
+		return _Name;
+	}
 
-public String getDescript() {
-	return _Descript;
-}
+	public String getTime() {
+		return _Time;
+	}
 
-//**********Setters**********//
+	public String getDescript() {
+		return _Descript;
+	}
 
-public void setName(String name) {
-	this._Name = name;
-}
-
-
-public void setDescript(String description) {
-	this._Descript = description;
-}
-
-
-public void setPoint(String point) {
-	_Point = point;
-}
-
-
-public void setTime(String time) {
-	this._Time=time;
-}
-
-//**********Private Methods**********//
-private String _Descript;
-private String _Name;
-private String _Time;
-private String _Point;
+	//**********Private Methods**********//
+	private String _Descript;
+	private String _Name;
+	private String _Time;
+	private String _Point;
 
 }
