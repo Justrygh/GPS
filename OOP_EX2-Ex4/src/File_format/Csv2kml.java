@@ -17,7 +17,6 @@ import Declaration.ourFile;
  * 
  * @author Eli 
  * @author Qusai 
- * @author Shai
  *
  */
 public class Csv2kml {
@@ -25,7 +24,6 @@ public class Csv2kml {
 	public  void write() {
 		ourFile file=this.read();
 		PrintWriter Print = null;
-
 		try 
 		{
 			Print = new PrintWriter(new File(file.getName()));
@@ -67,24 +65,17 @@ public class Csv2kml {
 	public ourFile read() {
 		String L = "";
 		String S = ",";
-
 		try (BufferedReader Buffer = new BufferedReader(new FileReader(_Csv2kml))) {
 			ArrayList<Filters> List=new ArrayList<Filters>();
 			Buffer.readLine();
 			Buffer.readLine();
 			while ((L = Buffer.readLine()) != null) {
 				String[] Data = L.split(S);
-				Filters place = new Filters();
-				place.setName(Data[1]);
-				place.setDescript(Data[10]);
-				place.setPoint(Data[7]+","+Data[6]+","+Data[8]);
-				place.setTime(Data[3]);
+				Filters place = new Filters(Data[1], Data[3], Data[10], (Data[7]+","+Data[6]+","+Data[8]));
 				List.add(place);
 			}
-			ourFile file=new ourFile();
 			String temp=_Csv2kml.substring(0, _Csv2kml.length()-4);
-			file.setName(temp);
-			file.setFilters(List);
+			ourFile file=new ourFile(temp, List);
 
 			return file;
 		}
