@@ -46,6 +46,8 @@ public class MultiCSV {
 		Builder.append("<Style id=\"blue\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/blue-dot.png</href></Icon></IconStyle></Style>");
 		Builder.append("<Style id=\"purple\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/purple-dot.png</href></Icon></IconStyle></Style>");
 		Builder.append("<Style id=\"pink\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/pink-dot.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"pacman\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/data/Icon.png</href></Icon></IconStyle></Style>");
+	    //In order to make the pacman Icon to work, you need to change the Directory PAth.
 		Print.write(Builder.toString());
 	}
 
@@ -129,7 +131,7 @@ public class MultiCSV {
 	 */
 	public Project ListOfCSV(File MultiCSV) {
 		Project _pList = new Project();
-		File[] files = new File("Your/Directory/Path/OOP_EX2-EX4-master/data").listFiles(
+		File[] files = new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/data").listFiles(
 				new FilenameFilter() { @Override public boolean accept(File dir, String name) { return name.endsWith(".csv"); } });
 		print(MultiCSV);
 		for(int i=0; i<files.length; i++) {
