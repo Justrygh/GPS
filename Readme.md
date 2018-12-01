@@ -19,14 +19,14 @@ We have been asked to do the following assigments:
 3. Create a Data structure that will contain the following things:
  * 1. Create an Element that will contain the details above we mentioned and in addition will
       contain the Time Stamp (The time and date the element was created) and his color.
-      // Each element in a row in the CSV file.
+      // Each element is a row in the CSV file.
 
  * 2. Create a Layer that will contain all the Elements we created. While creating the layer
       we gave each layer a *UNIQE* color that all the elements inside the layer will have the 
       same color in order to notice the difference between each layer.
       // Each Layer is a CSV file.
 
- * 3. Create a Project that will contain all the Layer. Convert a folder with CSV files into
+ * 3. Create a Project that will contain all the Layers. Convert a folder with CSV files into
       One KML file containing all the details of the CSV files.
 
 **In order to know what each class/function purpose is, I suggest you to look over at our JAVA DOC which explains everything into specific details.**
