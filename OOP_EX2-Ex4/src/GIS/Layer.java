@@ -104,12 +104,13 @@ public class Layer implements GIS_layer{
 	 * All the elements inside the Layer will get the same color.
 	 */
 	public String Colors() {
-		String[] Colors = {"#red", "#yellow", "#green"};
+		String[] Colors = {"red", "orange", "yellow", "green", "blue", "purple", "pink"};
 		Random random = new Random();
 		int Select = random.nextInt(Colors.length);
 		String newColor = Colors[Select];
-		if(_Colors.size() == 3) {
-			_Colors.remove(Select);
+		if(_Colors.size() == 7) {
+			_Colors.clear();
+			_Colors.add(Select);
 			return newColor;
 		}
 		while(_Colors.contains(Select)) {
