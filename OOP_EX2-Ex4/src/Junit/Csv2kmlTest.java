@@ -11,8 +11,8 @@ class Csv2kmlTest {
 
 	@Test
 	void testWrite() {
-		File M1 = new File("/Users/qusaitrabeh/Downloads/GPS-master/data/MultiCSV.kml");
-		File M2 = new File("/Users/qusaitrabeh/Downloads/GPS-master/data/MultiCSV.kml");
+		File M1 = new File("Your/Directory/Path/OOP_EX2-EX4-master/data/MultiCSV.kml");
+		File M2 = new File("Your/Directory/Path/OOP_EX2-EX4-master/data/MultiCSV.kml");
 		Csv2kml c1 = new Csv2kml("Your/Directory/Path/OOP_EX2-EX4-master/data/MultiCSV.kml");
 		Csv2kml c2 = new Csv2kml("Your/Directory/Path/OOP_EX2-EX4-master/data/MultiCSV.kml");
 		c1.write();
