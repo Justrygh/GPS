@@ -130,40 +130,6 @@ public class MyCoords {
 	private double degree(double x) {
 		return x / (Math.PI) * 180;
 	}
-/**
- * this method is for converting from degree to radians 
- * @param p  our Point that we want to convert.
- * @return our new point after convertion.
- */
-	
-	public Point3D to_radian(Point3D p) {
-		double x = degree(Math.asin(p.z() / The_earth_rad));
-		if (x > 180)
-			x -= 360;
-		else
-			x += 360;
-		double y = degree(Math.atan2(p.y(), p.x()));
-		if (y > 90)
-			y -= 180;
-		else
-			y += 180;
-		double z = Math.sqrt(Math.pow(p.x(), 2) + Math.pow(p.y(), 2) + Math.pow(p.z(), 2))- The_earth_rad;
-		Point3D new_Point = new Point3D(x, y, z);
-		return new_Point;
-	}
-	/**
-	 * This method convert from radian to degree.
-	 * @param p our Point that we want to convert.
-	 * @return our new point after convertion.
-	 */
-	public Point3D to_degree(Point3D p) {
-		double x = (The_earth_rad + p.z()) * Math.cos(radian(p.x())) * Math.cos(radian(p.y()));
-		double y = (The_earth_rad + p.z()) * Math.cos(radian(p.x())) * Math.sin(radian(p.y()));
-		double z = (The_earth_rad + p.z()) * Math.sin(radian(p.x()));
-		Point3D new_Point = new Point3D(x, y, z);
-		return new_Point;
-	}
-
 	/**
 	 * return true iff this point is a valid lat, lon , lat coordinate:
 	 * [-180,+180],[-90,+90],[-450, +inf]
