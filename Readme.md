@@ -1,4 +1,6 @@
-//**********GPS Project!**********//
+**********GPS Project!**********
+
+@authors: Eli & Qusai, Shai.
 
 This project represent a GPS system in Object Oriented course in Ariel University.
 In this project we work with 3D/2D Points in the Sphere (In our case the planet Earth).
