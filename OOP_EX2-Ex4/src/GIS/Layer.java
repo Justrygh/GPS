@@ -81,7 +81,7 @@ public class Layer implements GIS_layer{
 	//**********Private Methods**********//
 	private Metadata _M;
 	private Set<GIS_element> _eList;
-	private static ArrayList<Integer> _Colors = new ArrayList<Integer>();
+	private ArrayList<Integer> _Colors = new ArrayList<Integer>();
 	
 	//**********Constructor**********//
 	
