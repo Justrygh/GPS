@@ -40,8 +40,12 @@ public class MultiCSV {
 		Builder.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
 		Builder.append("<Document>");
 		Builder.append("<Style id=\"red\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/red-dot.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"orange\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/orange-dot.png</href></Icon></IconStyle></Style>");
 		Builder.append("<Style id=\"yellow\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/yellow-dot.png</href></Icon></IconStyle></Style>");
 		Builder.append("<Style id=\"green\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/green-dot.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"blue\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/blue-dot.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"purple\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/purple-dot.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"pink\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/pink-dot.png</href></Icon></IconStyle></Style>");
 		Print.write(Builder.toString());
 	}
 
