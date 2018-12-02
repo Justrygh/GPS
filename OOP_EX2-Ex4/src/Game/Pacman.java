@@ -16,7 +16,7 @@ public class Pacman {
 	private String _Radius;
 	private String _Type;
 	private String _Point;
-	private String _Pic = "pacman";
+	private String _Pic;
 	
 	public void setType(String type) {
 		this._Type = type;

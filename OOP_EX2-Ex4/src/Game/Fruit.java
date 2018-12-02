@@ -5,7 +5,6 @@ public class Fruit {
 	public Fruit(String type, String point) {
 		this._Type = type;
 		this._Point = point;
-		this._Pic = "fruit";
 	}
 	
 	public Fruit() {}

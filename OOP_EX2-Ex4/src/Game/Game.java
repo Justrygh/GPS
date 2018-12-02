@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import Declaration.Filters;
 import Declaration.ourFile;
@@ -32,6 +33,8 @@ public class Game {
 		Builder.append("<Document>");
 		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Pacman.png</href></Icon></IconStyle></Style>");
 		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Fruit.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Apple.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Lime\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Lime.png</href></Icon></IconStyle></Style>");
 		while(it.hasNext()) {
 			Game Replace = it.next();
 			Builder.append("<Placemark>");
@@ -81,7 +84,7 @@ public class Game {
 					setPoint(Data[2]+","+Data[1]+","+Data[3]);
 					setSpeed("0");
 					setRadius("0");
-					setPicture("Fruit");
+					setPicture(Fruits());
 				}
 				Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture());
 				_List.add(temp);
@@ -93,8 +96,28 @@ public class Game {
 		}
 		return _List;
 	}
+	
+	public String Fruits() {
+		String[] Fruits = {"Fruit", "Apple", "Lime"};
+		Random random = new Random();
+		int Select = random.nextInt(Fruits.length);
+		String newColor = Fruits[Select];
+		if(_Fruits.size() == 7) {
+			_Fruits.clear();
+			_Fruits.add(Select);
+			return newColor;
+		}
+		while(_Fruits.contains(Select)) {
+			Select = random.nextInt(Fruits.length);
+			newColor = Fruits[Select];
+		}
+		_Fruits.add(Select);
+		return newColor;
+	}
 	//**********Constructor**********//
-
+	
+	private ArrayList<Integer> _Fruits = new ArrayList<Integer>();
+	
 	public Game() {}
 
 	public Game(Fruit fruit) {
