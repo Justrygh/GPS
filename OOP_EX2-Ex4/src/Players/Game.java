@@ -35,7 +35,7 @@ public class Game {
 		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Pacman.png</href></Icon></IconStyle></Style>");
 		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Fruit.png</href></Icon></IconStyle></Style>");
 		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Apple.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Lime\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Lime.png</href></Icon></IconStyle></Style>");
+		//Builder.append("<Style id=\"Lime\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Lime.png</href></Icon></IconStyle></Style>");
 		while(it.hasNext()) {
 			Game Replace = it.next();
 			Builder.append("<Placemark>");
@@ -99,11 +99,11 @@ public class Game {
 	}
 	
 	public String Fruits() {
-		String[] Fruits = {"Fruit", "Apple", "Lime"};
+		String[] Fruits = {"Fruit", "Apple"};//, "Lime"};
 		Random random = new Random();
 		int Select = random.nextInt(Fruits.length);
 		String newColor = Fruits[Select];
-		if(_Fruits.size() == 7) {
+		if(_Fruits.size() == 2) {
 			_Fruits.clear();
 			_Fruits.add(Select);
 			return newColor;
