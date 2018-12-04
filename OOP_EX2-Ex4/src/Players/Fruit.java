@@ -2,9 +2,10 @@ package Players;
 
 public class Fruit {
 	
-	public Fruit(String type, String point) {
+	public Fruit(String type, String point, String picture) {
 		this._Type = type;
 		this._Point = point;
+		this._Pic = picture;
 	}
 	
 	public Fruit() {}

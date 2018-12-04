@@ -2,11 +2,12 @@ package Players;
 
 public class Pacman {
 	
-	public Pacman(String type, String point, String speed, String radius) {
+	public Pacman(String type, String point, String speed, String radius, String picture) {
 		this._Type = type;
 		this._Point = point;
 		this._Speed = speed;
 		this._Radius = radius;
+		this._Pic = picture;
 	}
 	
 	public Pacman() {}

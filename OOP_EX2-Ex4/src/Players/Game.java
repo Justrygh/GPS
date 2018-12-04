@@ -18,11 +18,12 @@ import Players.Pacman;
 
 public class Game {
 
-	public void write(ArrayList<Game> _List, File KML) {
-		ourFile file = new ourFile(KML.getName());
+	public void write() {
+		ArrayList<Game> _List = read();
+		ourFile file = new ourFile(_Game.getName());
 		PrintWriter Print = null;
 		try {
-			Print = new PrintWriter(new File(KML.getParent(), file.getName()));
+			Print = new PrintWriter(new File(_Game.getParent(), file.getName()));
 		}
 		catch(Exception e){
 			System.err.println("There's no such file or directory");
@@ -63,11 +64,11 @@ public class Game {
 		System.out.println("Congrats! You did it!");
 	}
 
-	public ArrayList<Game> read(File KML){
+	public ArrayList<Game> read(){
 		String L = "";
 		String S = ",";
 		ArrayList<Game> _List = new ArrayList<Game>();
-		try(BufferedReader Buffer = new BufferedReader(new FileReader(KML))){
+		try(BufferedReader Buffer = new BufferedReader(new FileReader(_Game))){
 			Buffer.readLine();
 			while((L = Buffer.readLine()) != null) {
 				String[] Data = L.split(S);
@@ -146,9 +147,14 @@ public class Game {
 		this._Radius = pacman.getRadius();
 
 	}
+	
+	public Game(File KML) {
+		this._Game = KML;
+	}
 
 	//**********Private Methods**********//
 	
+	private File _Game;
 	private String _Type;
 	private String _Point;
 	private String _Pic;
@@ -156,7 +162,11 @@ public class Game {
 	private String _Radius;
 
 	//**********Getters**********//
-
+	
+	public File getFile() {
+		return this._Game;
+	}
+	
 	public String getType() {
 		return this._Type;
 	}
