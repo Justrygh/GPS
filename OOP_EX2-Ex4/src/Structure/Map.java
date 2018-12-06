@@ -109,8 +109,8 @@ public class Map extends JPanel implements MouseListener{
 			public void actionPerformed(ActionEvent e) {
 				isFruit = false;
 				isPacman = false;
+				frame.dispose();
 				setList(ConvertPoints());
-				//frame.dispose();
 				ShortestPathAlgo it = new ShortestPathAlgo(getList());
 				setList(it.Calculate());
 				Game Test = new Game(myFile);
