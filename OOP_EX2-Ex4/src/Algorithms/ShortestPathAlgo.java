@@ -62,7 +62,7 @@ public class ShortestPathAlgo {
 			}
 		}
 		while(_Fruits.size()>0) {
-			createPath(getPacman(), getFruit(), getTime());
+			createPath();
 			Calculate();
 		}
 		
@@ -82,13 +82,14 @@ public class ShortestPathAlgo {
 		this._Time = 0;
 	}
 
-	public void createPath(Pacman pacman, Fruit fruit, double time) {
-		pacman.setTime(time);
-		pacman.setPoint(fruit.getPoint());
-		pacman.FruitsEaten();
-		_Fruits.remove(fruit);
+	public void createPath() {
+		this._Pacman.setTime(this._Time);
+		this._Pacman.setPoint(this._Fruit.getPoint());
+		this._Pacman.FruitsEaten();
+		_Fruits.remove(this._Fruit);
 		Zero();
 	}
+	
 	private Fruit _Fruit;
 	private Pacman _Pacman;
 	private double _Distance;
