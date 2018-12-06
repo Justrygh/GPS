@@ -15,6 +15,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -24,7 +25,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+import Algorithms.ShortestPathAlgo;
 import Players.Fruit;
+import Players.Game;
 import Players.Pacman;
 
 public class Map extends JPanel implements MouseListener{
@@ -33,18 +36,29 @@ public class Map extends JPanel implements MouseListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static JFrame frame;
 	private static JMenuBar _MB;
 	private int x, y;
 	private boolean isPacman = false;
 	private boolean isFruit = false;
+	private File myFile = new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/CoordsConvert.kml");
 
 	private ArrayList<Fruit> _Fruits = new ArrayList<Fruit>();
 	private ArrayList<Pacman> _Pacmans = new ArrayList<Pacman>();
+	private ArrayList<Game> _List;
 
 	private static void setMB(JMenuBar menu) {
 		_MB = menu;
 	}
-
+	
+	private void setList(ArrayList<Game> list) {
+		this._List = list;
+	}
+	
+	public ArrayList<Game> getList(){
+		return this._List;
+	}
+	
 	public static JMenuBar getMB() {
 		return _MB;
 	}
@@ -59,7 +73,6 @@ public class Map extends JPanel implements MouseListener{
 		JMenu menu1 = new JMenu("File");
 		JMenuItem newf = new JMenuItem("   New   ");
 		JMenuItem open = new JMenuItem("   Open File...   ");
-		JMenuItem save = new JMenuItem("   Save As...   ");
 		JMenu menu2 = new JMenu("Edit");
 		JMenuItem clear = new JMenuItem("   Clear   ");
 
@@ -88,7 +101,22 @@ public class Map extends JPanel implements MouseListener{
 
 		menu1.add(newf);
 		menu1.add(open);
+		
+		JMenuItem save = new JMenuItem("   Save  ");
 		menu1.add(save);
+		save.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				isFruit = false;
+				isPacman = false;
+				setList(ConvertPoints());
+				//frame.dispose();
+				ShortestPathAlgo it = new ShortestPathAlgo(getList());
+				setList(it.Calculate());
+				Game Test = new Game(myFile);
+				Test.write(getList());
+			}
+		});
 		menu2.add(clear);
 		setMB(menuBar);
 
@@ -102,7 +130,7 @@ public class Map extends JPanel implements MouseListener{
 	}
 
 	public static void main(String[] args){
-		JFrame frame= new JFrame("Ariel Map");
+		frame = new JFrame("Ariel Map");
 		frame.getContentPane().add(new Map());
 		frame.setJMenuBar(_MB);
 		frame.setSize(1433, 642);
@@ -117,14 +145,15 @@ public class Map extends JPanel implements MouseListener{
 		Image Pacman = Toolkit.getDefaultToolkit().getImage("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Pacman.png");
 		Image Apple = Toolkit.getDefaultToolkit().getImage("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Apple.png");
 		if(isPacman == true){
-			if(g.drawImage(Pacman, x, y, this) == true) {
+			if(g.drawImage(Pacman, x-16, y-16, this) == true) {
 				g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
 				g.setColor(Color.WHITE);
 				g.drawString("("+Integer.toString(x)+","+Integer.toString(y)+")",x, y);
+				_Pacmans.add(new Pacman("Pacman", x+","+y+","+"0", "1", "1", "Pacman"));
 			}
 		} 
 		if(isFruit == true){
-			if(g.drawImage(Apple, x, y, this) == true) {
+			if(g.drawImage(Apple, x-16, y-16, this) == true) {
 				g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
 				g.setColor(Color.WHITE);
 				g.drawString("("+Integer.toString(x)+","+Integer.toString(y)+")",x, y);
@@ -132,11 +161,32 @@ public class Map extends JPanel implements MouseListener{
 			}
 		}
 	}
+	
+	public ArrayList<Game> ConvertPoints(){
+		ArrayList<Game> _List = new ArrayList<Game>();
+		for(int i=0; i<_Pacmans.size(); i++) {
+			String[] arrP = (_Pacmans.get(i).getPoint().split(","));
+			double newY = (32.10565 - (Double.parseDouble(arrP[1])/150000));
+			double newX = (35.2022 + (Double.parseDouble(arrP[0])/125000));
+			_Pacmans.get(i).setPoint(String.valueOf(newX)+","+String.valueOf(newY)+","+0);
+			Game temp = new Game(_Pacmans.get(i));
+			_List.add(temp);
+		}
+		for(int i=0; i<_Fruits.size(); i++) {
+			String[] arrF = (_Fruits.get(i).getPoint().split(","));
+			double newY = (32.10565 - (Double.parseDouble(arrF[1])/150000));
+			double newX = (35.2022 + (Double.parseDouble(arrF[0])/125000));
+			_Fruits.get(i).setPoint(String.valueOf(newX)+","+String.valueOf(newY)+","+0);
+			Game temp = new Game(_Fruits.get(i));
+			_List.add(temp);
+		}
+		return _List;
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		x = e.getX()-16;
-		y = e.getY()-16;  
+		x = e.getX();
+		y = e.getY();  
 		paintElement();
 	}
 
