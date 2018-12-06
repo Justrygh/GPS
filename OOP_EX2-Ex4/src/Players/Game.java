@@ -18,8 +18,7 @@ import Players.Pacman;
 
 public class Game {
 
-	public void write() {
-		ArrayList<Game> _List = read();
+	public void write(ArrayList<Game> _List) {
 		ourFile file = new ourFile(_Game.getName());
 		PrintWriter Print = null;
 		try {
@@ -46,6 +45,8 @@ public class Game {
 			Builder.append("<description>");
 			Builder.append("Speed: " + Replace.getSpeed() + "<br/>");
 			Builder.append("Radius: " + Replace.getRadius() + "<br/>");
+			Builder.append("Time: " + Replace.getTime() + "<br/>");
+			Builder.append("Fruits Eaten: " + Replace.getFruitsEaten() + "<br/>");
 			Builder.append("</description>");
 			Builder.append("<styleUrl>");
 			Builder.append(Replace.getPicture());
@@ -84,8 +85,8 @@ public class Game {
 				if(Data[0].equals(F)) {
 					setType(Data[0]+"ruit");
 					setPoint(Data[2]+","+Data[1]+","+Data[3]);
-					setSpeed("0");
-					setRadius("0");
+					setSpeed(null);
+					setRadius(null);
 					setPicture(Fruits());
 				}
 				Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture());
@@ -128,7 +129,6 @@ public class Game {
 		this._Pic = fruit.getPicture();
 		this._Speed = "0";
 		this._Radius = "0";
-
 	}
 	
 	public Game(String type, String point, String speed, String radius, String picture) {
@@ -145,7 +145,8 @@ public class Game {
 		this._Pic = pacman.getPicture();
 		this._Speed = pacman.getSpeed();
 		this._Radius = pacman.getRadius();
-
+		this._Time = String.valueOf(pacman.getTime());
+		this._FruitsEaten = String.valueOf(pacman.getFruitsEaten());
 	}
 	
 	public Game(File KML) {
@@ -160,6 +161,8 @@ public class Game {
 	private String _Pic;
 	private String _Speed;
 	private String _Radius;
+	private String _Time;
+	private String _FruitsEaten;
 
 	//**********Getters**********//
 	
@@ -187,6 +190,14 @@ public class Game {
 		return this._Radius;
 	}
 	
+	public String getTime() {
+		return this._Time;
+	}
+	
+	public String getFruitsEaten() {
+		return this._FruitsEaten;
+	}
+	
 	//**********Setters**********//
 	
 	private void setType(String type) {
@@ -208,4 +219,5 @@ public class Game {
 	private void setRadius(String radius) {
 		this._Radius = radius;
 	}
+	
 }
