@@ -9,6 +9,8 @@ public class Pacman {
 		this._Radius = radius;
 		this._Pic = picture;
 		this._Time = 0;
+		this._Dis = 0;
+		this._iD = null;
 	}
 	
 	public Pacman() {}
@@ -20,7 +22,10 @@ public class Pacman {
 	private String _Point;
 	private String _Pic;
 	private double _Time;
+	private double _Dis;
 	private int _FruitsEaten;
+	private String _iD;
+	
 	
 	public void setType(String type) {
 		this._Type = type;
@@ -50,6 +55,14 @@ public class Pacman {
 		this._FruitsEaten++;
 	}
 	
+	public void setDistance(double distance) {
+		this._Dis = distance;
+	}
+	
+	public void setiD(String id) {
+		this._iD = id;
+	}
+	
 	public String getPicture() {
 		return this._Pic;
 	}
@@ -76,6 +89,14 @@ public class Pacman {
 	
 	public int getFruitsEaten() {
 		return this._FruitsEaten;
+	}
+	
+	public double getDistance() {
+		return this._Dis;
+	}
+	
+	public String getiD() {
+		return this._iD;
 	}
 
 }

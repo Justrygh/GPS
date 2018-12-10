@@ -48,6 +48,7 @@ public class MultiCSV {
 		Builder.append("<Style id=\"pink\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/pink-dot.png</href></Icon></IconStyle></Style>");
 		//Builder.append("<Style id=\"pacman\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/data/Pacman.png</href></Icon></IconStyle></Style>");
 		//Builder.append("<Style id=\"fruit\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/data/Fruit.png</href></Icon></IconStyle></Style>");
+	    //In order to make the pacman/fruit Icon to work, you need to change the Directory PAth.
 		Print.write(Builder.toString());
 	}
 
@@ -112,7 +113,7 @@ public class MultiCSV {
 			while ((L = Buffer.readLine()) != null) {
 				String[] Data = L.split(S);
 				Element place = new Element();
-				place.ElementSet(Data[1], Data[10], Data[7]+","+Data[6]+","+Data[8], Data[3], _List.get_Meta_data().getColor());
+				place.ElementSet(Data[1], Data[10], (Data[7]+","+Data[6]+","+Data[8]), Data[3], _List.get_Meta_data().getColor());
 				_List.add(place);
 			}
 		}
@@ -131,7 +132,7 @@ public class MultiCSV {
 	 */
 	public Project ListOfCSV(File MultiCSV) {
 		Project _pList = new Project();
-		File[] files = new File("Your/Directory/Path/OOP_EX2-EX4-master/data").listFiles(
+		File[] files = new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/data").listFiles(
 				new FilenameFilter() { @Override public boolean accept(File dir, String name) { return name.endsWith(".csv"); } });
 		print(MultiCSV);
 		for(int i=0; i<files.length; i++) {

@@ -35,7 +35,6 @@ public class Game {
 		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Pacman.png</href></Icon></IconStyle></Style>");
 		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Fruit.png</href></Icon></IconStyle></Style>");
 		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Apple.png</href></Icon></IconStyle></Style>");
-		//Builder.append("<Style id=\"Lime\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Lime.png</href></Icon></IconStyle></Style>");
 		while(it.hasNext()) {
 			Game Replace = it.next();
 			Builder.append("<Placemark>");
@@ -45,8 +44,6 @@ public class Game {
 			Builder.append("<description>");
 			Builder.append("Speed: " + Replace.getSpeed() + "<br/>");
 			Builder.append("Radius: " + Replace.getRadius() + "<br/>");
-			Builder.append("Time: " + Replace.getTime() + "<br/>");
-			Builder.append("Fruits Eaten: " + Replace.getFruitsEaten() + "<br/>");
 			Builder.append("</description>");
 			Builder.append("<styleUrl>");
 			Builder.append(Replace.getPicture());
@@ -68,38 +65,67 @@ public class Game {
 	public ArrayList<Game> read(){
 		String L = "";
 		String S = ",";
+		String id = "id";
 		ArrayList<Game> _List = new ArrayList<Game>();
 		try(BufferedReader Buffer = new BufferedReader(new FileReader(_Game))){
-			Buffer.readLine();
-			while((L = Buffer.readLine()) != null) {
-				String[] Data = L.split(S);
-				String P = "P";
-				String F = "F";
-				if(Data[0].equals(P)) {
-					setType(Data[0]+"acman");
-					setPoint(Data[2]+","+Data[1]+","+Data[3]);
-					setSpeed(Data[4]);
-					setRadius(Data[5]);
-					setPicture("Pacman");
+			L = Buffer.readLine();
+			String[] Check = L.split(S);
+			if(Check[1].equals(id)) {
+				while((L = Buffer.readLine()) != null) {
+					String[] Data = L.split(S);
+					String P = "P";
+					String F = "F";
+					if(Data[0].equals(P)) {
+						setType(Data[0]+"acman");
+						setPoint(Data[3]+","+Data[2]+","+Data[4]);
+						setSpeed(Data[5]);
+						setRadius(Data[6]);
+						setPicture("Pacman");
+						setiD(Data[1]);
+					}
+					if(Data[0].equals(F)) {
+						setType(Data[0]+"ruit");
+						setPoint(Data[3]+","+Data[2]+","+Data[4]);
+						setSpeed(null);
+						setRadius(null);
+						setPicture(Fruits());
+					}
+					Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture());
+					_List.add(temp);
 				}
-				if(Data[0].equals(F)) {
-					setType(Data[0]+"ruit");
-					setPoint(Data[2]+","+Data[1]+","+Data[3]);
-					setSpeed(null);
-					setRadius(null);
-					setPicture(Fruits());
-				}
-				Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture());
-				_List.add(temp);
+				return _List;
 			}
-			return _List;
+			else {
+				while((L = Buffer.readLine()) != null) {
+					String[] Data = L.split(S);
+					String P = "P";
+					String F = "F";
+					if(Data[0].equals(P)) {
+						setType(Data[0]+"acman");
+						setPoint(Data[2]+","+Data[1]+","+Data[3]);
+						setSpeed(Data[4]);
+						setRadius(Data[5]);
+						setPicture("Pacman");
+					}
+					if(Data[0].equals(F)) {
+						setType(Data[0]+"ruit");
+						setPoint(Data[2]+","+Data[1]+","+Data[3]);
+						setSpeed(null);
+						setRadius(null);
+						setPicture(Fruits());
+					}
+					Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture());
+					_List.add(temp);
+				}
+				return _List;
+			}
 		}
 		catch(Exception e) {
 
 		}
 		return _List;
 	}
-	
+
 	public String Fruits() {
 		String[] Fruits = {"Fruit", "Apple"};//, "Lime"};
 		Random random = new Random();
@@ -118,9 +144,9 @@ public class Game {
 		return newColor;
 	}
 	//**********Constructor**********//
-	
+
 	private ArrayList<Integer> _Fruits = new ArrayList<Integer>();
-	
+
 	public Game() {}
 
 	public Game(Fruit fruit) {
@@ -130,7 +156,7 @@ public class Game {
 		this._Speed = "0";
 		this._Radius = "0";
 	}
-	
+
 	public Game(String type, String point, String speed, String radius, String picture) {
 		this._Type = type;
 		this._Point = point;
@@ -147,14 +173,16 @@ public class Game {
 		this._Radius = pacman.getRadius();
 		this._Time = String.valueOf(pacman.getTime());
 		this._FruitsEaten = String.valueOf(pacman.getFruitsEaten());
+		this._Dis = String.valueOf(pacman.getDistance());
+		this._iD = pacman.getiD();
 	}
-	
+
 	public Game(File KML) {
 		this._Game = KML;
 	}
 
 	//**********Private Methods**********//
-	
+
 	private File _Game;
 	private String _Type;
 	private String _Point;
@@ -163,13 +191,15 @@ public class Game {
 	private String _Radius;
 	private String _Time;
 	private String _FruitsEaten;
+	private String _Dis;
+	private String _iD;
 
 	//**********Getters**********//
-	
+
 	public File getFile() {
 		return this._Game;
 	}
-	
+
 	public String getType() {
 		return this._Type;
 	}
@@ -189,35 +219,47 @@ public class Game {
 	public String getRadius() {
 		return this._Radius;
 	}
-	
+
 	public String getTime() {
 		return this._Time;
 	}
-	
+
 	public String getFruitsEaten() {
 		return this._FruitsEaten;
 	}
+
+	public String getDistance() {
+		return this._Dis;
+	}
 	
+	public String getiD() {
+		return this._iD;
+	}
+
 	//**********Setters**********//
-	
+
 	private void setType(String type) {
 		this._Type = type;
 	}
-	
-	private void setPoint(String point) {
+
+	public void setPoint(String point) {
 		this._Point = point;
 	}
-	
+
 	private void setPicture(String pic) {
 		this._Pic = pic;
 	}
-	
+
 	private void setSpeed(String speed) {
 		this._Speed = speed;
 	}
-	
+
 	private void setRadius(String radius) {
 		this._Radius = radius;
 	}
 	
+	private void setiD(String id) {
+		this._iD = id;
+	}
+
 }

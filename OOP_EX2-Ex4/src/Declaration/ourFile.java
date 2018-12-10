@@ -8,6 +8,10 @@ public class ourFile {
 		this._Filters = filters;
 		this._Name = name;
 	}
+	
+	public ourFile(String name) {
+		this._Name = setName(name);
+	}
 
 	//**********Getters**********//
 
@@ -17,6 +21,12 @@ public class ourFile {
 
 	public Collection<Filters> getFilters() {
 		return _Filters;
+	}
+	
+	public String setName(String name) {
+		this._Name = name.substring(0, (name.length()-4));
+		this._Name = _Name + ".kml";
+		return this._Name;
 	}
 
 	//***********Private Methods**********//
