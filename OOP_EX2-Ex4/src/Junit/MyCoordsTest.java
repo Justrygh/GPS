@@ -92,15 +92,5 @@ class MyCoordsTest {
 			fail("ERR try another GPS point in range >>[-180,+180],[-90,+90],[-450, +inf]<<");
 		}
 	}
-	@Test
-	void test_to_radian() {
-		MyCoords new_coord = new MyCoords();
-		Point3D a=new Point3D(32.103315,35.209039,670);
-		Point3D a_to_radian=new_coord.to_radian(a);
-		Point3D expected=new Point3D(360.00601884169714,227.6416958840577,-6377328.307883579);
-		if(!a_to_radian.equals(expected)) {
-			fail("ERR : the radian function isn't converting currect try to fix it!!");
-		}
-		
-	}
+
 }
