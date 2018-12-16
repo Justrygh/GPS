@@ -79,8 +79,6 @@ public class ShortestPathAlgo {
 	}
 	
 	public void add() {
-		this._Fruit.setTime(this._Pacman.getTime() + this._Time);
-		
 		_List.add(new Game(this._Pacman));
 		_List.add(new Game(this._Fruit));
 	}
