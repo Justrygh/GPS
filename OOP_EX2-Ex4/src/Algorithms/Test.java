@@ -23,10 +23,6 @@ public class Test {
 		
 		Game Try = new Game(new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/game_1543685769754.csv"));
 		ShortestPathAlgo Name = new ShortestPathAlgo(Try.read());
-		ArrayList<Game> it = Name.Calculate2GPS();
-		Path2kml test = new Path2kml(new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Coords.kml"));
-		test.write(it);
-		
 	}
 }
 

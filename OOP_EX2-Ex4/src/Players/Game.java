@@ -90,6 +90,7 @@ public class Game {
 						setSpeed(null);
 						setRadius(null);
 						setPicture(Fruits());
+						setiD(Data[1]);
 					}
 					Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture(), getiD());
 					_List.add(temp);
@@ -155,8 +156,11 @@ public class Game {
 		this._Type = fruit.getType();
 		this._Point = fruit.getPoint();
 		this._Pic = fruit.getPicture();
+		this._iD = fruit.getiD();
 		this._Speed = "0";
 		this._Radius = "0";
+		this._Dis = "0";
+		this._Time = String.valueOf(fruit.getTime());
 	}
 
 	public Game(String type, String point, String speed, String radius, String picture, String id) {

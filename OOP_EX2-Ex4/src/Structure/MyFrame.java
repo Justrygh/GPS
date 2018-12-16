@@ -1,7 +1,6 @@
 package Structure;
 
 import java.awt.Color;
-
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -19,10 +18,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.Timer;
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import Algorithms.ShortestPathAlgo;
 import File_format.Path2kml;
@@ -46,9 +44,9 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private boolean isSaved = false;
 	private boolean isDemo = false;
 
-	private static int i = 0;
+	private int i = 0;
+	private int j = 0;
 
-	private File Load;
 	private File Save;
 
 	private Map _Map = new Map();
@@ -153,10 +151,21 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			public void actionPerformed(ActionEvent e) {
 				run.setEnabled(true);
 				demo.setEnabled(true);
+				kml.setEnabled(true);
 				_Pacmans.clear();
 				_Fruits.clear();
 				_List.clear();
-				Game Try = new Game(new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/game_1543685769754.csv"));
+				JFileChooser chooser = new JFileChooser();
+				int returnName = chooser.showOpenDialog(null);
+				String path = "";
+				if (returnName == JFileChooser.APPROVE_OPTION) {
+					File f = chooser.getSelectedFile();
+					if (f != null && f.getName().endsWith(".csv")) { // Make sure the user didn't choose a directory.
+
+						path = f.getAbsolutePath();// get the absolute path to selected file
+					}
+				}
+				Game Try = new Game(new File(path));
 				//Game Try = new Game(Load);
 				ShortestPathAlgo Name = new ShortestPathAlgo(Try.read());
 				Set(Name);
@@ -172,8 +181,6 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				isPacman = false;
 				isFruit = false;
 				isSaved = true;
-				setList(Save());
-				//setSave(new File(""));
 				run.setEnabled(true);
 				demo.setEnabled(true);
 				kml.setEnabled(true);
@@ -269,6 +276,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		kml.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Path2kml pk = new Path2kml(new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/SavedGame.kml"));
+				pk.print();
+				pk.write(Convert());
+				pk.Close();
 			}
 		});
 		kml.setEnabled(false);
@@ -276,6 +287,14 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		setMB(menuBar);
 	}
 	
+	public ArrayList<Game> Convert(){
+		Calculate();
+		ShortestPathAlgo Fix = new ShortestPathAlgo(getList());
+		setPList(Fix.getPList());
+		setFList(Fix.getFList());
+		return _Map.ConvertPoints2GPS(getList());
+	}
+
 	public void Change() {
 		for(int i=0; i<_Pacmans.size(); i++) {
 			for(int j=0; j<_Fruits.size(); j++) {
@@ -283,7 +302,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				String[] Data2 = _Fruits.get(j).getPoint().split(",");
 				int pX = (int)(Double.parseDouble(Data1[0]));
 				int pY = (int)(Double.parseDouble(Data1[1]));
-				
+
 				int fX = (int)(Double.parseDouble(Data2[0]));
 				int fY = (int)(Double.parseDouble(Data2[1]));
 				if(pX == fX && pY == fY) {
@@ -301,16 +320,17 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		setList(_Map.ConvertPoints2Pixel(getList()));
 
 		ShortestPathAlgo test = new ShortestPathAlgo(getList());
-
 		setPList(test.getPList());
 		setFList(test.getFList());
 	}
 
 	public void Calculate() {
 		ShortestPathAlgo Test = new ShortestPathAlgo(getList());
-		ArrayList<Game> it = Test.Calculate2Pixel();
+		ArrayList<Game> it = Test.Calculate();
 		setList(it);
 	}
+
+
 	public void Paths(Graphics g) {
 		Calculate();
 		ArrayList<Game> it = getList();
@@ -318,15 +338,11 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		for(int i=0; i<it.size(); i+=2) {
 			String[] Data1 = it.get(i).getPoint().split(",");
 			String[] Data2 = it.get(i+1).getPoint().split(",");
-
 			int x1 = (int)((Double.parseDouble(Data1[0])) * this.getWidth() / W);
 			int y1 = (int)((Double.parseDouble(Data1[1])) * this.getHeight() / H);
-
 			int x2 = (int)((Double.parseDouble(Data2[0])) * this.getWidth() / W);
 			int y2 = (int)((Double.parseDouble(Data2[1])) * this.getHeight() / H);
-
 			Image img = Toolkit.getDefaultToolkit().getImage("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Done.png");
-
 			g.drawImage(img, x2-16, y2-16, null);
 			g.drawLine(x1, y1, x2, y2);
 		}
@@ -340,7 +356,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		Image Apple = Toolkit.getDefaultToolkit().getImage("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Apple.png");
 		Image Pacman = Toolkit.getDefaultToolkit().getImage("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Pacman.png");
 		Image img = Toolkit.getDefaultToolkit().getImage("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Done.png");
-		
+
 		String Done = "Done";
 		for(int i=0; i<_Fruits.size(); i++) {
 			String[] Data = _Fruits.get(i).getPoint().split(",");
@@ -366,15 +382,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				g.setColor(Color.WHITE);
 				String[] Data1 = _List.get(i).getPoint().split(",");
 				String[] Data2 = _List.get(i+1).getPoint().split(",");
-
 				int x1 = (int)((Double.parseDouble(Data1[0])) * this.getWidth() / W);
 				int y1 = (int)((Double.parseDouble(Data1[1])) * this.getHeight() / H);
-
 				int x2 = (int)((Double.parseDouble(Data2[0])) * this.getWidth() / W);
 				int y2 = (int)((Double.parseDouble(Data2[1])) * this.getHeight() / H);
-
-				//Image img = Toolkit.getDefaultToolkit().getImage("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Done.png");
-
 				g.drawImage(img, x2-16, y2-16, null);
 				g.drawLine(x1, y1, x2, y2);
 			}
@@ -388,7 +399,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				g.drawString("("+String.valueOf(x1)+","+String.valueOf(y1)+")", x1, y1); 
 			}
 		}
-		
+
 		if(isDemo == true) {
 			for(int i=0; i<_Fruits.size(); i++) {
 				if(_Fruits.get(i).getPicture().equals(Done)) {
@@ -411,10 +422,6 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		frame.setVisible(true);
 	}
 
-	public long TimeStamp() {
-		return new Date().getTime() + 7200000;
-	}
-
 	protected void paintElement() {
 		Graphics g = getGraphics();
 		//	The method getGraphics is called to obtain a Graphics object
@@ -435,7 +442,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
 			g.setColor(Color.WHITE);
 			g.drawString("("+Integer.toString(x)+","+Integer.toString(y)+")",x, y);
-			_Fruits.add(new Fruit("Fruit", x+","+y+","+"0", "Apple"));
+			_Fruits.add(new Fruit("Fruit", x+","+y+","+"0", "Apple", String.valueOf(j)));
+			j++;
 		}
 		repaint();
 	}

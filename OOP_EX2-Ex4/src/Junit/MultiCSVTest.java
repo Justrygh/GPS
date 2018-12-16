@@ -192,10 +192,10 @@ class MultiCSVTest {
 		for (int i = 0; i < files1.length; i++) {
 			File name = files1[i];
 			Layer temp = c1.read(name);
-			c1.write(temp, _Csv1);
+			c1.write(temp);
 			_pList1.add(temp);
 		}
-		c1.Close(_Csv1);
+		c1.Close();
 
 		MultiCSV c2 = new MultiCSV();
 		File _Csv2 = new File("Your/Directory/Path/OOP_EX2-EX4-master/data/MultiCSV.kml");
@@ -210,10 +210,10 @@ class MultiCSVTest {
 		for (int i = 0; i < files2.length; i++) {
 			File name = files2[i];
 			Layer temp = c2.read(name);
-			c2.write(temp, _Csv1);
+			c2.write(temp);
 			_pList2.add(temp);
 		}
-		c1.Close(_Csv1);
+		c1.Close();
 
 		assertEquals(_Csv2, _Csv1);
 

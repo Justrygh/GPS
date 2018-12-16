@@ -13,22 +13,18 @@ import Threads.MyThread;
 public class Path extends Thread implements Runnable{
 	private ArrayList<Game> Paths;
 
-	private long _TimeStamp = new Date().getTime() + 720000;
 	private String _Point;
-
-	private boolean isGPS;
 
 	public Path() {
 		this.Paths = new ArrayList<Game>();
 	}
+	
+	public Path(ArrayList<Game> gList) {
+		this.Paths = gList;
+	}
 
 	public ArrayList<Game> getList(){
 		return this.Paths;
-	}
-
-
-	public boolean getGPS() {
-		return this.isGPS;
 	}
 
 	public ArrayList<Path> Create(ArrayList<Game> List, ArrayList<Pacman> PList){

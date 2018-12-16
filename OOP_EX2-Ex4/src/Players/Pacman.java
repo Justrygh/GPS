@@ -24,6 +24,7 @@ public class Pacman {
 	private String _Point;
 	private String _Pic;
 	private double _Time;
+	
 	private double _Dis;
 	private int _FruitsEaten;
 	private String _iD;
