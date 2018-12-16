@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -90,7 +91,7 @@ public class Game {
 						setRadius(null);
 						setPicture(Fruits());
 					}
-					Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture());
+					Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture(), getiD());
 					_List.add(temp);
 				}
 				return _List;
@@ -114,7 +115,7 @@ public class Game {
 						setRadius(null);
 						setPicture(Fruits());
 					}
-					Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture());
+					Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture(), getiD());
 					_List.add(temp);
 				}
 				return _List;
@@ -143,6 +144,7 @@ public class Game {
 		_Fruits.add(Select);
 		return newColor;
 	}
+	
 	//**********Constructor**********//
 
 	private ArrayList<Integer> _Fruits = new ArrayList<Integer>();
@@ -157,12 +159,13 @@ public class Game {
 		this._Radius = "0";
 	}
 
-	public Game(String type, String point, String speed, String radius, String picture) {
+	public Game(String type, String point, String speed, String radius, String picture, String id) {
 		this._Type = type;
 		this._Point = point;
 		this._Speed = speed;
 		this._Radius = radius;
 		this._Pic = picture;
+		this._iD = id;
 	}
 
 	public Game(Pacman pacman) {

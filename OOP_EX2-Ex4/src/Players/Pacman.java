@@ -1,8 +1,10 @@
 package Players;
 
+import java.util.Date;
+
 public class Pacman {
 	
-	public Pacman(String type, String point, String speed, String radius, String picture) {
+	public Pacman(String type, String point, String speed, String radius, String picture, String id) {
 		this._Type = type;
 		this._Point = point;
 		this._Speed = speed;
@@ -10,7 +12,7 @@ public class Pacman {
 		this._Pic = picture;
 		this._Time = 0;
 		this._Dis = 0;
-		this._iD = null;
+		this._iD = id;
 	}
 	
 	public Pacman() {}
@@ -25,8 +27,7 @@ public class Pacman {
 	private double _Dis;
 	private int _FruitsEaten;
 	private String _iD;
-	
-	
+
 	public void setType(String type) {
 		this._Type = type;
 	}

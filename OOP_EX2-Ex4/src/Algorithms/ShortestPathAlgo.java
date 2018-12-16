@@ -23,7 +23,7 @@ public class ShortestPathAlgo {
 				_Fruits.add(Fruit);
 			}
 			else if(g.getType().equals(P)) {
-				Pacman Pacman = new Pacman(g.getType(), g.getPoint(), g.getSpeed(), g.getRadius(), g.getPicture());
+				Pacman Pacman = new Pacman(g.getType(), g.getPoint(), g.getSpeed(), g.getRadius(), g.getPicture(), g.getiD());
 				_Pacmans.add(Pacman);
 			}
 		}
@@ -118,13 +118,18 @@ public class ShortestPathAlgo {
 		this._Distance = 0;
 		this._Time = 0;
 	}
-
-	public void createPath() {
+	
+	public void add() {
 		_List.add(new Game(this._Pacman));
 		_List.add(new Game(this._Fruit));
+	}
+	
+
+	public void createPath() {
+		add();
 		
-		this._Pacman.setTime(this._Time);
 		this._Pacman.FruitsEaten();
+		this._Pacman.setTime(this._Time);
 		this._Pacman.setDistance(this._Distance);
 		this._Pacman.setPoint(this._Fruit.getPoint());
 		_Fruits.remove(this._Fruit);
