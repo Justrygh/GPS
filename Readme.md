@@ -49,7 +49,7 @@ In this project, you can do the following things:
       - Cordinates represented in: (Lat, Long, Alt)
       - Speed/Weight (Pacman ONLY) -The speed of how many meters the Pacman will make in a second
       - Radius (Pacman ONLY) - The distance that the Pacman is able to eat the Fruit infront of him.
-      - iD - Unique Identifier for each Pacman/Fruit.
+      - ID - Unique Identifier for each Pacman/Fruit.
       
  2. You can create a new GAME in GUI:
       Whenever you run the code for the first time, an Ariel University map will be showen in the GUI with instructions
@@ -62,7 +62,7 @@ In this project, you can do the following things:
       - Cordinates represented in: (Lat, Long, Alt)
       - Speed/Weight (Pacman ONLY) -The speed of how many meters the Pacman will make in a second
       - Radius (Pacman ONLY) - The distance that the Pacman is able to eat the Fruit infront of him.
-      - iD - Unique Identifier for each Pacman/Fruit.
+      - ID - Unique Identifier for each Pacman/Fruit.
       
 In the project we have special features in order to accomplish our mission and view the game running:
 
