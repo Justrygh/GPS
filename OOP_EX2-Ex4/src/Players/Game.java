@@ -38,9 +38,9 @@ public class Game {
 		Builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		Builder.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
 		Builder.append("<Document>");
-		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Pacman.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Fruit.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Apple.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Pacman.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Fruit.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Apple.png</href></Icon></IconStyle></Style>");
 		while(it.hasNext()) {
 			Game Replace = it.next();
 			Builder.append("<Placemark>");
