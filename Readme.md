@@ -36,7 +36,7 @@ We have been asked to do the following assigments:
 This project represents a Pacman Game where you can import a CSV file with Pacmans and Fruits details, you can create a new Game in the GUI by placing a Pacmans and Fruits where ever you like in the map and you can save the Game to a new CSV file.
 
 In the project you can see the:
- * 1. pacmans Path represented in Lines.
+ * 1. Pacmans path represented in Lines.
  
  * 2. Simulation in real-time where each Pacman is located.
  
