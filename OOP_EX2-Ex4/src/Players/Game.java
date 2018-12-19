@@ -108,13 +108,15 @@ public class Game {
 						setSpeed(Data[4]);
 						setRadius(Data[5]);
 						setPicture("Pacman");
+						setiD("");
 					}
 					if(Data[0].equals(F)) {
 						setType(Data[0]+"ruit");
 						setPoint(Data[2]+","+Data[1]+","+Data[3]);
-						setSpeed(null);
-						setRadius(null);
+						setSpeed("");
+						setRadius("");
 						setPicture(Fruits());
+						setiD("");
 					}
 					Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture(), getiD());
 					_List.add(temp);
@@ -157,9 +159,9 @@ public class Game {
 		this._Point = fruit.getPoint();
 		this._Pic = fruit.getPicture();
 		this._iD = fruit.getiD();
-		this._Speed = "0";
-		this._Radius = "0";
-		this._Dis = "0";
+		this._Speed = "";
+		this._Radius = "";
+		this._Dis = "";
 		this._Time = String.valueOf(fruit.getTime());
 	}
 

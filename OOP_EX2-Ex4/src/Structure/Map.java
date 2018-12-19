@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import Players.Game;
+import Players.Pacman;
 
 public class Map {
 	
@@ -38,6 +39,16 @@ public class Map {
 	}
 
 	public ArrayList<Game> ConvertPoints2GPS(ArrayList<Game> _List){
+		for(int i=0; i<_List.size(); i++) {
+			String[] arrP = (_List.get(i).getPoint().split(","));
+			double newY = (32.106 - (Double.parseDouble(arrP[1])/152500));
+			double newX = (35.2018 + (Double.parseDouble(arrP[0])/118000));
+			_List.get(i).setPoint(newX +","+newY+","+0);
+		}
+		return _List;
+	}
+	
+	public ArrayList<Pacman> ConvertPac(ArrayList<Pacman> _List){
 		for(int i=0; i<_List.size(); i++) {
 			String[] arrP = (_List.get(i).getPoint().split(","));
 			double newY = (32.106 - (Double.parseDouble(arrP[1])/152500));

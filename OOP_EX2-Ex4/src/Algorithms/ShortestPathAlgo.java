@@ -37,8 +37,8 @@ public class ShortestPathAlgo {
 				double speed = Double.parseDouble(_Pacmans.get(i).getSpeed());
 				String[] arrP = (_Pacmans.get(i).getPoint().split(","));
 				String[] arrF = (_Fruits.get(j).getPoint().split(","));
-				Point3D Pac = new Point3D(Integer.parseInt(arrP[0]), Integer.parseInt(arrP[1]));
-				Point3D Fru = new Point3D(Integer.parseInt(arrF[0]), Integer.parseInt(arrF[1]));
+				Point3D Pac = new Point3D(Double.parseDouble(arrP[0]), Double.parseDouble(arrP[1]));
+				Point3D Fru = new Point3D(Double.parseDouble(arrF[0]), Double.parseDouble(arrF[1]));
 				double distance = Pac.distance2D(Fru) - Double.parseDouble(_Pacmans.get(i).getRadius());
 				if(distance < 0)
 					distance = 0;

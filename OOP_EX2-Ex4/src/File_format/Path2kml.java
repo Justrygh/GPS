@@ -13,17 +13,17 @@ import java.util.Iterator;
 
 import Declaration.ourFile;
 import Players.Game;
+import Players.Pacman;
 import Structure.Path;
 
 public class Path2kml {
 
 	private File myFile;
-
+	private final static long TimeStamp = new Date().getTime() + 7200000;
 	public Path2kml(File file) {
 		this.myFile = file;
 	}
 
-	private final static long TimeStamp = new Date().getTime() + 7200000;
 
 	/**
 	 * @author Eli 
@@ -58,16 +58,66 @@ public class Path2kml {
 	 *
 	 */
 
-	public void write(ArrayList<Game> game) {
-
+	public void write(ArrayList<Game> game, ArrayList<Pacman> pac) {
 		StringBuilder Builder = new StringBuilder();
-		Iterator<Game> it = game.iterator();
-		while(it.hasNext()) {
-			Game Replace=it.next();
+		for(int i=0; i<game.size(); i+=2) {
+			Game Replace=game.get(i);
+			Game ReplaceF=game.get(i+1);
 			long Time = (int)(Double.parseDouble(Replace.getTime())*1000);
-			long Temp = (int)((Double.parseDouble(Replace.getTime()) - (Double.parseDouble(Replace.getDistance()) / Double.parseDouble(Replace.getSpeed())))*1000);
-			String sTime = Instant.ofEpochMilli(TimeStamp + Temp).atOffset(ZoneOffset.UTC).toString();
-			String eTime = Instant.ofEpochMilli(TimeStamp + Time).atOffset(ZoneOffset.UTC).toString();
+			long Temp = (int)((Double.parseDouble(Replace.getTime()) + (Double.parseDouble(Replace.getDistance()) / Double.parseDouble(Replace.getSpeed())))*1000);
+			String sTime = Instant.ofEpochMilli(TimeStamp + Time).atOffset(ZoneOffset.UTC).toString();
+			String eTime = Instant.ofEpochMilli(TimeStamp + Temp).atOffset(ZoneOffset.UTC).toString();
+			String fTime = Instant.ofEpochMilli(TimeStamp).atOffset(ZoneOffset.UTC).toString();
+			//**********Pacman**********//
+			Builder.append("<Placemark>");
+			Builder.append("<TimeSpan>");
+			Builder.append("<begin>" + sTime + "</begin>");
+			Builder.append("<end>" + eTime + "</end>");
+			Builder.append("</TimeSpan>");
+			Builder.append("<name>");
+			Builder.append(Replace.getType() + "ID: " + Replace.getiD());
+			Builder.append("</name>");
+			Builder.append("<description>");
+			Builder.append("Speed: " + Replace.getSpeed() + "<br/>");
+			Builder.append("Radius: " + Replace.getRadius() + "<br/>");
+			Builder.append("Time: " + Replace.getTime() + "<br/>");
+			Builder.append("Distance: " + Replace.getDistance() + "<br/>");
+			Builder.append("Fruits Eaten: " + Replace.getFruitsEaten() + "<br/>");
+			Builder.append("</description>");
+			Builder.append("<styleUrl>");
+			Builder.append(Replace.getPicture());
+			Builder.append("</styleUrl>");
+			Builder.append("<Point>");
+			Builder.append("<coordinates>");
+			Builder.append(Replace.getPoint());
+			Builder.append("</coordinates>");
+			Builder.append("</Point>");
+			Builder.append("</Placemark>");
+			//**********Fruit**********//
+			Builder.append("<Placemark>");
+			Builder.append("<TimeSpan>");
+			Builder.append("<begin>" + fTime + "</begin>");
+			Builder.append("<end>" + eTime + "</end>");
+			Builder.append("</TimeSpan>");
+			Builder.append("<name>");
+			Builder.append(ReplaceF.getType() + "ID: " + ReplaceF.getiD());
+			Builder.append("</name>");
+			Builder.append("<styleUrl>");
+			Builder.append(ReplaceF.getPicture());
+			Builder.append("</styleUrl>");
+			Builder.append("<Point>");
+			Builder.append("<coordinates>");
+			Builder.append(ReplaceF.getPoint());
+			Builder.append("</coordinates>");
+			Builder.append("</Point>");
+			Builder.append("</Placemark>");
+		}
+		for(int i=0; i<pac.size(); i++) {
+			Pacman Replace=pac.get(i);
+			long Time = (int)(Replace.getTime()*1000);
+			long Temp = (int)(Replace.getTime() + (Replace.getDistance() / Double.parseDouble(Replace.getSpeed()))*1000);
+			String sTime = Instant.ofEpochMilli(TimeStamp + Time).atOffset(ZoneOffset.UTC).toString();
+			String eTime = Instant.ofEpochMilli(TimeStamp + Temp).atOffset(ZoneOffset.UTC).toString();
 			Builder.append("<Placemark>");
 			Builder.append("<TimeSpan>");
 			Builder.append("<begin>" + sTime + "</begin>");

@@ -14,13 +14,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JFileChooser;
+import javax.swing.JFileChooser;	
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Algorithms.ShortestPathAlgo;
 import File_format.Path2kml;
@@ -161,12 +168,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				if (returnName == JFileChooser.APPROVE_OPTION) {
 					File f = chooser.getSelectedFile();
 					if (f != null && f.getName().endsWith(".csv")) { // Make sure the user didn't choose a directory.
-
 						path = f.getAbsolutePath();// get the absolute path to selected file
 					}
 				}
 				Game Try = new Game(new File(path));
-				//Game Try = new Game(Load);
 				ShortestPathAlgo Name = new ShortestPathAlgo(Try.read());
 				Set(Name);
 				repaint();
@@ -180,7 +185,23 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			public void actionPerformed(ActionEvent e) {
 				isPacman = false;
 				isFruit = false;
-				isSaved = true;
+				setList(Save());
+				JFileChooser chooser = new JFileChooser();
+				int result = chooser.showSaveDialog(null);
+				File f = new File(" ");
+				if (result == JFileChooser.APPROVE_OPTION) {
+					f = new File(chooser.getSelectedFile() + ".csv");
+					try {
+						f.createNewFile();
+						print(f, _Map.ConvertPoints2GPS(getList()));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+				Game Try = new Game(f);
+				ShortestPathAlgo Name = new ShortestPathAlgo(Try.read());
+				Set(Name);
+				repaint();
 				run.setEnabled(true);
 				demo.setEnabled(true);
 				kml.setEnabled(true);
@@ -219,6 +240,9 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				paint(getGraphics());
 				isPacman = false;
 				isFruit = false;
+				run.setEnabled(false);
+				demo.setEnabled(false);
+				kml.setEnabled(false);
 			}
 		});
 		clear.setEnabled(false);
@@ -231,6 +255,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				Paths(getGraphics());
 				run.setEnabled(false);
 				demo.setEnabled(false);
+				kml.setEnabled(false);
 				repaint();
 			}
 		});
@@ -245,6 +270,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				isFruit = false;
 				isSaved = false;
 				run.setEnabled(false);
+				kml.setEnabled(false);
 				Calculate();
 				Path p = new Path();
 				ArrayList<Path> pList = new ArrayList<Path>();
@@ -276,10 +302,23 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		kml.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Path2kml pk = new Path2kml(new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/SavedGame.kml"));
+				JFileChooser chooser = new JFileChooser();
+				int result = chooser.showSaveDialog(null);
+				File f = new File(" ");
+				if (result == JFileChooser.APPROVE_OPTION) {
+					f = new File(chooser.getSelectedFile() + ".kml");
+					try {
+						f.createNewFile();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+				Path2kml pk = new Path2kml(f);
 				pk.print();
-				pk.write(Convert());
+				setList(Convert());
+				pk.write(getList(), _Map.ConvertPac(getPList()));
 				pk.Close();
+				System.exit(0);
 			}
 		});
 		kml.setEnabled(false);
@@ -287,11 +326,40 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		setMB(menuBar);
 	}
 	
+	public void print(File csv, ArrayList<Game> list) {
+		PrintWriter print = null;
+		try {
+			print = new PrintWriter(csv);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		StringBuilder Builder = new StringBuilder();
+		Builder.append("Type,id,Lat,Lon,Alt,Speed/Weight,Radius,"+_Pacmans.size()+","+_Fruits.size()+"\n");
+		
+		for(int i=0; i<list.size(); i++) {
+			Game temp = list.get(i);
+			String[] Data = temp.getPoint().split(",");
+			Builder.append(temp.getType().charAt(0)+","+temp.getiD()+","+Data[1]+","+Data[0]+","+Data[2]+","+temp.getSpeed()+","+temp.getRadius()+","+","+"\n");
+		}
+		print.write(Builder.toString());
+		print.close();
+	}
+
 	public ArrayList<Game> Convert(){
 		Calculate();
-		ShortestPathAlgo Fix = new ShortestPathAlgo(getList());
-		setPList(Fix.getPList());
-		setFList(Fix.getFList());
+		ArrayList<Game> res = new ArrayList<Game>();
+		Game temp = new Game();
+		for(int i=0; i<_Pacmans.size(); i++) {
+			for(int j=0; j<getList().size(); j++) {
+				if(_Pacmans.get(i).getiD().equals(getList().get(j).getiD()) && _Pacmans.get(i).getType().equals(getList().get(j).getType())) {
+					temp = getList().get(j);
+					temp.setPoint(getList().get(j+1).getPoint());
+				}
+			}
+			res.add(temp);
+		}
+		ShortestPathAlgo test = new ShortestPathAlgo(res);
+		setPList(test.getPList());
 		return _Map.ConvertPoints2GPS(getList());
 	}
 
