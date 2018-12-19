@@ -14,8 +14,6 @@ public class MyCoords {
 	 * This interface represents a basic coordinate system converter, including: 1.
 	 * The 3D vector between two lat,lon, alt points 2. Adding a 3D vector in meters
 	 * to a global point. 3. convert a 3D vector from meters to polar coordinates
-	 * 
-	 * @authors Eli & Qusai & Shai
 	 *
 	 */
 	final double The_earth_rad = 6378 * 1000;
