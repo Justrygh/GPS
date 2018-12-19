@@ -54,8 +54,6 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private int i = 0;
 	private int j = 0;
 
-	private File Save;
-
 	private Map _Map = new Map();
 
 	private ArrayList<Fruit> _Fruits;
@@ -66,15 +64,6 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private static void setMB(MenuBar menu) {
 		_MB = menu;
 	}
-
-	private void setSave(File save) {
-		this.Save = save;
-	}
-
-	private File getSave() {
-		return this.Save;
-	}
-
 
 	private void setList(ArrayList<Game> list) {
 		this._List = list;
