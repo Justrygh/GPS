@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import Geom.Point3D;
 import Players.Fruit;
 import Players.Pacman;
+import Structure.Map;
 import Players.Game;
 /**
  * 
@@ -12,6 +13,7 @@ import Players.Game;
  */
 
 public class ShortestPathAlgo {
+	
 	/**
 	 * Constructor that gets an ArrayList of Game.
 	 * @param game List.
@@ -37,7 +39,7 @@ public class ShortestPathAlgo {
 	 *  Pacman to the nearest Fruit.
 	 * @return returned the calculated path.
 	 */
-	public ArrayList<Game> Calculate() {
+	public ArrayList<Game> calculatePath() {
 		double time = Integer.MAX_VALUE; 
 		for(int i=0; i<_Pacmans.size(); i++) {
 			for(int j=0; j<_Fruits.size(); j++) {
@@ -46,7 +48,7 @@ public class ShortestPathAlgo {
 				String[] arrF = (_Fruits.get(j).getPoint().split(","));
 				Point3D Pac = new Point3D(Double.parseDouble(arrP[0]), Double.parseDouble(arrP[1]));
 				Point3D Fru = new Point3D(Double.parseDouble(arrF[0]), Double.parseDouble(arrF[1]));
-				double distance = Pac.distance2D(Fru) - Double.parseDouble(_Pacmans.get(i).getRadius());
+				double distance = _Map.distanceBetween2Points(Pac, Fru) - Double.parseDouble(_Pacmans.get(i).getRadius());
 				if(distance < 0)
 					distance = 0;
 				double temp = distance/speed;
@@ -72,7 +74,7 @@ public class ShortestPathAlgo {
 		}
 		while(_Fruits.size()>0) {
 			createPath();
-			Calculate();
+			calculatePath();
 		}
 		
 		return _List;
@@ -80,7 +82,7 @@ public class ShortestPathAlgo {
    /**
     * This method resets our private methods.
     */
-	public void Zero() {
+	public void zero() {
 		this._Pacman = null;
 		this._Fruit = null;
 		this._Distance = 0;
@@ -107,7 +109,7 @@ public class ShortestPathAlgo {
 		this._Pacman.setDistance(this._Distance);
 		this._Pacman.setPoint(this._Fruit.getPoint());
 		_Fruits.remove(this._Fruit);
-		Zero();
+		zero();
 	}
 	
 	/*********PRIVATE VARIABELS*********/
@@ -115,6 +117,7 @@ public class ShortestPathAlgo {
 	private Pacman _Pacman;
 	private double _Distance;
 	private double _Time;
+	private Map _Map = new Map();
 	private ArrayList<Fruit> _Fruits = new ArrayList<Fruit>();
 	private ArrayList<Pacman> _Pacmans = new ArrayList<Pacman>();
 	private ArrayList<Game> _List = new ArrayList<Game>();
