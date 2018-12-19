@@ -453,7 +453,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			g.drawImage(_Map.getImage(), 0 , 0 , this.getWidth() , this.getHeight() , this);
 		}
 		else {
-			Image start = Toolkit.getDefaultToolkit().getImage("Your/Directory/Path/OOP_EX2-EX4-master/newdata/Instructions.png");
+			Image start = Toolkit.getDefaultToolkit().getImage("Your/Directory/Path/OOP_EX2-EX4-master/newdata/Instructions.jpeg");
 			g.drawImage(start, 0 , 0 , this.getWidth() , this.getHeight() , this);
 		}
 
