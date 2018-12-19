@@ -44,38 +44,38 @@ Just press CTRL + F, In the search area write down the next line:
 
 In this project, you can do the following things:
 
- * 1. You can import a CSV file, which contains list of Pacmans and Fruits including:
+ 1. You can import a CSV file, which contains list of Pacmans and Fruits including:
       - Type(P/F), 
       - Cordinates represented in: (Lat, Long, Alt)
       - Speed/Weight (Pacman ONLY) -The speed of how many meters the Pacman will make in a second
       - Radius (Pacman ONLY) - The distance that the Pacman is able to eat the Fruit infront of him.
       - iD - Unique Identifier for each Pacman/Fruit.
       
- * 2. You can create a new GAME in GUI which pops-up when you run the code.
+ 2. You can create a new GAME in GUI:
       Whenever you run the code for the first time, an Ariel University map will be showen in the GUI with instructions
       explaining what features do we have and how to use them.
       You can add Pacmans/Fruits as many as you want, where ever you want in our GUI, and run the game.
       **Make sure to read the instructions before in order to be able to play the game**
       
- * 3. You can export a game you created in our GUI to a new CSV file and save all the details in order to run it again next time:
+ 3. You can export a game you created in our GUI to a new CSV file and save all the details in order to run it again next time:
       - Type(P/F), 
       - Cordinates represented in: (Lat, Long, Alt)
       - Speed/Weight (Pacman ONLY) -The speed of how many meters the Pacman will make in a second
       - Radius (Pacman ONLY) - The distance that the Pacman is able to eat the Fruit infront of him.
       - iD - Unique Identifier for each Pacman/Fruit.
-
+      
 In the project we have special features in order to accomplish our mission and view the game running:
 
- * 1. Run - Calculates the Shortest Path for each Pacman and represents it by drawing lines from our Pacman to the next fruit
+ 1. Run - Calculates the Shortest Path for each Pacman and represents it by drawing lines from our Pacman to the next fruit
             he is about to eat, until he reaches the last fruit in his path.
  
- * 2. Demo - Simulate each Pacman's path in real-time by showing his new location every 1/2 second (The pacmans caculates their
+ 2. Demo - Simulate each Pacman's path in real-time by showing his new location every 1/2 second (The pacmans caculates their
              new location for every second, but in order to make the game run faster since it will take few minutes for the
              Pacmans to complete their path, we fast forwarded it,
              You can feel free and change the delay time to your own will.
  
- * 3. Convert2kml - Another way of viewing each Pacman location, we added a feature that we convert our game to a new KML file
-                    which allows the player to view the game in Google-Earth.
+ 3. Convert2kml - Another way of viewing each Pacman location, we added a feature that we convert our game to a new KML file
+                  which allows the player to view the game in Google-Earth.
 
 **In order to know what each class/function purpose is, I suggest you to look over at our JAVA DOC which explains everything into specific details.**
 
