@@ -33,33 +33,49 @@ We have been asked to do the following assigments:
       
 **********Pacman Project**********
 
-This project represents a Pacman Game where you can import a CSV file with Pacmans and Fruits details, you can create a new Game in the GUI by placing a Pacmans and Fruits where ever you like in the map and you can save the Game to a new CSV file.
+This project represents a Pacman Game.
+This game purpose is for the Pacmans to eat all the Fruits in the shortest time.
 
-In the project you can see the:
- * 1. Pacmans path represented in Lines.
+**Attention**:
+In order to run the game, you will need to enter the next classes:
+(Map, MyFrame, Path2kml, Game)
+Just press CTRL + F, In the search area write down the next line:
+" Your/Directory/Path " And change it to the location your project is located.
+
+In this project, you can do the following things:
+
+ * 1. You can import a CSV file, which contains list of Pacmans and Fruits including:
+      - Type(P/F), 
+      - Cordinates represented in: (Lat, Long, Alt)
+      - Speed/Weight (Pacman ONLY) -The speed of how many meters the Pacman will make in a second
+      - Radius (Pacman ONLY) - The distance that the Pacman is able to eat the Fruit infront of him.
+      - iD - Unique Identifier for each Pacman/Fruit.
+      
+ * 2. You can create a new GAME in GUI which pops-up when you run the code.
+      Whenever you run the code for the first time, an Ariel University map will be showen in the GUI with instructions
+      explaining what features do we have and how to use them.
+      You can add Pacmans/Fruits as many as you want, where ever you want in our GUI, and run the game.
+      **Make sure to read the instructions before in order to be able to play the game**
+      
+ * 3. You can export a game you created in our GUI to a new CSV file and save all the details in order to run it again next time:
+      - Type(P/F), 
+      - Cordinates represented in: (Lat, Long, Alt)
+      - Speed/Weight (Pacman ONLY) -The speed of how many meters the Pacman will make in a second
+      - Radius (Pacman ONLY) - The distance that the Pacman is able to eat the Fruit infront of him.
+      - iD - Unique Identifier for each Pacman/Fruit.
+
+In the project we have special features in order to accomplish our mission and view the game running:
+
+ * 1. Run - Calculates the Shortest Path for each Pacman and represents it by drawing lines from our Pacman to the next fruit
+            he is about to eat, until he reaches the last fruit in his path.
  
- * 2. Simulation in real-time where each Pacman is located.
+ * 2. Demo - Simulate each Pacman's path in real-time by showing his new location every 1/2 second (The pacmans caculates their
+             new location for every second, but in order to make the game run faster since it will take few minutes for the
+             Pacmans to complete their path, we fast forwarded it,
+             You can feel free and change the delay time to your own will.
  
- * 3. Import to a KML file and see as well in Google-Earth each Pacman location in real-time. (Represents in TimeSpan)
-
-1. ShortestPathAlgo:
-Calculates the Shortest Time when all the Pacmans will eat all the fruits.
-
-2. Map:
-Picture of Ariel University map, Convert points to Pixel from GPS and vice-versa.
-
-3. Path:
-Saves each Pacman path to eat the nearest Fruit in the shortest time.
-
-4. Game:
-Collection of Pacmans and Fruits
-
-5. MyFrame:
-The main GUI that represents the GAME, includes all the classes Functions and methods inside.
-In this class, you can import a game, export a new game, and create a new game.
-
-6. Path2kml:
-Converts the Game GUI from CSV file to KML file in order to view it in Google-Earth.
+ * 3. Convert2kml - Another way of viewing each Pacman location, we added a feature that we convert our game to a new KML file
+                    which allows the player to view the game in Google-Earth.
 
 **In order to know what each class/function purpose is, I suggest you to look over at our JAVA DOC which explains everything into specific details.**
 
