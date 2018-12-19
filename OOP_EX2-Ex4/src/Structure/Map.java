@@ -24,7 +24,7 @@ public class Map {
 	//Default Constructor that Draws the Ariel University MAP at First Pop-up.
 	public Map() {
 		try {
-			this._Img = ImageIO.read(new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Ariel1.png"));
+			this._Img = ImageIO.read(new File("Your/Directory/Path/OOP_EX2-EX4-master/newdata/Ariel1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
