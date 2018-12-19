@@ -12,7 +12,7 @@ public class Path{
 	 */
 	/*** PRIVATE VARIABELS ***/
 	private ArrayList<Game> Paths;
-
+	private Map _Map = new Map();
 	private String _Point;
 
     //Default Constructor.
@@ -71,7 +71,7 @@ public class Path{
 				Point3D pac = new Point3D(Double.parseDouble(pacData[0]), Double.parseDouble(pacData[1]));
 				Point3D fru = new Point3D(Double.parseDouble(fruData[0]), Double.parseDouble(fruData[1]));
 				Point3D vec = new Point3D(fru.x() - pac.x(), fru.y() - pac.y());
-				double distance = Math.sqrt(Math.pow(vec.x(), 2) + Math.pow(vec.y(), 2))
+				double distance = _Map.distanceBetween2Points(pac, fru)
 						- Double.parseDouble(pList.get(i).getList().get(0).getRadius());
 				double _Time = distance / Double.parseDouble(pList.get(i).getList().get(0).getSpeed());
 				if (_Time > 1) {
