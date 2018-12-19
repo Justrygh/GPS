@@ -11,11 +11,16 @@ import Players.Game;
 import Players.Pacman;
 
 public class Map {
-	
+	/**
+	 * @author Eli.
+	 * @author Qusai.
+	 */
+	// Our Private Variables
 	private BufferedImage _Img;
 	private int Width;
 	private int Height;
 	
+	//Default Constructor that Draws the Ariel University MAP at First Pop-up.
 	public Map() {
 		try {
 			this._Img = ImageIO.read(new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Ariel1.png"));
@@ -25,19 +30,29 @@ public class Map {
 		this.Width = _Img.getWidth();
 		this.Height = _Img.getHeight();
 	}
-	
+	/**
+	 * @return Ariel Image.
+	 */
 	public BufferedImage getImage() {
 		return this._Img;
 	}
-	
+	/**
+	 * @return Ariel image Width.
+	 */
 	public int getWidth() {
 		return this.Width;
 	}
-	
+	/**
+	 * @return Ariel image Height
+	 */
 	public int getHeight() {
 		return this.Height;
 	}
-
+	/**
+	 * This method gets ArrayList of Game points in Pixels and Converts it to GPS Points.
+	 * @param _List The List that Converted by the Method.
+	 * @return new Converted List.
+	 */
 	public ArrayList<Game> ConvertPoints2GPS(ArrayList<Game> _List){
 		for(int i=0; i<_List.size(); i++) {
 			String[] arrP = (_List.get(i).getPoint().split(","));
@@ -47,7 +62,11 @@ public class Map {
 		}
 		return _List;
 	}
-	
+	/**
+	 * This method gets ArrayList of Pacmans points in pixels and Converts it to GPS Points(we use it in the KML convert File).
+	 * @param _List The List that Converted by the Method.
+	 * @return new Converted List.
+	 */
 	public ArrayList<Pacman> ConvertPac(ArrayList<Pacman> _List){
 		for(int i=0; i<_List.size(); i++) {
 			String[] arrP = (_List.get(i).getPoint().split(","));
@@ -57,7 +76,11 @@ public class Map {
 		}
 		return _List;
 	}
-	
+	/**
+	 * This method gets ArrayList of Game points in GPS and Converts it to Pixel Points.
+	 * @param _List The List that Converted by the Method.
+	 * @return new Converted List.
+	 */
 	public ArrayList<Game> ConvertPoints2Pixel(ArrayList<Game> _List){
 		for(int i=0; i<_List.size(); i++) {
 			String[] arrP = (_List.get(i).getPoint().split(","));

@@ -1,18 +1,21 @@
 package Algorithms;
-import java.io.File;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-
-import Coords.MyCoords;
 import Geom.Point3D;
 import Players.Fruit;
 import Players.Pacman;
 import Players.Game;
+/**
+ * 
+ * @author Eli.
+ * @author Qusai.
+ *
+ */
 
 public class ShortestPathAlgo {
+	/**
+	 * Constructor that gets an ArrayList of Game.
+	 * @param game List.
+	 */
 
 	public ShortestPathAlgo(ArrayList<Game> game) {
 		String P = "Pacman";
@@ -29,7 +32,11 @@ public class ShortestPathAlgo {
 			}
 		}
 	}
-	
+	/**
+	 * This method is a simple Algorithm that calculates the Shortest Path from
+	 *  Pacman to the nearest Fruit.
+	 * @return returned the calculated path.
+	 */
 	public ArrayList<Game> Calculate() {
 		double time = Integer.MAX_VALUE; 
 		for(int i=0; i<_Pacmans.size(); i++) {
@@ -70,20 +77,28 @@ public class ShortestPathAlgo {
 		
 		return _List;
 	}
-
+   /**
+    * This method resets our private methods.
+    */
 	public void Zero() {
 		this._Pacman = null;
 		this._Fruit = null;
 		this._Distance = 0;
 		this._Time = 0;
 	}
-	
+	/**
+	 * This method adds our Pacman and Fruit that we got from the Algorithm to a new Game List by order.
+	 * First the Pacman and then the Fruit, the pacman suppose to eat next. 
+	 */
 	public void add() {
 		_List.add(new Game(this._Pacman));
 		_List.add(new Game(this._Fruit));
 	}
 	
-
+   /**
+    * This method updates the pacman after he ate each fruit.
+    * 
+    */
 	public void createPath() {
 		add();
 		
@@ -95,6 +110,7 @@ public class ShortestPathAlgo {
 		Zero();
 	}
 	
+	/*********PRIVATE VARIABELS*********/
 	private Fruit _Fruit;
 	private Pacman _Pacman;
 	private double _Distance;
@@ -102,7 +118,8 @@ public class ShortestPathAlgo {
 	private ArrayList<Fruit> _Fruits = new ArrayList<Fruit>();
 	private ArrayList<Pacman> _Pacmans = new ArrayList<Pacman>();
 	private ArrayList<Game> _List = new ArrayList<Game>();
-
+	
+    /*********Getters&Setters*********/
 	private void setDistance(double distance) {
 		this._Distance = distance;
 	}
@@ -142,5 +159,4 @@ public class ShortestPathAlgo {
 	public ArrayList<Fruit> getFList(){
 		return this._Fruits;
 	}
-
 }

@@ -2,22 +2,27 @@ package Players;
 import java.io.BufferedReader;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
-
-import Declaration.Filters;
 import Declaration.ourFile;
-import GIS.Element;
 import Players.Fruit;
 import Players.Pacman;
-
+/**
+ * @author Eli.
+ * @author Qusai.
+ *
+ */
 public class Game {
+	/**
+	 * @author Eli.
+	 * @author Qusai.
+	 * In this Write method we Write All the Data that we got from
+	 * the Read Method. using the ArrayList that we returned from the read().
+	 * @param _List ArrayList that we returned from the read().
+	 */
 
 	public void write(ArrayList<Game> _List) {
 		ourFile file = new ourFile(_Game.getName());
@@ -62,7 +67,12 @@ public class Game {
 		Print.close();
 		System.out.println("Congrats! You did it!");
 	}
-
+/**
+ * In this Method we read all the data that we need to our Game 
+ * using BufferedReader that Split all the data in Our CSV File 
+ * using ",".
+ * @return returned the readable ArrayList that we use in the Write() method.
+ */
 	public ArrayList<Game> read(){
 		String L = "";
 		String S = ",";
@@ -129,9 +139,13 @@ public class Game {
 		}
 		return _List;
 	}
-
+/**
+ * Simplest method that creates in each iteration a Random 
+ * icon to the Fruit Object.
+ * @return A Random Fruit icon. 
+ */
 	public String Fruits() {
-		String[] Fruits = {"Fruit", "Apple"};//, "Lime"};
+		String[] Fruits = {"Fruit", "Apple"};
 		Random random = new Random();
 		int Select = random.nextInt(Fruits.length);
 		String newColor = Fruits[Select];
@@ -151,9 +165,12 @@ public class Game {
 	//**********Constructor**********//
 
 	private ArrayList<Integer> _Fruits = new ArrayList<Integer>();
-
+    // Default Constructor. 
 	public Game() {}
-
+    /**
+     * The Game Constructor  for the Fruit Object. 
+     * @param fruit Fruit Object
+     */
 	public Game(Fruit fruit) {
 		this._Type = fruit.getType();
 		this._Point = fruit.getPoint();
@@ -164,7 +181,15 @@ public class Game {
 		this._Dis = "";
 		this._Time = String.valueOf(fruit.getTime());
 	}
-
+/**
+ * Game Full Constructor.
+ * @param type the Type of each Object (Fruit/Pacman).
+ * @param point the Point of each Object in the Game (Fruit/Pacman).
+ * @param speed the Speed is specific for Pacmans and to the Fruits is "NULL".
+ * @param radius the Radius is specific for Pacmans and to the Fruits is "NULL".
+ * @param picture the Pic of each icon.
+ * @param id the ID for each Player(Fruit/Pacman).
+ */
 	public Game(String type, String point, String speed, String radius, String picture, String id) {
 		this._Type = type;
 		this._Point = point;
@@ -173,7 +198,10 @@ public class Game {
 		this._Pic = picture;
 		this._iD = id;
 	}
-
+/**
+ * the Game Constructor for the Pacman Object. 
+ * @param pacman our Object/Player.
+ */
 	public Game(Pacman pacman) {
 		this._Type = pacman.getType();
 		this._Point = pacman.getPoint();
@@ -185,7 +213,10 @@ public class Game {
 		this._Dis = String.valueOf(pacman.getDistance());
 		this._iD = pacman.getiD();
 	}
-
+/**
+ * Constructor for the KML File that we create to use it in Google Earth.
+ * @param KML the KML File that we create to use it in Google Earth.
+ */
 	public Game(File KML) {
 		this._Game = KML;
 	}

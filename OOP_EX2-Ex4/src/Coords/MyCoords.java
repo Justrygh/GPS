@@ -6,7 +6,6 @@ import Geom.Point3D;
  * 
  * @author Eli
  * @author Qusai
- * @author Shai
  *
  */
 

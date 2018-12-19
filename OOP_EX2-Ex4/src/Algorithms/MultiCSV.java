@@ -20,9 +20,8 @@ public class MultiCSV {
 	/**
 	 * @author Eli 
 	 * @author Qusai 
-	 * @author Shai
 	 * This function creates the KML file and writes the header.
-	 * @param File to be written.
+	 * @param MultiCSV - File to be written.
 	 */
 	
 	public void print(File MultiCSV) {

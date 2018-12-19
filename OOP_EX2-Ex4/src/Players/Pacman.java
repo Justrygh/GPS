@@ -3,6 +3,16 @@ package Players;
 import java.util.Date;
 
 public class Pacman {
+	/**
+	 * @author Eli
+	 * @author Qusai
+	 * @param type the type is Pacman.
+	 * @param point our Pacman Point.
+	 * @param speed our Pacman Speed.
+	 * @param radius our Pacman Radius.
+	 * @param picture our Pacman Picture(.PNG) Format.
+	 * @param id our Pacman ID.
+	 */
 	
 	public Pacman(String type, String point, String speed, String radius, String picture, String id) {
 		this._Type = type;

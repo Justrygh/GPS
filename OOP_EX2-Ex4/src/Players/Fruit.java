@@ -2,6 +2,16 @@ package Players;
 
 public class Fruit {
 	
+	/**
+	 * @author Eli.
+	 * @author qusai
+	 * @param type the type Fruit .
+	 * @param point our Point of the object.
+	 * @param picture object picture with (.PNG) Format .
+	 * @param id the ID of each Fruit.
+	 * Constructor for Fruits.
+	 */
+	
 	public Fruit(String type, String point, String picture, String id) {
 		this._Type = type;
 		this._Point = point;

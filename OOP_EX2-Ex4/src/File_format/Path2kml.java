@@ -1,22 +1,23 @@
 package File_format;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.PrintWriter;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-
-import Declaration.ourFile;
 import Players.Game;
 import Players.Pacman;
-import Structure.Path;
 
 public class Path2kml {
+	
+	/**
+	 * @author Eli 
+	 * @author Qusai 
+	 * This function creates the KML file in which we can see each Pacman in real-time location.
+	 * @param File to be written.
+	 */
 
 	private File myFile;
 	private final static long TimeStamp = new Date().getTime() + 7200000;
@@ -24,14 +25,12 @@ public class Path2kml {
 		this.myFile = file;
 	}
 
-
 	/**
-	 * @author Eli 
-	 * @author Qusai 
-	 * This function creates the KML file and writes the header.
-	 * @param File to be written.
+	 * Prints the Header of the KML, 
+	 * 
+	 * ATTENTION!!!
+	 * In order to do that you need to change the Directory Path of your project.
 	 */
-
 	public void print() {
 		try 
 		{
@@ -46,16 +45,19 @@ public class Path2kml {
 		Builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		Builder.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
 		Builder.append("<Document>");
-		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Pacman.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Fruit.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Apple.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Done\"><IconStyle><Icon><href>/home/eli/eclipse-workspace/OOP_EX2-EX4-master/newdata/Done.png</href></Icon></IconStyle></Style>");
-		//In order to make the pacman/fruit Icon to work, you need to change the Directory Path.
+		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Pacman.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Fruit.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Apple.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Done\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Done.png</href></Icon></IconStyle></Style>");
 		Print.write(Builder.toString());
 	}
 
-	/*
-	 *
+	/**
+	 * Writes down the fruits and the pacmans to new KML file with TimeStamp.
+	 * Replace.getTime() = The current time the pacman passed before reaching the fruit. (The last fruit he ate)
+	 * We calculated the time until the pacman reached the last point + the time until he reached the new fruit.
+	 * @param game Sorted ArrayList of game from the ShortestPathAlgo class (Calculate method). 
+	 * @param pac Sorted ArrayList of Pacmans in their last positions.
 	 */
 
 	public void write(ArrayList<Game> game, ArrayList<Pacman> pac) {
@@ -146,7 +148,7 @@ public class Path2kml {
 		Print.write(Builder.toString());
 	}
 
-	/*
+	/**
 	 * This function closes the KML file and sends it to the directory path you declared.
 	 */
 
