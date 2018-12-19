@@ -42,23 +42,23 @@ In the project you can see the:
  
  * 3. Import to a KML file and see as well in Google-Earth each Pacman location in real-time. (Represents in TimeSpan)
 
-ShortestPathAlgo:
+1. ShortestPathAlgo:
 Calculates the Shortest Time when all the Pacmans will eat all the fruits.
 
-Map:
+2. Map:
 Picture of Ariel University map, Convert points to Pixel from GPS and vice-versa.
 
-Path:
+3. Path:
 Saves each Pacman path to eat the nearest Fruit in the shortest time.
 
-Game:
+4. Game:
 Collection of Pacmans and Fruits
 
-MyFrame:
+5. MyFrame:
 The main GUI that represents the GAME, includes all the classes Functions and methods inside.
 In this class, you can import a game, export a new game, and create a new game.
 
-Path2kml:
+6. Path2kml:
 Converts the Game GUI from CSV file to KML file in order to view it in Google-Earth.
 
 **In order to know what each class/function purpose is, I suggest you to look over at our JAVA DOC which explains everything into specific details.**
