@@ -247,6 +247,9 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			public void actionPerformed(ActionEvent e) {
 				isPacman = true;
 				isFruit = false;
+				demo.setEnabled(false);
+				run.setEnabled(false);
+				kml.setEnabled(false);
 			}
 		});
 		pacman.setEnabled(false);
@@ -257,6 +260,9 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			public void actionPerformed(ActionEvent e) {
 				isFruit = true;
 				isPacman = false;
+				demo.setEnabled(false);
+				run.setEnabled(false);
+				kml.setEnabled(false);
 			}
 		});
 		fruit.setEnabled(false);
@@ -267,6 +273,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			public void actionPerformed(ActionEvent e) {
 				clearLists();
 				repaint();
+				Stop = false;
 				isDemo = false;
 				isSaved = false;
 				isPacman = false;
@@ -276,6 +283,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				kml.setEnabled(false);
 				pacman.setEnabled(true);
 				fruit.setEnabled(true);
+				start.setEnabled(false);
+				stop.setEnabled(false);
 			}
 		});
 		clear.setEnabled(false);
@@ -304,6 +313,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				isPacman = false;
 				isFruit = false;
 				isSaved = false;
+				pacman.setEnabled(false);
+				fruit.setEnabled(false);
 				run.setEnabled(false);
 				kml.setEnabled(false);
 				stop.setEnabled(true);
