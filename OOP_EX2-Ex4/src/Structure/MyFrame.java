@@ -11,6 +11,8 @@ import java.awt.MenuItem;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -29,6 +31,7 @@ import File_format.Path2kml;
 import Players.Fruit;
 import Players.Game;
 import Players.Pacman;
+import Threads.MyThread;
 
 public class MyFrame extends JPanel implements MouseListener, MouseMotionListener{
 
@@ -51,6 +54,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private boolean isSaved = false;
 	private boolean isDemo = false;
 	private boolean instructions = false;
+	private boolean Stop = false;
 
 	private int i = 0;
 	private int j = 0;
@@ -62,6 +66,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private ArrayList<Pacman> _Pacmans;
 	private ArrayList<Game> _List;
 	private ArrayList<Image> _Icons;
+	private ArrayList<Path> pList;
 
 
 	public static void main(String[] args){
@@ -83,7 +88,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private void setIList(ArrayList<Image> ilist) {
 		this._Icons = ilist;
 	}
-	
+
 	private ArrayList<Image> getIList(){
 		return this._Icons;
 	}
@@ -133,6 +138,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		_Pacmans = new ArrayList<Pacman>();
 		_List = new ArrayList<Game>();
 		_Icons = new ArrayList<Image>();
+		pList = new ArrayList<Path>();
 
 		MenuBar menuBar = new MenuBar();
 		Menu menu1 = new Menu("File");
@@ -145,7 +151,11 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		MenuItem clear = new MenuItem("   Clear   ");
 		Menu menu3 = new Menu("Demo");
 		MenuItem run = new MenuItem("   Run   ");
-		MenuItem demo = new MenuItem("   Demo   ");
+		MenuItem demo = new MenuItem("   Demo  ");
+		MenuItem space = new MenuItem("------------------------------");
+		MenuItem start = new MenuItem("   Start   ");
+		MenuItem stop = new MenuItem("   Stop   ");
+		MenuItem space1 = new MenuItem("------------------------------");
 		MenuItem kml = new MenuItem("   Convert to KML   ");
 
 		menuBar.add(menu1);
@@ -264,6 +274,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				run.setEnabled(false);
 				demo.setEnabled(false);
 				kml.setEnabled(false);
+				pacman.setEnabled(true);
+				fruit.setEnabled(true);
 			}
 		});
 		clear.setEnabled(false);
@@ -272,6 +284,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		run.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				pacman.setEnabled(false);
+				fruit.setEnabled(false);
 				isSaved = true;
 				paths(getGraphics());
 				run.setEnabled(false);
@@ -292,33 +306,88 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				isSaved = false;
 				run.setEnabled(false);
 				kml.setEnabled(false);
+				stop.setEnabled(true);
 				calculatePath();
 				Path p = new Path();
-				ArrayList<Path> pList = new ArrayList<Path>();
 				pList = p.Create(getList(), getPList());
 				changeFruitIcon();
-				while((pList = p.Print(pList)).size() > 0) {
-					for(int i=0; i<_Pacmans.size(); i++) {
-						for(int j=0; j<pList.size(); j++) {
-							if(_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
-								_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
+				Thread t1 = new Thread(new Runnable() {
+					public void run() {
+						pList = p.Print(pList);
+						for(int i=0; i<_Pacmans.size(); i++) {
+							for(int j=0; j<pList.size(); j++) {
+								if(_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
+									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
+								}
 							}
 						}
+						changeFruitIcon();
+						paintComponent(getGraphics());
+						try {
+							Thread.sleep(150);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+						if(pList.size() > 0 && Stop == false) 
+							this.run();
 					}
-					changeFruitIcon();
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					paintComponent(getGraphics());
-					
-				}
+				});
+				t1.start();
 				demo.setEnabled(false);
 			}
 		});
 		demo.setEnabled(false);
+		
+		menu3.add(space);
+		space.setEnabled(false);
+		
+		menu3.add(start);
+		start.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				stop.setEnabled(true);
+				start.setEnabled(false);
+				Stop = false;
+				Path p = new Path();
+				Thread t1 = new Thread(new Runnable() {
+					public void run() {
+						pList = p.Print(pList);
+						for(int i=0; i<_Pacmans.size(); i++) {
+							for(int j=0; j<pList.size(); j++) {
+								if(_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
+									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
+								}
+							}
+						}
+						changeFruitIcon();
+						paintComponent(getGraphics());
+						try {
+							Thread.sleep(150);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+						if(pList.size() > 0 && Stop == false) 
+							this.run();
+					}
+				});
+				t1.start();
+			}
+		});
+		start.setEnabled(false);
+		
+		menu3.add(stop);
+		stop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Stop = true;
+				start.setEnabled(true);
+				stop.setEnabled(false);
+			}
+		});
+		stop.setEnabled(false);
+		
+		menu3.add(space1);
+		space1.setEnabled(false);
 
 		menu3.add(kml);
 		kml.addActionListener(new ActionListener() {
@@ -370,7 +439,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	 * @param csv File - A file you want to save the current game.
 	 * @param list - The current Game you created and you want to save.
 	 */
-	
+
 	public void print(File csv, ArrayList<Game> list) {
 		PrintWriter print = null;
 		try {
@@ -395,7 +464,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	 * Converts the points to GPS and updates the last Pacmans locations.
 	 * @return ArrayList of Game converted from Pixel to GPS points.
 	 */
-	
+
 	public ArrayList<Game> convertGPS(){
 		calculatePath();
 		ArrayList<Game> res = new ArrayList<Game>();
@@ -467,7 +536,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	 * Creates the Lines (DrawLine) that represents each Pacman's path.
 	 * @param g - Graphics.
 	 */
-	
+
 	public void paths(Graphics g) {
 		calculatePath();
 		ArrayList<Game> it = getList();
@@ -492,7 +561,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	 * isSaved - If you pressed the RUN button, it will print the Lines even after you rescale the map.
 	 * isDemo - When you simulate the Pacmans in real time, updates the Fruits eaten image.
 	 */
-	
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -581,7 +650,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	 * This function generates a random icon for each fruit created.
 	 * @return Fruit Image
 	 */
-	
+
 	public Image randomFruitsIcon() {
 		Image Apple = Toolkit.getDefaultToolkit().getImage("newdata/Apple.png");
 		Image Fruit = Toolkit.getDefaultToolkit().getImage("newdata/Fruit.png");
@@ -597,7 +666,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	 * This function generates list of random fruits icons when you open a game
 	 * @param size of the ArrayList of fruits.
 	 */
-	
+
 	public void createFruitsIconList(int size) {
 		for(int i=0; i<size; i++) {
 			randomFruitsIcon();
@@ -699,4 +768,5 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	@Override
 	public void mouseMoved(MouseEvent e) {
 	}
+
 }
