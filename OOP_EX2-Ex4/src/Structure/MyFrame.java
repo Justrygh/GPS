@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Random;
+
 import javax.swing.JFileChooser;	
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -35,9 +37,9 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	 * @author Qusai
 	 * This class is the main Class that represents our GUI + Game.
 	 */
-	
+
 	//**********Private Variables**********//
-	
+
 	private static final long serialVersionUID = 1L;
 	private static MenuBar _MB;
 	private int H = 642; 
@@ -52,14 +54,16 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 	private int i = 0;
 	private int j = 0;
+	private int p = 0;
 
 	private Map _Map = new Map();
 
 	private ArrayList<Fruit> _Fruits;
 	private ArrayList<Pacman> _Pacmans;
 	private ArrayList<Game> _List;
-	
-	
+	private ArrayList<Image> _Icons;
+
+
 	public static void main(String[] args){
 		JFrame frame = new JFrame("Game GUI");
 		frame.getContentPane().add(new MyFrame());
@@ -69,7 +73,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		frame.setResizable(true);
 		frame.setVisible(true);
 	}
-	
+
 	//**********Private Methods**********//
 
 	private static void setMB(MenuBar menu) {
@@ -121,6 +125,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		_Fruits = new ArrayList<Fruit>();
 		_Pacmans = new ArrayList<Pacman>();
 		_List = new ArrayList<Game>();
+		_Icons = new ArrayList<Image>();
 
 		MenuBar menuBar = new MenuBar();
 		Menu menu1 = new Menu("File");
@@ -145,6 +150,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				instructions = true;
+				repaint();
 				isPacman = true;
 				isFruit = true;
 				paintElement();
@@ -210,7 +216,6 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				Game Try = new Game(f);
 				ShortestPathAlgo Name = new ShortestPathAlgo(Try.read());
 				setPoints(Name);
-				repaint();
 				run.setEnabled(true);
 				demo.setEnabled(true);
 				kml.setEnabled(true);
@@ -382,7 +387,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		setPList(test.getPList());
 		return _Map.ConvertPoints2GPS(getList());
 	}
-	
+
 	/**
 	 * Changes the Fruits Icon to (/) When the Pacmans reaches the fruits.
 	 */
@@ -403,7 +408,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			}
 		}
 	}
-	
+
 	/**
 	 * This function takes a CSV file points, 
 	 * Converts them to Pixels and updates each list. (Fruits + Pacmans + Game)
@@ -470,16 +475,19 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			g.drawImage(start, 0 , 0 , this.getWidth() , this.getHeight() , this);
 		}
 
-		Image Apple = Toolkit.getDefaultToolkit().getImage("newdata/Apple.png");
 		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
 		Image img = Toolkit.getDefaultToolkit().getImage("newdata/Done.png");
+
+		if(_Icons.size() < _Fruits.size()) {
+			createFruitsIconList(_Fruits.size());
+		}
 
 		String Done = "Done";
 		for(int i=0; i<_Fruits.size(); i++) {
 			String[] Data = _Fruits.get(i).getPoint().split(",");
 			int x2 = (int)((Double.parseDouble(Data[0])) * this.getWidth() / W);
 			int y2 = (int)((Double.parseDouble(Data[1])) * this.getHeight() / H);
-			g.drawImage(Apple, x2-16, y2-16, this);
+			g.drawImage(_Icons.get(i), x2-16, y2-16, this);
 			g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
 			g.setColor(Color.WHITE);
 			g.drawString("("+String.valueOf(x2)+","+String.valueOf(y2)+")", x2, y2); 
@@ -493,7 +501,6 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			g.setColor(Color.WHITE);
 			g.drawString("("+String.valueOf(x1)+","+String.valueOf(y1)+")", x1, y1); 
 		}
-
 		if(isSaved == true) {
 			for(int i=0; i<_List.size(); i+=2) {
 				g.setColor(Color.WHITE);
@@ -526,10 +533,62 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 					g.drawImage(img, x2-16, y2-16, this);
 				}
 			}
+			for(int i=0; i<_Pacmans.size(); i++) {
+				String[] Data = _Pacmans.get(i).getPoint().split(",");
+				int x1 = (int)((Double.parseDouble(Data[0])) * this.getWidth() / W);
+				int y1 = (int)((Double.parseDouble(Data[1])) * this.getHeight() / H);
+				g.drawImage(pacmanIcon(), x1-16, y1-16, this);
+				g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
+				g.setColor(Color.WHITE);
+				g.drawString("("+String.valueOf(x1)+","+String.valueOf(y1)+")", x1, y1); 
+			}
+		}
+	}
+	
+	/**
+	 * Generates a random icon for each fruit created.
+	 * @return Fruit Image
+	 */
+	public Image randomFruitsIcon() {
+		Image Apple = Toolkit.getDefaultToolkit().getImage("newdata/Apple.png");
+		Image Fruit = Toolkit.getDefaultToolkit().getImage("newdata/Fruit.png");
+		Image[] Fruits = {Fruit, Apple};
+		Random random = new Random();
+		int Select = random.nextInt(Fruits.length);
+		Image newImage = Fruits[Select];
+		_Icons.add(newImage);
+		return newImage;
+	}
+	
+	/**
+	 * Generates list of random fruits icons when you open a csv file
+	 * @param size of the ArrayList of fruits.
+	 */
+	public void createFruitsIconList(int size) {
+		for(int i=0; i<size; i++) {
+			randomFruitsIcon();
+		}
+	}
+	
+	/**
+	 * This function switches between 2 Pacmans icons, 1 with open mouth, the second with closed one.
+	 * @return Pacman image
+	 */
+
+	public Image pacmanIcon() {
+		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
+		Image PacmanEat = Toolkit.getDefaultToolkit().getImage("newdata/Pacman1.png");
+		if(p == 1) {
+			p = 0;
+			return Pacman;
+		}
+		else {
+			p++;
+			return PacmanEat;
 		}
 	}
 
-	
+
 
 	/**
 	 * Paints the Pacman/Fruit when you click on the GUI (Depends on your choice).
@@ -538,7 +597,6 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	protected void paintElement() {
 		Graphics g = getGraphics();
 		//	The method getGraphics is called to obtain a Graphics object
-		Image Apple = Toolkit.getDefaultToolkit().getImage("newdata/Apple.png");
 		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
 
 		x = (int)(x * W / this.getWidth());
@@ -551,7 +609,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			_Pacmans.add(new Pacman("Pacman", x+","+y+","+"0", "1", "1", "Pacman", String.valueOf(i)));
 			i++;
 		} 
-		if(isFruit == true && g.drawImage(Apple, x-16, y-16, this) == true){
+		if(isFruit == true && g.drawImage(randomFruitsIcon(), x-16, y-16, this) == true){
 			g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
 			g.setColor(Color.WHITE);
 			g.drawString("("+Integer.toString(x)+","+Integer.toString(y)+")",x, y);
@@ -560,7 +618,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		}
 		repaint();
 	}
-	
+
 	/**
 	 * Creates ArrayList of Game from all the Pacmans and Fruits that were created in the game.
 	 * @return ArrayList of Game represents all the Pacmans and Fruits in our GUI.
