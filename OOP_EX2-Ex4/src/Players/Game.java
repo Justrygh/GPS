@@ -38,9 +38,9 @@ public class Game {
 		Builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		Builder.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
 		Builder.append("<Document>");
-		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Pacman.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Fruit.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Apple.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>newdata/Pacman.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>newdata/Fruit.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>newdata/Apple.png</href></Icon></IconStyle></Style>");
 		while(it.hasNext()) {
 			Game Replace = it.next();
 			Builder.append("<Placemark>");
@@ -99,7 +99,7 @@ public class Game {
 						setPoint(Data[3]+","+Data[2]+","+Data[4]);
 						setSpeed(null);
 						setRadius(null);
-						setPicture(Fruits());
+						setPicture(fruitsIcon());
 						setiD(Data[1]);
 					}
 					Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture(), getiD());
@@ -125,7 +125,7 @@ public class Game {
 						setPoint(Data[2]+","+Data[1]+","+Data[3]);
 						setSpeed("");
 						setRadius("");
-						setPicture(Fruits());
+						setPicture(fruitsIcon());
 						setiD("");
 					}
 					Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture(), getiD());
@@ -144,7 +144,7 @@ public class Game {
  * icon to the Fruit Object.
  * @return A Random Fruit icon. 
  */
-	public String Fruits() {
+	public String fruitsIcon() {
 		String[] Fruits = {"Fruit", "Apple"};
 		Random random = new Random();
 		int Select = random.nextInt(Fruits.length);

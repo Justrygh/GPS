@@ -21,7 +21,7 @@ public class Test {
 		File MultiCSV = new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/data/MultiCSV.kml");
 		Test.ListOfCSV(MultiCSV);*/
 		
-		Game Try = new Game(new File("Your/Directory/Path/OOP_EX2-EX4-master/newdata/game_1543685769754.csv"));
+		Game Try = new Game(new File("newdata/game_1543685769754.csv"));
 		ShortestPathAlgo Name = new ShortestPathAlgo(Try.read());
 	}
 }

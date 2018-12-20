@@ -45,10 +45,10 @@ public class Path2kml {
 		Builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		Builder.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
 		Builder.append("<Document>");
-		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Pacman.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Fruit.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Apple.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Done\"><IconStyle><Icon><href>Your/Directory/Path/OOP_EX2-EX4-master/newdata/Done.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>newdata/Pacman.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>newdata/Fruit.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>newdata/Apple.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Done\"><IconStyle><Icon><href>newdata/Done.png</href></Icon></IconStyle></Style>");
 		Print.write(Builder.toString());
 	}
 

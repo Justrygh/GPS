@@ -128,7 +128,7 @@ public class MultiCSV {
 	 */
 	public Project ListOfCSV(File MultiCSV) {
 		Project _pList = new Project();
-		File[] files = new File("/home/eli/eclipse-workspace/OOP_EX2-EX4-master/data/").listFiles(
+		File[] files = new File("data/").listFiles(
 				new FilenameFilter() { @Override public boolean accept(File dir, String name) { return name.endsWith(".csv"); } });
 		print(MultiCSV);
 		for(int i=0; i<files.length; i++) {

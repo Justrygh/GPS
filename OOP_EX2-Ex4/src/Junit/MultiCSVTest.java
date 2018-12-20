@@ -23,7 +23,7 @@ class MultiCSVTest {
 
 	@Test
 	void testPrint() {
-		File M1 = new File("Your/Directory/Path/OOP_EX2-EX4-master/data/MultiCSV.kml");
+		File M1 = new File("data/MultiCSV.kml");
 
 		try {
 			Print = new PrintWriter(M1);
@@ -42,7 +42,7 @@ class MultiCSVTest {
 		Builder.append(
 				"<Style id=\"green\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/ms/icons/green-dot.png</href></Icon></IconStyle></Style>");
 		Print.write(Builder.toString());
-		File M2 = new File("Your/Directory/Path/OOP_EX2-EX4-master/data/MultiCSV.kml");
+		File M2 = new File("data/MultiCSV.kml");
 		try {
 			Print = new PrintWriter(M2);
 		} catch (FileNotFoundException e) {
@@ -139,7 +139,7 @@ class MultiCSVTest {
 
 	@Test
 	void testRead() {
-		File _Csv1 = new File("Your/Directory/Path/OOP_EX2-EX4-master/data/MultiCSV.kml");
+		File _Csv1 = new File("data/MultiCSV.kml");
 		String L = "";
 		String S = ",";
 		Layer _List = new Layer();
@@ -156,7 +156,7 @@ class MultiCSVTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		File _Csv2 = new File("Your/Directory/Path/OOP_EX2-EX4-master/data/MultiCSV.kml");
+		File _Csv2 = new File("data/MultiCSV.kml");
 
 		String L1 = "";
 		String S1 = ",";
@@ -180,9 +180,9 @@ class MultiCSVTest {
 	@Test
 	void testListOfCSV() {
 		MultiCSV c1 = new MultiCSV();
-		File _Csv1 = new File("/Users/qusaitrabeh/Downloads/GPS-master/data/MultiCSV.kml");
+		File _Csv1 = new File("data/MultiCSV.kml");
 		Project _pList1 = new Project();
-		File[] files1 = new File("Your/Directory/Path/OOP_EX2-EX4-master/data").listFiles(new FilenameFilter() {
+		File[] files1 = new File("data").listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
 				return name.endsWith(".csv");
@@ -198,9 +198,9 @@ class MultiCSVTest {
 		c1.Close();
 
 		MultiCSV c2 = new MultiCSV();
-		File _Csv2 = new File("Your/Directory/Path/OOP_EX2-EX4-master/data/MultiCSV.kml");
+		File _Csv2 = new File("data/MultiCSV.kml");
 		Project _pList2 = new Project();
-		File[] files2 = new File("Your/Directory/Path/OOP_EX2-EX4-master/data").listFiles(new FilenameFilter() {
+		File[] files2 = new File("data/").listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
 				return name.endsWith(".csv");

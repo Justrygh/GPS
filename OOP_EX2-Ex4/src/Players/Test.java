@@ -9,7 +9,7 @@ import GIS.Project;
 public class Test {
 
 	public static void main(String[] args) {
-		File Test = new File("Your/Directory/Path/OOP_EX2-EX4-master/newdata/p1_Ariel.csv");
+		File Test = new File("newdata/p1_Ariel.csv");
 		Game Try = new Game(Test);
 		Try.write(Try.read());
 	}
