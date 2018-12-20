@@ -37,11 +37,8 @@ This Project represents a Pacman Game.
 This game purpose is for the Pacmans to eat all the Fruits in the shortest time.
 
 **Attention**:
-In order to run the game, you will need to enter the next classes:
-(Map, MyFrame, Path2kml, Game)
-
-Just press CTRL + F, In the search area write down the next line:
-" Your/Directory/Path " And change it to the location your project is located.
+In order to run the game, you will need to read the instructions first! 
+When you will run the code for the first time, the instructions will pop-up on the GUI.
 
 In this project, you can do the following things:
 
