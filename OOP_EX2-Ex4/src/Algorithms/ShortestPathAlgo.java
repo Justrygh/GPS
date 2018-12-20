@@ -48,7 +48,7 @@ public class ShortestPathAlgo {
 				String[] arrF = (_Fruits.get(j).getPoint().split(","));
 				Point3D Pac = new Point3D(Double.parseDouble(arrP[0]), Double.parseDouble(arrP[1]));
 				Point3D Fru = new Point3D(Double.parseDouble(arrF[0]), Double.parseDouble(arrF[1]));
-				double distance = _Map.distanceBetween2Points(Pac, Fru) - Double.parseDouble(_Pacmans.get(i).getRadius());
+				double distance = Map.distanceBetween2Points(Pac, Fru) - Double.parseDouble(_Pacmans.get(i).getRadius());
 				if(distance < 0)
 					distance = 0;
 				double temp = distance/speed;
@@ -117,7 +117,7 @@ public class ShortestPathAlgo {
 	private Pacman _Pacman;
 	private double _Distance;
 	private double _Time;
-	private Map _Map = new Map();
+	private Map Map = new Map();
 	private ArrayList<Fruit> _Fruits = new ArrayList<Fruit>();
 	private ArrayList<Pacman> _Pacmans = new ArrayList<Pacman>();
 	private ArrayList<Game> _List = new ArrayList<Game>();

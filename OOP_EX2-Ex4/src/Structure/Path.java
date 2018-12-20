@@ -12,8 +12,8 @@ public class Path{
 	 */
 	/*** PRIVATE VARIABELS ***/
 	private ArrayList<Game> Paths;
-	private Map _Map = new Map();
 	private String _Point;
+	private Map _Map = new Map();
 
     //Default Constructor.
 	public Path() {
@@ -68,18 +68,18 @@ public class Path{
 			if (pList.get(i).getList().size() > 1) {
 				String[] pacData = pList.get(i).getList().get(0).getPoint().split(",");
 				String[] fruData = pList.get(i).getList().get(1).getPoint().split(",");
-				Point3D pac = new Point3D(Double.parseDouble(pacData[0]), Double.parseDouble(pacData[1]));
-				Point3D fru = new Point3D(Double.parseDouble(fruData[0]), Double.parseDouble(fruData[1]));
-				Point3D vec = new Point3D(fru.x() - pac.x(), fru.y() - pac.y());
-				double distance = _Map.distanceBetween2Points(pac, fru)
+				Point3D Pac = new Point3D(Double.parseDouble(pacData[0]), Double.parseDouble(pacData[1]));
+				Point3D Fru = new Point3D(Double.parseDouble(fruData[0]), Double.parseDouble(fruData[1]));
+				Point3D vec = new Point3D(Fru.x() - Pac.x(), Fru.y() - Pac.y());
+				double distance = _Map.distanceBetween2Points(Pac, Fru)
 						- Double.parseDouble(pList.get(i).getList().get(0).getRadius());
 				double _Time = distance / Double.parseDouble(pList.get(i).getList().get(0).getSpeed());
 				if (_Time > 1) {
-					double x = pac.x() + (vec.x() / _Time);
-					double y = pac.y() + (vec.y() / _Time);
+					double x = Pac.x() + (vec.x() / _Time);
+					double y = Pac.y() + (vec.y() / _Time);
 					_Point = (x + "," + y + "," + 0);
 				} else {
-					_Point = (fru.x() + "," + fru.y() + "," + 0);
+					_Point = (Fru.x() + "," + Fru.y() + "," + 0);
 					pList.get(i).getList().remove(1);
 				}
 				pList.get(i).getList().get(0).setPoint(_Point);
