@@ -11,8 +11,6 @@ import java.awt.MenuItem;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -23,9 +21,13 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;	
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import Algorithms.ShortestPathAlgo;
 import File_format.Path2kml;
 import Players.Fruit;
@@ -144,6 +146,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		Menu menu1 = new Menu("File");
 		MenuItem here = new MenuItem("   New   ");
 		MenuItem open = new MenuItem("   Open File...   ");
+		MenuItem edit = new MenuItem("   Open & Edit   ");
 		MenuItem save = new MenuItem("   Save ");
 		Menu menu2 = new Menu("Edit");
 		MenuItem pacman = new MenuItem("   Pacman   ");
@@ -157,10 +160,19 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		MenuItem stop = new MenuItem("   Stop   ");
 		MenuItem space1 = new MenuItem("------------------------------");
 		MenuItem kml = new MenuItem("   Convert to KML   ");
+		Menu menu4 = new Menu("   Define   ");
+		MenuItem speedbar = new MenuItem("----------SPEED----------");
+		MenuItem speedall = new MenuItem("   Default Pacmans   ");
+		MenuItem speedp = new MenuItem("   Single Pacman  ");
+		MenuItem radiusbar = new MenuItem("----------RADIUS----------");
+		MenuItem radiusall = new MenuItem("   Defualt Pacmans   ");
+		MenuItem radiusp = new MenuItem("   Single Pacman   ");
+
 
 		menuBar.add(menu1);
 		menuBar.add(menu2);
 		menuBar.add(menu3);
+		menuBar.add(menu4);
 
 		menu1.add(here);
 		here.addActionListener(new ActionListener() {
@@ -175,11 +187,9 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				isPacman = false;
 				isFruit = false;
 				open.setEnabled(true);
+				edit.setEnabled(true);
 				here.setEnabled(false);
-				pacman.setEnabled(true);
-				fruit.setEnabled(true);
-				clear.setEnabled(true);
-				save.setEnabled(true);
+				menu2.setEnabled(true);
 			}
 		});
 		here.setEnabled(true);
@@ -188,9 +198,11 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		open.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				run.setEnabled(true);
-				demo.setEnabled(true);
-				kml.setEnabled(true);
+				menu3.setEnabled(true);
+				menu4.setEnabled(false);
+				pacman.setEnabled(false);
+				fruit.setEnabled(false);
+				save.setEnabled(false);
 				clearLists();
 				JFileChooser chooser = new JFileChooser();
 				int returnName = chooser.showOpenDialog(null);
@@ -209,15 +221,47 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		});
 		open.setEnabled(false);
 
+		menu1.add(edit);
+		edit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				menu3.setEnabled(false);
+				menu4.setEnabled(true);
+				menu2.setEnabled(true);
+				pacman.setEnabled(true);
+				fruit.setEnabled(true);
+				save.setEnabled(true);
+				clearLists();
+				JFileChooser chooser = new JFileChooser();
+				int returnName = chooser.showOpenDialog(null);
+				String path = "";
+				if (returnName == JFileChooser.APPROVE_OPTION) {
+					File f = chooser.getSelectedFile();
+					if (f != null && f.getName().endsWith(".csv")) {
+						path = f.getAbsolutePath();
+					}
+				}
+				Game Try = new Game(new File(path));
+				ShortestPathAlgo Name = new ShortestPathAlgo(Try.read());
+				setLists(Name);
+				i = getPList().size();
+				j = getFList().size();
+				repaint();
+			}
+		});
+		edit.setEnabled(false);
+
 		menu1.add(save);
 		save.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				isPacman = false;
 				isFruit = false;
-				run.setEnabled(true);
-				demo.setEnabled(true);
-				kml.setEnabled(true);
+				save.setEnabled(false);
+				menu2.setEnabled(false);
+				menu3.setEnabled(true);
+				menu4.setEnabled(false);
+				_List = new ArrayList<Game>();
 				setList(saveList());
 				JFileChooser chooser = new JFileChooser();
 				int result = chooser.showSaveDialog(null);
@@ -247,12 +291,11 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			public void actionPerformed(ActionEvent e) {
 				isPacman = true;
 				isFruit = false;
-				demo.setEnabled(false);
-				run.setEnabled(false);
-				kml.setEnabled(false);
+				menu3.setEnabled(false);
+				menu4.setEnabled(true);
+				save.setEnabled(true);
 			}
 		});
-		pacman.setEnabled(false);
 
 		menu2.add(fruit);
 		fruit.addActionListener(new ActionListener() {
@@ -260,12 +303,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			public void actionPerformed(ActionEvent e) {
 				isFruit = true;
 				isPacman = false;
-				demo.setEnabled(false);
-				run.setEnabled(false);
-				kml.setEnabled(false);
+				menu3.setEnabled(false);
+				save.setEnabled(true);
 			}
 		});
-		fruit.setEnabled(false);
 
 		menu2.add(clear);
 		clear.addActionListener(new ActionListener() {
@@ -278,16 +319,19 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				isSaved = false;
 				isPacman = false;
 				isFruit = false;
-				run.setEnabled(false);
-				demo.setEnabled(false);
-				kml.setEnabled(false);
+				menu1.setEnabled(true);
+				demo.setEnabled(true);
+				kml.setEnabled(true);
+				run.setEnabled(true);
+				stop.setEnabled(false);
+				start.setEnabled(false);
+				menu4.setEnabled(false);
+				save.setEnabled(false);
+				menu3.setEnabled(false);
 				pacman.setEnabled(true);
 				fruit.setEnabled(true);
-				start.setEnabled(false);
-				stop.setEnabled(false);
 			}
 		});
-		clear.setEnabled(false);
 
 		menu3.add(run);
 		run.addActionListener(new ActionListener() {
@@ -295,15 +339,14 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			public void actionPerformed(ActionEvent e) {
 				pacman.setEnabled(false);
 				fruit.setEnabled(false);
+				menu1.setEnabled(false);
+				menu4.setEnabled(false);
 				isSaved = true;
 				paths(getGraphics());
-				run.setEnabled(false);
-				demo.setEnabled(false);
-				kml.setEnabled(false);
+				menu3.setEnabled(false);
 				repaint();
 			}
 		});
-		run.setEnabled(false);
 
 		menu3.add(demo);
 		demo.addActionListener(new ActionListener() {
@@ -313,8 +356,9 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				isPacman = false;
 				isFruit = false;
 				isSaved = false;
-				pacman.setEnabled(false);
-				fruit.setEnabled(false);
+				menu1.setEnabled(false);
+				menu2.setEnabled(false);
+				menu4.setEnabled(false);
 				run.setEnabled(false);
 				kml.setEnabled(false);
 				stop.setEnabled(true);
@@ -335,7 +379,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						changeFruitIcon();
 						paintComponent(getGraphics());
 						try {
-							Thread.sleep(150);
+							Thread.sleep(500);
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						}
@@ -347,11 +391,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				demo.setEnabled(false);
 			}
 		});
-		demo.setEnabled(false);
-		
+
 		menu3.add(space);
 		space.setEnabled(false);
-		
+
 		menu3.add(start);
 		start.addActionListener(new ActionListener() {
 			@Override
@@ -373,7 +416,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						changeFruitIcon();
 						paintComponent(getGraphics());
 						try {
-							Thread.sleep(150);
+							Thread.sleep(500);
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						}
@@ -385,18 +428,22 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			}
 		});
 		start.setEnabled(false);
-		
+
 		menu3.add(stop);
 		stop.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Stop = true;
+				menu2.setEnabled(true);
+				pacman.setEnabled(false);
+				fruit.setEnabled(false);
+				clear.setEnabled(true);
 				start.setEnabled(true);
 				stop.setEnabled(false);
 			}
 		});
 		stop.setEnabled(false);
-		
+
 		menu3.add(space1);
 		space1.setEnabled(false);
 
@@ -423,7 +470,176 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				System.exit(0);
 			}
 		});
-		kml.setEnabled(false);
+
+		menu4.add(speedbar);
+		speedbar.setEnabled(false);
+
+		menu4.add(speedall);
+		speedall.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame f=new JFrame("Default Speed"); 
+				JButton b=new JButton("Submit");    
+				b.setBounds(50,50,100,20); 
+				JTextField textfield= new JTextField();
+				textfield.setBounds(50, 25, 100, 20);
+				f.add(textfield);
+				f.add(b); 
+				f.setResizable(false); 
+				f.setBounds(W/3, H/2, 0, 0);
+				f.setSize(200,120);   
+				f.setLayout(null);    
+				f.setVisible(true);    
+
+				b.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						if(textfield.getText().length() > 1 || textfield.getText().length() < 1 || 
+								textfield.getText().length() == 1 && Integer.parseInt(textfield.getText()) <= 0)
+							return;
+						for(int i=0; i<_Pacmans.size(); i++) {
+							_Pacmans.get(i).setSpeed(textfield.getText());
+						}
+						f.dispose();
+					}         
+				});
+			}
+		});
+
+		menu4.add(speedp);
+		speedp.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame f = new JFrame("Set Speed");
+				JButton b = new JButton("Submit");
+				b.setBounds(70, 75, 100, 20);
+				JLabel label1 = new JLabel();		
+				label1.setText("ID:");
+				label1.setBounds(10, -15, 100, 100);
+				JLabel label2 = new JLabel();		
+				label2.setText("SPEED:");
+				label2.setBounds(10, 10, 100, 100);
+				JTextField textfield1 = new JTextField();
+				textfield1.setBounds(70, 25, 100, 20);
+				JTextField textfield2 = new JTextField();
+				textfield2.setBounds(70, 50, 100, 20);
+				f.add(textfield1);
+				f.add(textfield2);
+				f.add(b);
+				f.add(label1);
+				f.add(label2);
+				f.setBounds(W/3, H/2, 0, 0);
+				f.setSize(250, 150);
+				f.setLayout(null);
+				f.setVisible(true);
+				f.setResizable(false);   
+
+				b.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						int id = Integer.parseInt(textfield1.getText());
+						if(id >= _Pacmans.size()) {
+							return;
+						}
+						if(textfield2.getText().length() > 1 || textfield2.getText().length() < 1 || 
+								textfield2.getText().length() == 1 && Integer.parseInt(textfield2.getText()) <= 0)
+							return;
+						for(int i=0; i<_Pacmans.size(); i++) {
+							if(id == Integer.parseInt(_Pacmans.get(i).getiD()))
+								_Pacmans.get(i).setSpeed(textfield2.getText());
+						}
+						f.dispose();
+					}         
+				});
+			}
+		});
+
+		menu4.add(radiusbar);
+		radiusbar.setEnabled(false);
+
+		menu4.add(radiusall);
+		radiusall.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame f=new JFrame("Default Radius"); 
+				JButton b=new JButton("Submit");    
+				b.setBounds(50,50,100,20); 
+				JTextField textfield= new JTextField();
+				textfield.setBounds(50, 25, 100, 20);
+				f.add(textfield);
+				f.add(b); 
+				f.setResizable(false); 
+				f.setBounds(W/3, H/2, 0, 0);
+				f.setSize(200,120);   
+				f.setLayout(null);    
+				f.setVisible(true);    
+
+				b.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						if(textfield.getText().length() > 1 || textfield.getText().length() < 1 || 
+								textfield.getText().length() == 1 && Integer.parseInt(textfield.getText()) <= 0)
+							return;
+						for(int i=0; i<_Pacmans.size(); i++) {
+							_Pacmans.get(i).setRadius(textfield.getText());
+						}
+						f.dispose();
+					}         
+				});
+			}
+		});
+
+		menu4.add(radiusp);
+		radiusp.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame f = new JFrame("Set Radius");
+				JButton b = new JButton("Submit");
+				b.setBounds(70, 75, 100, 20);
+				JLabel label1 = new JLabel();		
+				label1.setText("ID:");
+				label1.setBounds(10, -15, 100, 100);
+				JLabel label2 = new JLabel();		
+				label2.setText("RADIUS:");
+				label2.setBounds(10, 10, 100, 100);
+				JTextField textfield1 = new JTextField();
+				textfield1.setBounds(70, 25, 100, 20);
+				JTextField textfield2 = new JTextField();
+				textfield2.setBounds(70, 50, 100, 20);
+				f.add(textfield1);
+				f.add(textfield2);
+				f.add(b);
+				f.add(label1);
+				f.add(label2);
+				f.setBounds(W/3, H/2, 0, 0);
+				f.setSize(250, 150);
+				f.setLayout(null);
+				f.setVisible(true);
+				f.setResizable(false);   
+
+				b.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						int id = Integer.parseInt(textfield1.getText());
+						if(id >= _Pacmans.size()) {
+							return;
+						}
+						if(textfield2.getText().length() > 1 || textfield2.getText().length() < 1 || 
+								textfield2.getText().length() == 1 && Integer.parseInt(textfield2.getText()) <= 0)
+							return;
+						for(int i=0; i<_Pacmans.size(); i++) {
+							if(id == Integer.parseInt(_Pacmans.get(i).getiD()))
+								_Pacmans.get(i).setRadius(textfield2.getText());
+						}
+						f.dispose();
+					}         
+				});
+			}
+		});
+
+		menu2.setEnabled(false);
+		menu3.setEnabled(false);
+		menu4.setEnabled(false);
 
 		setMB(menuBar);
 	}
@@ -597,7 +813,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			int x2 = (int)((Double.parseDouble(Data[0])) * this.getWidth() / W);
 			int y2 = (int)((Double.parseDouble(Data[1])) * this.getHeight() / H);
 			g.drawImage(_Icons.get(i), x2-16, y2-16, this);
-			g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
+			g.setFont(new Font("Monospaced", Font.BOLD, 14));  
 			g.setColor(Color.WHITE);
 			g.drawString("("+String.valueOf(x2)+","+String.valueOf(y2)+")", x2, y2); 
 		}
@@ -607,15 +823,19 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				int x1 = (int)((Double.parseDouble(Data[0])) * this.getWidth() / W);
 				int y1 = (int)((Double.parseDouble(Data[1])) * this.getHeight() / H);
 				g.drawImage(Pacman, x1-16, y1-16, this);
-				g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
+				g.setFont(new Font("Monospaced", Font.BOLD, 14));  
 				g.setColor(Color.WHITE);
 				g.drawString("("+String.valueOf(x1)+","+String.valueOf(y1)+")", x1, y1); 
+				g.setFont(new Font("Monospaced", Font.BOLD, 18));  
+				g.setColor(Color.ORANGE);
+				g.drawString("ID: "+ _Pacmans.get(i).getiD(), x1-16, y1-16); 
 			}
 		}
 
 		if(isSaved == true) {
 			for(int i=0; i<_List.size(); i+=2) {
 				g.setColor(Color.WHITE);
+				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				String[] Data1 = _List.get(i).getPoint().split(",");
 				String[] Data2 = _List.get(i+1).getPoint().split(",");
 				int x1 = (int)((Double.parseDouble(Data1[0])) * this.getWidth() / W);
@@ -630,9 +850,12 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				int x1 = (int)((Double.parseDouble(Data[0])) * this.getWidth() / W);
 				int y1 = (int)((Double.parseDouble(Data[1])) * this.getHeight() / H);
 				g.drawImage(Pacman, x1-16, y1-16, this);
-				g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
+				g.setFont(new Font("Monospaced", Font.BOLD, 14));  
 				g.setColor(Color.WHITE);
 				g.drawString("("+String.valueOf(x1)+","+String.valueOf(y1)+")", x1, y1); 
+				g.setFont(new Font("Monospaced", Font.BOLD, 18));  
+				g.setColor(Color.ORANGE);
+				g.drawString("ID: "+ _Pacmans.get(i).getiD(), x1-16, y1-16); 
 			}
 		}
 		if(isDemo == true) {
@@ -649,9 +872,12 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				int x1 = (int)((Double.parseDouble(Data[0])) * this.getWidth() / W);
 				int y1 = (int)((Double.parseDouble(Data[1])) * this.getHeight() / H);
 				g.drawImage(pacmanIcon(), x1-16, y1-16, this);
-				g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
+				g.setFont(new Font("Monospaced", Font.BOLD, 14));  
 				g.setColor(Color.WHITE);
 				g.drawString("("+String.valueOf(x1)+","+String.valueOf(y1)+")", x1, y1); 
+				g.setFont(new Font("Monospaced", Font.BOLD, 18));  
+				g.setColor(Color.ORANGE);
+				g.drawString("ID: "+ _Pacmans.get(i).getiD(), x1-16, y1-16); 
 			}
 			p++;
 		}
@@ -713,14 +939,17 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		y = (int)(y * H / this.getHeight());
 
 		if(isPacman == true && g.drawImage(Pacman, x-16, y-16, this) == true){
-			g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
+			g.setFont(new Font("Monospaced", Font.BOLD, 14));  
 			g.setColor(Color.WHITE);
 			g.drawString("("+Integer.toString(x)+","+Integer.toString(y)+")",x, y);
+			g.setFont(new Font("Monospaced", Font.BOLD, 18));
+			g.setColor(Color.ORANGE);
+			g.drawString("ID: "+i, x-16, y-16); 
 			_Pacmans.add(new Pacman("Pacman", x+","+y+","+"0", "1", "1", "Pacman", String.valueOf(i)));
 			i++;
 		} 
 		if(isFruit == true && g.drawImage(randomFruitsIcon(), x-16, y-16, this) == true){
-			g.setFont(new Font("Monospaced", Font.PLAIN, 14));  
+			g.setFont(new Font("Monospaced", Font.BOLD, 14));  
 			g.setColor(Color.WHITE);
 			g.drawString("("+Integer.toString(x)+","+Integer.toString(y)+")",x, y);
 			_Fruits.add(new Fruit("Fruit", x+","+y+","+"0", "Apple", String.valueOf(j)));
