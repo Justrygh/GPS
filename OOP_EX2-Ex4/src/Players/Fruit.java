@@ -18,6 +18,7 @@ public class Fruit {
 		this._Pic = picture;
 		this._iD = id;
 		this._Time = 0;
+		this._Angel = 0;
 	}
 	
 	public Fruit() {}
@@ -28,6 +29,15 @@ public class Fruit {
 	private String _Pic;
 	private String _iD;
 	private double _Time;
+	private double _Angel;
+	
+	public double getAngel() {
+		return _Angel;
+	}
+
+	public void setAngel(double angel) {
+		this._Angel = angel;
+	}
 	
 	public void setType(String type) {
 		this._Type = type;

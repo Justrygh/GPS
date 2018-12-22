@@ -48,10 +48,12 @@ public class ShortestPathAlgo {
 				String[] arrF = (_Fruits.get(j).getPoint().split(","));
 				Point3D Pac = new Point3D(Double.parseDouble(arrP[0]), Double.parseDouble(arrP[1]));
 				Point3D Fru = new Point3D(Double.parseDouble(arrF[0]), Double.parseDouble(arrF[1]));
-				double distance = Map.distanceBetween2Points(Pac, Fru) - Double.parseDouble(_Pacmans.get(i).getRadius());
+				double distance = Map.distanceBetween2Points(Pac, Fru) 
+						- Double.parseDouble(_Pacmans.get(i).getRadius());
 				if(distance < 0)
 					distance = 0;
 				double temp = distance/speed;
+				double angel = Map.angelBetween2Points(Pac, Fru);
 				if(this._Pacman != null) {
 					if(temp < time && (_Pacmans.get(i).getTime() + temp) < (this._Pacman.getTime() + this._Time)) {
 						time = temp;
@@ -59,6 +61,7 @@ public class ShortestPathAlgo {
 						setPacman(_Pacmans.get(i));
 						setFruit(_Fruits.get(j));
 						setDistance(distance);
+						setAngel(angel);
 					}
 				}
 				else {
@@ -68,6 +71,7 @@ public class ShortestPathAlgo {
 						setPacman(_Pacmans.get(i));
 						setFruit(_Fruits.get(j));
 						setDistance(distance);
+						setAngel(angel);
 					}
 				}
 			}
@@ -85,6 +89,7 @@ public class ShortestPathAlgo {
 	public void zero() {
 		this._Pacman = null;
 		this._Fruit = null;
+		this._Angel = 0;
 		this._Distance = 0;
 		this._Time = 0;
 	}
@@ -93,6 +98,7 @@ public class ShortestPathAlgo {
 	 * First the Pacman and then the Fruit, the pacman suppose to eat next. 
 	 */
 	public void add() {
+		this._Fruit.setAngel(_Angel);
 		_List.add(new Game(this._Pacman));
 		_List.add(new Game(this._Fruit));
 	}
@@ -117,6 +123,7 @@ public class ShortestPathAlgo {
 	private Pacman _Pacman;
 	private double _Distance;
 	private double _Time;
+	private double _Angel;
 	private Map Map = new Map();
 	private ArrayList<Fruit> _Fruits = new ArrayList<Fruit>();
 	private ArrayList<Pacman> _Pacmans = new ArrayList<Pacman>();
@@ -137,6 +144,14 @@ public class ShortestPathAlgo {
 	
 	private void setFruit(Fruit fruit) {
 		this._Fruit = fruit;
+	}
+	
+	private void setAngel(double angel) {
+		this._Angel = angel;
+	}
+	
+	public double getAngel() {
+		return this._Angel;
 	}
 	
 	public Pacman getPacman() {

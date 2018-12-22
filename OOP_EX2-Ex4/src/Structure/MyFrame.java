@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Menu;
 import java.awt.MenuBar;
@@ -14,6 +15,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,8 +25,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;	
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,24 +35,24 @@ import javax.swing.JTextField;
 
 import Algorithms.ShortestPathAlgo;
 import File_format.Path2kml;
+import Geom.Point3D;
 import Players.Fruit;
 import Players.Game;
 import Players.Pacman;
 import Threads.MyThread;
 
-public class MyFrame extends JPanel implements MouseListener, MouseMotionListener{
+public class MyFrame extends JPanel implements MouseListener, MouseMotionListener {
 
 	/**
 	 * @author Eli
-	 * @author Qusai
-	 * This class is the main Class that represents our GUI + Game.
+	 * @author Qusai This class is the main Class that represents our GUI + Game.
 	 */
 
-	//**********Private Variables**********//
+	// **********Private Variables**********//
 
 	private static final long serialVersionUID = 1L;
 	private static MenuBar _MB;
-	private int H = 642; 
+	private int H = 642;
 	private int y, x = 0;
 	private int W = 1299;
 
@@ -70,8 +75,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private ArrayList<Image> _Icons;
 	private ArrayList<Path> pList;
 
-
-	public static void main(String[] args){
+	public static void main(String[] args) {
 		JFrame frame = new JFrame("Game GUI");
 		frame.getContentPane().add(new MyFrame());
 		frame.setMenuBar(_MB);
@@ -81,7 +85,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		frame.setVisible(true);
 	}
 
-	//**********Private Methods**********//
+	// **********Private Methods**********//
 
 	private static void setMB(MenuBar menu) {
 		_MB = menu;
@@ -91,14 +95,15 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		this._Icons = ilist;
 	}
 
-	private ArrayList<Image> getIList(){
+	private ArrayList<Image> getIList() {
 		return this._Icons;
 	}
+
 	private void setList(ArrayList<Game> list) {
 		this._List = list;
 	}
 
-	public ArrayList<Game> getList(){
+	public ArrayList<Game> getList() {
 		return this._List;
 	}
 
@@ -110,11 +115,11 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		this._Fruits = fList;
 	}
 
-	public ArrayList<Pacman> getPList(){
+	public ArrayList<Pacman> getPList() {
 		return this._Pacmans;
 	}
 
-	public ArrayList<Fruit> getFList(){
+	public ArrayList<Fruit> getFList() {
 		return this._Fruits;
 	}
 
@@ -127,13 +132,13 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	 */
 	public MyFrame() {
 		initGUI();
-		this.addMouseListener(this); 
+		this.addMouseListener(this);
 	}
 
 	/**
-	 * This function creates our MenuBar.
-	 * Each button in our MenuBar enables/disables functions that we create in other classes.
-	 * You have instructions in the main GUI when you run the game for the first time.
+	 * This function creates our MenuBar. Each button in our MenuBar
+	 * enables/disables functions that we create in other classes. You have
+	 * instructions in the main GUI when you run the game for the first time.
 	 */
 	private void initGUI() {
 		_Fruits = new ArrayList<Fruit>();
@@ -167,7 +172,6 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		MenuItem radiusbar = new MenuItem("----------RADIUS----------");
 		MenuItem radiusall = new MenuItem("   Defualt Pacmans   ");
 		MenuItem radiusp = new MenuItem("   Single Pacman   ");
-
 
 		menuBar.add(menu1);
 		menuBar.add(menu2);
@@ -351,7 +355,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		menu3.add(demo);
 		demo.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e)  {
+			public void actionPerformed(ActionEvent e) {
 				isDemo = true;
 				isPacman = false;
 				isFruit = false;
@@ -369,10 +373,25 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				Thread t1 = new Thread(new Runnable() {
 					public void run() {
 						pList = p.Print(pList);
-						for(int i=0; i<_Pacmans.size(); i++) {
-							for(int j=0; j<pList.size(); j++) {
-								if(_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
+						for (int i = 0; i < _Pacmans.size(); i++) {
+							for (int j = 0; j < pList.size(); j++) {
+								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
+//									double angel = pList.get(j).getList().get(0).getAngel();
+//									while(angel<0) {
+//										angel+=360;
+//									}
+//									while(angel>360) {
+//										angel-=360;
+//									}
+									String[] pacData = _Pacmans.get(i).getPoint().split(",");
+									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
+									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
+											Double.parseDouble(pacData[1]));
+									Point3D Fru = new Point3D(Double.parseDouble(fruData[0]),
+											Double.parseDouble(fruData[1]));
+									double angel = rotatePac(Pac, Fru);
 									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
+									_Pacmans.get(i).setAngel(angel);
 								}
 							}
 						}
@@ -383,9 +402,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						}
-						if(pList.size() > 0 && Stop == false) 
+						if (pList.size() > 0 && Stop == false)
 							this.run();
 					}
+
 				});
 				t1.start();
 				demo.setEnabled(false);
@@ -406,10 +426,25 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				Thread t1 = new Thread(new Runnable() {
 					public void run() {
 						pList = p.Print(pList);
-						for(int i=0; i<_Pacmans.size(); i++) {
-							for(int j=0; j<pList.size(); j++) {
-								if(_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
+						for (int i = 0; i < _Pacmans.size(); i++) {
+							for (int j = 0; j < pList.size(); j++) {
+								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
+//									double angel = pList.get(j).getList().get(0).getAngel();
+//									while(angel<0) {
+//										angel+=360;
+//									}
+//									while(angel>360) {
+//										angel-=360;
+//									}
+									String[] pacData = _Pacmans.get(i).getPoint().split(",");
+									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
+									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
+											Double.parseDouble(pacData[1]));
+									Point3D Fru = new Point3D(Double.parseDouble(fruData[0]),
+											Double.parseDouble(fruData[1]));
+									double angel = rotatePac(Pac, Fru);
 									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
+									_Pacmans.get(i).setAngel(angel);
 								}
 							}
 						}
@@ -420,7 +455,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						}
-						if(pList.size() > 0 && Stop == false) 
+						if (pList.size() > 0 && Stop == false)
 							this.run();
 					}
 				});
@@ -478,30 +513,30 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		speedall.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFrame f=new JFrame("Default Speed"); 
-				JButton b=new JButton("Submit");    
-				b.setBounds(50,50,100,20); 
-				JTextField textfield= new JTextField();
+				JFrame f = new JFrame("Default Speed");
+				JButton b = new JButton("Submit");
+				b.setBounds(50, 50, 100, 20);
+				JTextField textfield = new JTextField();
 				textfield.setBounds(50, 25, 100, 20);
 				f.add(textfield);
-				f.add(b); 
-				f.setResizable(false); 
-				f.setBounds(W/3, H/2, 0, 0);
-				f.setSize(200,120);   
-				f.setLayout(null);    
-				f.setVisible(true);    
+				f.add(b);
+				f.setResizable(false);
+				f.setBounds(W / 3, H / 2, 0, 0);
+				f.setSize(200, 120);
+				f.setLayout(null);
+				f.setVisible(true);
 
 				b.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						if(textfield.getText().length() > 1 || textfield.getText().length() < 1 || 
-								textfield.getText().length() == 1 && Integer.parseInt(textfield.getText()) <= 0)
+						if (textfield.getText().length() > 1 || textfield.getText().length() < 1
+								|| textfield.getText().length() == 1 && Integer.parseInt(textfield.getText()) <= 0)
 							return;
-						for(int i=0; i<_Pacmans.size(); i++) {
+						for (int i = 0; i < _Pacmans.size(); i++) {
 							_Pacmans.get(i).setSpeed(textfield.getText());
 						}
 						f.dispose();
-					}         
+					}
 				});
 			}
 		});
@@ -513,10 +548,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				JFrame f = new JFrame("Set Speed");
 				JButton b = new JButton("Submit");
 				b.setBounds(70, 75, 100, 20);
-				JLabel label1 = new JLabel();		
+				JLabel label1 = new JLabel();
 				label1.setText("ID:");
 				label1.setBounds(10, -15, 100, 100);
-				JLabel label2 = new JLabel();		
+				JLabel label2 = new JLabel();
 				label2.setText("SPEED:");
 				label2.setBounds(10, 10, 100, 100);
 				JTextField textfield1 = new JTextField();
@@ -528,28 +563,28 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				f.add(b);
 				f.add(label1);
 				f.add(label2);
-				f.setBounds(W/3, H/2, 0, 0);
+				f.setBounds(W / 3, H / 2, 0, 0);
 				f.setSize(250, 150);
 				f.setLayout(null);
 				f.setVisible(true);
-				f.setResizable(false);   
+				f.setResizable(false);
 
 				b.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						int id = Integer.parseInt(textfield1.getText());
-						if(id >= _Pacmans.size()) {
+						if (id >= _Pacmans.size()) {
 							return;
 						}
-						if(textfield2.getText().length() > 1 || textfield2.getText().length() < 1 || 
-								textfield2.getText().length() == 1 && Integer.parseInt(textfield2.getText()) <= 0)
+						if (textfield2.getText().length() > 1 || textfield2.getText().length() < 1
+								|| textfield2.getText().length() == 1 && Integer.parseInt(textfield2.getText()) <= 0)
 							return;
-						for(int i=0; i<_Pacmans.size(); i++) {
-							if(id == Integer.parseInt(_Pacmans.get(i).getiD()))
+						for (int i = 0; i < _Pacmans.size(); i++) {
+							if (id == Integer.parseInt(_Pacmans.get(i).getiD()))
 								_Pacmans.get(i).setSpeed(textfield2.getText());
 						}
 						f.dispose();
-					}         
+					}
 				});
 			}
 		});
@@ -561,30 +596,30 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		radiusall.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFrame f=new JFrame("Default Radius"); 
-				JButton b=new JButton("Submit");    
-				b.setBounds(50,50,100,20); 
-				JTextField textfield= new JTextField();
+				JFrame f = new JFrame("Default Radius");
+				JButton b = new JButton("Submit");
+				b.setBounds(50, 50, 100, 20);
+				JTextField textfield = new JTextField();
 				textfield.setBounds(50, 25, 100, 20);
 				f.add(textfield);
-				f.add(b); 
-				f.setResizable(false); 
-				f.setBounds(W/3, H/2, 0, 0);
-				f.setSize(200,120);   
-				f.setLayout(null);    
-				f.setVisible(true);    
+				f.add(b);
+				f.setResizable(false);
+				f.setBounds(W / 3, H / 2, 0, 0);
+				f.setSize(200, 120);
+				f.setLayout(null);
+				f.setVisible(true);
 
 				b.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						if(textfield.getText().length() > 1 || textfield.getText().length() < 1 || 
-								textfield.getText().length() == 1 && Integer.parseInt(textfield.getText()) <= 0)
+						if (textfield.getText().length() > 1 || textfield.getText().length() < 1
+								|| textfield.getText().length() == 1 && Integer.parseInt(textfield.getText()) <= 0)
 							return;
-						for(int i=0; i<_Pacmans.size(); i++) {
+						for (int i = 0; i < _Pacmans.size(); i++) {
 							_Pacmans.get(i).setRadius(textfield.getText());
 						}
 						f.dispose();
-					}         
+					}
 				});
 			}
 		});
@@ -596,10 +631,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				JFrame f = new JFrame("Set Radius");
 				JButton b = new JButton("Submit");
 				b.setBounds(70, 75, 100, 20);
-				JLabel label1 = new JLabel();		
+				JLabel label1 = new JLabel();
 				label1.setText("ID:");
 				label1.setBounds(10, -15, 100, 100);
-				JLabel label2 = new JLabel();		
+				JLabel label2 = new JLabel();
 				label2.setText("RADIUS:");
 				label2.setBounds(10, 10, 100, 100);
 				JTextField textfield1 = new JTextField();
@@ -611,28 +646,28 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				f.add(b);
 				f.add(label1);
 				f.add(label2);
-				f.setBounds(W/3, H/2, 0, 0);
+				f.setBounds(W / 3, H / 2, 0, 0);
 				f.setSize(250, 150);
 				f.setLayout(null);
 				f.setVisible(true);
-				f.setResizable(false);   
+				f.setResizable(false);
 
 				b.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						int id = Integer.parseInt(textfield1.getText());
-						if(id >= _Pacmans.size()) {
+						if (id >= _Pacmans.size()) {
 							return;
 						}
-						if(textfield2.getText().length() > 1 || textfield2.getText().length() < 1 || 
-								textfield2.getText().length() == 1 && Integer.parseInt(textfield2.getText()) <= 0)
+						if (textfield2.getText().length() > 1 || textfield2.getText().length() < 1
+								|| textfield2.getText().length() == 1 && Integer.parseInt(textfield2.getText()) <= 0)
 							return;
-						for(int i=0; i<_Pacmans.size(); i++) {
-							if(id == Integer.parseInt(_Pacmans.get(i).getiD()))
+						for (int i = 0; i < _Pacmans.size(); i++) {
+							if (id == Integer.parseInt(_Pacmans.get(i).getiD()))
 								_Pacmans.get(i).setRadius(textfield2.getText());
 						}
 						f.dispose();
-					}         
+					}
 				});
 			}
 		});
@@ -642,6 +677,23 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		menu4.setEnabled(false);
 
 		setMB(menuBar);
+	}
+	
+	/**
+	 * This function rotates the pacmans mouth depends on the next fruit location.
+	 * @param pac - Current Pacman location in Point3D
+	 * @param fru - Current Fruit location in Point3D
+	 * @return The angel we need to rotate the pacman.
+	 */
+
+	public double rotatePac(Point3D pac, Point3D fru) {
+		double res = 0;
+		if (pac.x() < fru.x()) {
+			res = 0;
+		} else if (pac.x() > fru.x()) {
+			res = 180;
+		}
+		return res;
 	}
 
 	/**
@@ -663,7 +715,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 	/**
 	 * This function prints the current game into a csv file.
-	 * @param csv File - A file you want to save the current game.
+	 * 
+	 * @param csv  File - A file you want to save the current game.
 	 * @param list - The current Game you created and you want to save.
 	 */
 
@@ -675,33 +728,35 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			e.printStackTrace();
 		}
 		StringBuilder Builder = new StringBuilder();
-		Builder.append("Type,id,Lat,Lon,Alt,Speed/Weight,Radius,"+_Pacmans.size()+","+_Fruits.size()+"\n");
+		Builder.append("Type,id,Lat,Lon,Alt,Speed/Weight,Radius," + _Pacmans.size() + "," + _Fruits.size() + "\n");
 
-		for(int i=0; i<list.size(); i++) {
+		for (int i = 0; i < list.size(); i++) {
 			Game temp = list.get(i);
 			String[] Data = temp.getPoint().split(",");
-			Builder.append(temp.getType().charAt(0)+","+temp.getiD()+","+Data[1]+","+Data[0]+","+Data[2]+","+temp.getSpeed()+","+temp.getRadius()+","+","+"\n");
+			Builder.append(temp.getType().charAt(0) + "," + temp.getiD() + "," + Data[1] + "," + Data[0] + "," + Data[2]
+					+ "," + temp.getSpeed() + "," + temp.getRadius() + "," + "," + "\n");
 		}
 		print.write(Builder.toString());
 		print.close();
 	}
 
 	/**
-	 * This function Calculates the Path using the ShortestPathAlgo, 
-	 * Converts the points to GPS and updates the last Pacmans locations.
+	 * This function Calculates the Path using the ShortestPathAlgo, Converts the
+	 * points to GPS and updates the last Pacmans locations.
+	 * 
 	 * @return ArrayList of Game converted from Pixel to GPS points.
 	 */
 
-	public ArrayList<Game> convertGPS(){
+	public ArrayList<Game> convertGPS() {
 		calculatePath();
 		ArrayList<Game> res = new ArrayList<Game>();
 		Game temp = new Game();
-		for(int i=0; i<_Pacmans.size(); i++) {
-			for(int j=0; j<getList().size(); j++) {
-				if(_Pacmans.get(i).getiD().equals(getList().get(j).getiD()) &&
-						_Pacmans.get(i).getType().equals(getList().get(j).getType())) {
+		for (int i = 0; i < _Pacmans.size(); i++) {
+			for (int j = 0; j < getList().size(); j++) {
+				if (_Pacmans.get(i).getiD().equals(getList().get(j).getiD())
+						&& _Pacmans.get(i).getType().equals(getList().get(j).getType())) {
 					temp = getList().get(j);
-					temp.setPoint(getList().get(j+1).getPoint());
+					temp.setPoint(getList().get(j + 1).getPoint());
 				}
 			}
 			res.add(temp);
@@ -716,16 +771,16 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	 */
 
 	public void changeFruitIcon() {
-		for(int i=0; i<_Pacmans.size(); i++) {
-			for(int j=0; j<_Fruits.size(); j++) {
+		for (int i = 0; i < _Pacmans.size(); i++) {
+			for (int j = 0; j < _Fruits.size(); j++) {
 				String[] Data1 = _Pacmans.get(i).getPoint().split(",");
 				String[] Data2 = _Fruits.get(j).getPoint().split(",");
-				int pX = (int)(Double.parseDouble(Data1[0]));
-				int pY = (int)(Double.parseDouble(Data1[1]));
+				int pX = (int) (Double.parseDouble(Data1[0]));
+				int pY = (int) (Double.parseDouble(Data1[1]));
 
-				int fX = (int)(Double.parseDouble(Data2[0]));
-				int fY = (int)(Double.parseDouble(Data2[1]));
-				if(pX == fX && pY == fY) {
+				int fX = (int) (Double.parseDouble(Data2[0]));
+				int fY = (int) (Double.parseDouble(Data2[1]));
+				if (pX == fX && pY == fY) {
 					_Fruits.get(j).setPicture("Done");
 				}
 			}
@@ -733,12 +788,13 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	/**
-	 * This function takes a CSV file points, 
-	 * Converts them to Pixels and updates each list. (Fruits + Pacmans + Game)
+	 * This function takes a CSV file points, Converts them to Pixels and updates
+	 * each list. (Fruits + Pacmans + Game)
+	 * 
 	 * @param spa - ShortestPathAlgo
 	 */
 
-	public void setLists(ShortestPathAlgo spa){
+	public void setLists(ShortestPathAlgo spa) {
 		setPList(spa.getPList());
 		setFList(spa.getFList());
 
@@ -751,7 +807,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	/**
-	 * Calculates the Path for all the Pacmans and updates the current ArrayList of Game.
+	 * Calculates the Path for all the Pacmans and updates the current ArrayList of
+	 * Game.
 	 */
 	public void calculatePath() {
 		ShortestPathAlgo Test = new ShortestPathAlgo(getList());
@@ -761,6 +818,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 	/**
 	 * Creates the Lines (DrawLine) that represents each Pacman's path.
+	 * 
 	 * @param g - Graphics.
 	 */
 
@@ -768,116 +826,116 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		calculatePath();
 		ArrayList<Game> it = getList();
 		g.setColor(Color.WHITE);
-		for(int i=0; i<it.size(); i+=2) {
+		for (int i = 0; i < it.size(); i += 2) {
 			String[] Data1 = it.get(i).getPoint().split(",");
-			String[] Data2 = it.get(i+1).getPoint().split(",");
-			int x1 = (int)((Double.parseDouble(Data1[0])) * this.getWidth() / W);
-			int y1 = (int)((Double.parseDouble(Data1[1])) * this.getHeight() / H);
-			int x2 = (int)((Double.parseDouble(Data2[0])) * this.getWidth() / W);
-			int y2 = (int)((Double.parseDouble(Data2[1])) * this.getHeight() / H);
+			String[] Data2 = it.get(i + 1).getPoint().split(",");
+			int x1 = (int) ((Double.parseDouble(Data1[0])) * this.getWidth() / W);
+			int y1 = (int) ((Double.parseDouble(Data1[1])) * this.getHeight() / H);
+			int x2 = (int) ((Double.parseDouble(Data2[0])) * this.getWidth() / W);
+			int y2 = (int) ((Double.parseDouble(Data2[1])) * this.getHeight() / H);
 			Image img = Toolkit.getDefaultToolkit().getImage("newdata/Done.png");
-			g.drawImage(img, x2-16, y2-16, null);
+			g.drawImage(img, x2 - 16, y2 - 16, null);
 			g.drawLine(x1, y1, x2, y2);
 		}
 	}
 
 	/**
-	 * This method paints our Pacmans/Fruits in our GUI.
-	 * instructions - Boolean that represents when you first press New and want to create a new game gui
-	 * and make the instructions disappear.
-	 * isSaved - If you pressed the RUN button, it will print the Lines even after you rescale the map.
-	 * isDemo - When you simulate the Pacmans in real time, updates the Fruits eaten image.
+	 * This method paints our Pacmans/Fruits in our GUI. instructions - Boolean that
+	 * represents when you first press New and want to create a new game gui and
+	 * make the instructions disappear. isSaved - If you pressed the RUN button, it
+	 * will print the Lines even after you rescale the map. isDemo - When you
+	 * simulate the Pacmans in real time, updates the Fruits eaten image.
 	 */
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if(instructions == true) {
-			g.drawImage(_Map.getImage(), 0 , 0 , this.getWidth() , this.getHeight() , this);
-		}
-		else {
+		if (instructions == true) {
+			g.drawImage(_Map.getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
+		} else {
 			Image start = Toolkit.getDefaultToolkit().getImage("newdata/Instructions.jpeg");
-			g.drawImage(start, 0 , 0 , this.getWidth() , this.getHeight() , this);
+			g.drawImage(start, 0, 0, this.getWidth(), this.getHeight(), this);
 		}
 
 		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
 		Image img = Toolkit.getDefaultToolkit().getImage("newdata/Done.png");
 
-		if(_Icons.size() < _Fruits.size()) {
+		if (_Icons.size() < _Fruits.size()) {
 			createFruitsIconList(_Fruits.size());
 		}
 
 		String Done = "Done";
-		for(int i=0; i<_Fruits.size(); i++) {
+		for (int i = 0; i < _Fruits.size(); i++) {
 			String[] Data = _Fruits.get(i).getPoint().split(",");
-			int x2 = (int)((Double.parseDouble(Data[0])) * this.getWidth() / W);
-			int y2 = (int)((Double.parseDouble(Data[1])) * this.getHeight() / H);
-			g.drawImage(_Icons.get(i), x2-16, y2-16, this);
-			g.setFont(new Font("Monospaced", Font.BOLD, 14));  
+			int x2 = (int) ((Double.parseDouble(Data[0])) * this.getWidth() / W);
+			int y2 = (int) ((Double.parseDouble(Data[1])) * this.getHeight() / H);
+			g.drawImage(_Icons.get(i), x2 - 16, y2 - 16, this);
+			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
-			g.drawString("("+String.valueOf(x2)+","+String.valueOf(y2)+")", x2, y2); 
+			g.drawString("(" + String.valueOf(x2) + "," + String.valueOf(y2) + ")", x2, y2);
 		}
-		if(isDemo == false) {
-			for(int i=0; i<_Pacmans.size(); i++) {
+		if (isDemo == false) {
+			for (int i = 0; i < _Pacmans.size(); i++) {
 				String[] Data = _Pacmans.get(i).getPoint().split(",");
-				int x1 = (int)((Double.parseDouble(Data[0])) * this.getWidth() / W);
-				int y1 = (int)((Double.parseDouble(Data[1])) * this.getHeight() / H);
-				g.drawImage(Pacman, x1-16, y1-16, this);
-				g.setFont(new Font("Monospaced", Font.BOLD, 14));  
+				int x1 = (int) ((Double.parseDouble(Data[0])) * this.getWidth() / W);
+				int y1 = (int) ((Double.parseDouble(Data[1])) * this.getHeight() / H);
+				g.drawImage(Pacman, x1 - 16, y1 - 16, this);
+				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				g.setColor(Color.WHITE);
-				g.drawString("("+String.valueOf(x1)+","+String.valueOf(y1)+")", x1, y1); 
-				g.setFont(new Font("Monospaced", Font.BOLD, 18));  
+				g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+				g.setFont(new Font("Monospaced", Font.BOLD, 18));
 				g.setColor(Color.ORANGE);
-				g.drawString("ID: "+ _Pacmans.get(i).getiD(), x1-16, y1-16); 
+				g.drawString("ID: " + _Pacmans.get(i).getiD(), x1 - 16, y1 - 16);
 			}
 		}
 
-		if(isSaved == true) {
-			for(int i=0; i<_List.size(); i+=2) {
+		if (isSaved == true) {
+			for (int i = 0; i < _List.size(); i += 2) {
 				g.setColor(Color.WHITE);
 				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				String[] Data1 = _List.get(i).getPoint().split(",");
-				String[] Data2 = _List.get(i+1).getPoint().split(",");
-				int x1 = (int)((Double.parseDouble(Data1[0])) * this.getWidth() / W);
-				int y1 = (int)((Double.parseDouble(Data1[1])) * this.getHeight() / H);
-				int x2 = (int)((Double.parseDouble(Data2[0])) * this.getWidth() / W);
-				int y2 = (int)((Double.parseDouble(Data2[1])) * this.getHeight() / H);
-				g.drawImage(img, x2-16, y2-16, null);
+				String[] Data2 = _List.get(i + 1).getPoint().split(",");
+				int x1 = (int) ((Double.parseDouble(Data1[0])) * this.getWidth() / W);
+				int y1 = (int) ((Double.parseDouble(Data1[1])) * this.getHeight() / H);
+				int x2 = (int) ((Double.parseDouble(Data2[0])) * this.getWidth() / W);
+				int y2 = (int) ((Double.parseDouble(Data2[1])) * this.getHeight() / H);
+				g.drawImage(img, x2 - 16, y2 - 16, null);
 				g.drawLine(x1, y1, x2, y2);
 			}
-			for(int i=0; i<_Pacmans.size(); i++) {
+			for (int i = 0; i < _Pacmans.size(); i++) {
 				String[] Data = _Pacmans.get(i).getPoint().split(",");
-				int x1 = (int)((Double.parseDouble(Data[0])) * this.getWidth() / W);
-				int y1 = (int)((Double.parseDouble(Data[1])) * this.getHeight() / H);
-				g.drawImage(Pacman, x1-16, y1-16, this);
-				g.setFont(new Font("Monospaced", Font.BOLD, 14));  
+				int x1 = (int) ((Double.parseDouble(Data[0])) * this.getWidth() / W);
+				int y1 = (int) ((Double.parseDouble(Data[1])) * this.getHeight() / H);
+				g.drawImage(Pacman, x1 - 16, y1 - 16, this);
+				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				g.setColor(Color.WHITE);
-				g.drawString("("+String.valueOf(x1)+","+String.valueOf(y1)+")", x1, y1); 
-				g.setFont(new Font("Monospaced", Font.BOLD, 18));  
+				g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+				g.setFont(new Font("Monospaced", Font.BOLD, 18));
 				g.setColor(Color.ORANGE);
-				g.drawString("ID: "+ _Pacmans.get(i).getiD(), x1-16, y1-16); 
+				g.drawString("ID: " + _Pacmans.get(i).getiD(), x1 - 16, y1 - 16);
 			}
 		}
-		if(isDemo == true) {
-			for(int i=0; i<_Fruits.size(); i++) {
-				if(_Fruits.get(i).getPicture().equals(Done)) {
+		if (isDemo == true) {
+			for (int i = 0; i < _Fruits.size(); i++) {
+				if (_Fruits.get(i).getPicture().equals(Done)) {
 					String[] Data = _Fruits.get(i).getPoint().split(",");
-					int x2 = (int)((Double.parseDouble(Data[0])) * this.getWidth() / W);
-					int y2 = (int)((Double.parseDouble(Data[1])) * this.getHeight() / H);
-					g.drawImage(img, x2-16, y2-16, this);
+					int x2 = (int) ((Double.parseDouble(Data[0])) * this.getWidth() / W);
+					int y2 = (int) ((Double.parseDouble(Data[1])) * this.getHeight() / H);
+					g.drawImage(img, x2 - 16, y2 - 16, this);
 				}
 			}
-			for(int i=0; i<_Pacmans.size(); i++) {
+			for (int i = 0; i < _Pacmans.size(); i++) {
 				String[] Data = _Pacmans.get(i).getPoint().split(",");
-				int x1 = (int)((Double.parseDouble(Data[0])) * this.getWidth() / W);
-				int y1 = (int)((Double.parseDouble(Data[1])) * this.getHeight() / H);
-				g.drawImage(pacmanIcon(), x1-16, y1-16, this);
-				g.setFont(new Font("Monospaced", Font.BOLD, 14));  
+				int x1 = (int) ((Double.parseDouble(Data[0])) * this.getWidth() / W);
+				int y1 = (int) ((Double.parseDouble(Data[1])) * this.getHeight() / H);
+				// Draw our image like normal
+				g.drawImage(pacmanIcon(_Pacmans.get(i).getAngel()), x1 - 16, y1 - 16, this);
+				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				g.setColor(Color.WHITE);
-				g.drawString("("+String.valueOf(x1)+","+String.valueOf(y1)+")", x1, y1); 
-				g.setFont(new Font("Monospaced", Font.BOLD, 18));  
+				g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+				g.setFont(new Font("Monospaced", Font.BOLD, 18));
 				g.setColor(Color.ORANGE);
-				g.drawString("ID: "+ _Pacmans.get(i).getiD(), x1-16, y1-16); 
+				g.drawString("ID: " + _Pacmans.get(i).getiD(), x1 - 16, y1 - 16);
 			}
 			p++;
 		}
@@ -885,13 +943,14 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 	/**
 	 * This function generates a random icon for each fruit created.
+	 * 
 	 * @return Fruit Image
 	 */
 
 	public Image randomFruitsIcon() {
 		Image Apple = Toolkit.getDefaultToolkit().getImage("newdata/Apple.png");
 		Image Fruit = Toolkit.getDefaultToolkit().getImage("newdata/Fruit.png");
-		Image[] Fruits = {Fruit, Apple};
+		Image[] Fruits = { Fruit, Apple };
 		Random random = new Random();
 		int Select = random.nextInt(Fruits.length);
 		Image newImage = Fruits[Select];
@@ -901,74 +960,87 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 	/**
 	 * This function generates list of random fruits icons when you open a game
+	 * 
 	 * @param size of the ArrayList of fruits.
 	 */
 
 	public void createFruitsIconList(int size) {
-		for(int i=0; i<size; i++) {
+		for (int i = 0; i < size; i++) {
 			randomFruitsIcon();
 		}
 	}
 
 	/**
-	 * This function switches between 2 Pacmans icons, 1 with open mouth, the second with closed one.
+	 * This function switches between 2 Pacmans icons, 1 with open mouth, the second
+	 * with closed one & their mouth direction.
+	 * 
 	 * @return Pacman image
 	 */
 
-	public Image pacmanIcon() {
+	public Image pacmanIcon(double angel) {
+		Image test = null;
 		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
-		Image PacmanEat = Toolkit.getDefaultToolkit().getImage("newdata/Pacman1.png");
-		if(p%2 == 1) {
-			return PacmanEat;
+		Image Pacman1 = Toolkit.getDefaultToolkit().getImage("newdata/Pacman1.png");
+		Image Pacman180 = Toolkit.getDefaultToolkit().getImage("newdata/Pacman180.png");
+		Image Pacman1_180 = Toolkit.getDefaultToolkit().getImage("newdata/Pacman1-180.png");
+		if (p % 2 == 1 && angel == 0) {
+			test = Pacman1;
+		} else if (p % 2 == 0 && angel == 0) {
+			test = Pacman;
+		} else if (p % 2 == 1 && angel == 180) {
+			test = Pacman1_180;
+		} else if (p % 2 == 0 && angel == 180) {
+			test = Pacman180;
 		}
-		else {
-			return Pacman;
-		}
+		return test;
 	}
 
 	/**
 	 * Paints the Pacman/Fruit when you click on the GUI (Depends on your choice).
-	 * Adds each Pacman/Fruit that was created into ArrayList in order to repaint then all.
+	 * Adds each Pacman/Fruit that was created into ArrayList in order to repaint
+	 * then all.
 	 */
 	protected void paintElement() {
 		Graphics g = getGraphics();
-		//	The method getGraphics is called to obtain a Graphics object
+		// The method getGraphics is called to obtain a Graphics object
 		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
 
-		x = (int)(x * W / this.getWidth());
-		y = (int)(y * H / this.getHeight());
+		x = (int) (x * W / this.getWidth());
+		y = (int) (y * H / this.getHeight());
 
-		if(isPacman == true && g.drawImage(Pacman, x-16, y-16, this) == true){
-			g.setFont(new Font("Monospaced", Font.BOLD, 14));  
+		if (isPacman == true && g.drawImage(Pacman, x - 16, y - 16, this) == true) {
+			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
-			g.drawString("("+Integer.toString(x)+","+Integer.toString(y)+")",x, y);
+			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
 			g.setFont(new Font("Monospaced", Font.BOLD, 18));
 			g.setColor(Color.ORANGE);
-			g.drawString("ID: "+i, x-16, y-16); 
-			_Pacmans.add(new Pacman("Pacman", x+","+y+","+"0", "1", "1", "Pacman", String.valueOf(i)));
+			g.drawString("ID: " + i, x - 16, y - 16);
+			_Pacmans.add(new Pacman("Pacman", x + "," + y + "," + "0", "1", "1", "Pacman", String.valueOf(i)));
 			i++;
-		} 
-		if(isFruit == true && g.drawImage(randomFruitsIcon(), x-16, y-16, this) == true){
-			g.setFont(new Font("Monospaced", Font.BOLD, 14));  
+		}
+		if (isFruit == true && g.drawImage(randomFruitsIcon(), x - 16, y - 16, this) == true) {
+			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
-			g.drawString("("+Integer.toString(x)+","+Integer.toString(y)+")",x, y);
-			_Fruits.add(new Fruit("Fruit", x+","+y+","+"0", "Apple", String.valueOf(j)));
+			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
+			_Fruits.add(new Fruit("Fruit", x + "," + y + "," + "0", "Apple", String.valueOf(j)));
 			j++;
 		}
 		repaint();
 	}
 
 	/**
-	 * Creates ArrayList of Game from all the Pacmans and Fruits that were created in the game.
+	 * Creates ArrayList of Game from all the Pacmans and Fruits that were created
+	 * in the game.
+	 * 
 	 * @return ArrayList of Game represents all the Pacmans and Fruits in our GUI.
 	 */
 
-	public ArrayList<Game> saveList(){
-		for(int i=0; i<_Pacmans.size(); i++) {
+	public ArrayList<Game> saveList() {
+		for (int i = 0; i < _Pacmans.size(); i++) {
 			Game temp = new Game(_Pacmans.get(i));
 			_List.add(temp);
 		}
-		for(int i=0; i<_Fruits.size(); i++) {
+		for (int i = 0; i < _Fruits.size(); i++) {
 			Game temp = new Game(_Fruits.get(i));
 			_List.add(temp);
 		}
@@ -991,10 +1063,11 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseExited(MouseEvent e) {
 
 	}
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		x = e.getX();
-		y = e.getY();  
+		y = e.getY();
 		paintElement();
 	}
 

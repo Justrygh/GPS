@@ -71,8 +71,8 @@ public class Map {
 	
 	public double angelBetween2Points(Point3D a, Point3D b) {
 		double angel = 0;
-		angel = Math.atan2(Math.abs(a.y()-b.y()), Math.abs(a.x()-b.x()));
-		return angel;
+		angel = Math.atan2((b.y()-a.y()) , (b.x()-a.x()));
+		return Math.toDegrees(angel);
 	}
 	/**
 	 * This method gets ArrayList of Game points in Pixels and Converts it to GPS Points.

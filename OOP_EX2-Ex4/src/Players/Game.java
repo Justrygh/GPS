@@ -180,6 +180,7 @@ public class Game {
 		this._Radius = "";
 		this._Dis = "";
 		this._Time = String.valueOf(fruit.getTime());
+		this._Angel = fruit.getAngel();
 	}
 /**
  * Game Full Constructor.
@@ -197,6 +198,7 @@ public class Game {
 		this._Radius = radius;
 		this._Pic = picture;
 		this._iD = id;
+		this._Angel = 0;
 	}
 /**
  * the Game Constructor for the Pacman Object. 
@@ -212,6 +214,7 @@ public class Game {
 		this._FruitsEaten = String.valueOf(pacman.getFruitsEaten());
 		this._Dis = String.valueOf(pacman.getDistance());
 		this._iD = pacman.getiD();
+		this._Angel = pacman.getAngel();
 	}
 /**
  * Constructor for the KML File that we create to use it in Google Earth.
@@ -233,6 +236,7 @@ public class Game {
 	private String _FruitsEaten;
 	private String _Dis;
 	private String _iD;
+	private double _Angel;
 
 	//**********Getters**********//
 
@@ -300,6 +304,12 @@ public class Game {
 	
 	private void setiD(String id) {
 		this._iD = id;
+	}
+	public double getAngel() {
+		return _Angel;
+	}
+	public void setAngel(double angel) {
+		this._Angel = angel;
 	}
 
 }

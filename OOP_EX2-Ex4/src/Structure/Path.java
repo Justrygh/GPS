@@ -13,6 +13,7 @@ public class Path{
 	/*** PRIVATE VARIABELS ***/
 	private ArrayList<Game> Paths;
 	private String _Point;
+	private double _Angel;
 	private Map _Map = new Map();
 
     //Default Constructor.
@@ -78,11 +79,14 @@ public class Path{
 					double x = Pac.x() + (vec.x() / _Time);
 					double y = Pac.y() + (vec.y() / _Time);
 					_Point = (x + "," + y + "," + 0);
+				//	_Angel = pList.get(i).getList().get(1).getAngel();
 				} else {
 					_Point = (Fru.x() + "," + Fru.y() + "," + 0);
+				//	_Angel = pList.get(i).getList().get(1).getAngel();
 					pList.get(i).getList().remove(1);
 				}
 				pList.get(i).getList().get(0).setPoint(_Point);
+				pList.get(i).getList().get(0).setAngel(_Angel);
 				if (pList.get(i).getList().size() == 1) {
 					pList.remove(i);
 					i--;

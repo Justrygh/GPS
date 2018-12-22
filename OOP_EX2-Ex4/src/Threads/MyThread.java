@@ -1,6 +1,6 @@
 package Threads;
 
-public class MyThread extends Thread {
+public class MyThread extends Thread implements Runnable{
 	private String _name;
 	private int _id;
 	private static int _count =0;

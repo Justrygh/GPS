@@ -23,6 +23,7 @@ public class Pacman {
 		this._Time = 0;
 		this._Dis = 0;
 		this._iD = id;
+		this._Angel = 0;
 	}
 	
 	public Pacman() {}
@@ -34,11 +35,19 @@ public class Pacman {
 	private String _Point;
 	private String _Pic;
 	private double _Time;
-	
 	private double _Dis;
 	private int _FruitsEaten;
 	private String _iD;
+	private double _Angel;
+	
+	public double getAngel() {
+		return _Angel;
+	}
 
+	public void setAngel(double angel) {
+		this._Angel = angel;
+	}
+	
 	public void setType(String type) {
 		this._Type = type;
 	}
