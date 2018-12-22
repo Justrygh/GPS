@@ -1,4 +1,4 @@
-**********GPS Project!**********
+***GPS Project!***
 
 @authors: Eli & Qusai.
 
@@ -24,19 +24,19 @@ We have been asked to do the following assigments:
       // Each element is a row in the CSV file.
 
  * 2. Create a Layer that will contain all the Elements we created. While creating the layer
-      we gave each layer a *UNIQE* color that all the elements inside the layer will have the 
+      we gave each layer a UNIQE color that all the elements inside the layer will have the 
       same color in order to notice the difference between each layer.
       // Each Layer is a CSV file.
 
  * 3. Create a Project that will contain all the Layers. Convert a folder with CSV files into
       One KML file containing all the details of the CSV files.
       
-**********Pacman Project**********
+***Pacman Project***
 
 This Project represents a Pacman Game.
 This game purpose is for the Pacmans to eat all the Fruits in the shortest time.
 
-**Attention**:
+*Attention*:
 In order to run the game, you will need to read the instructions first! 
 When you will run the code for the first time, the instructions will pop-up on the GUI.
 
@@ -53,7 +53,7 @@ In this project, you can do the following things:
       Whenever you run the code for the first time, an Ariel University map will be showen in the GUI with instructions
       explaining what features do we have and how to use them.
       You can add Pacmans/Fruits as many as you want, where ever you want in our GUI, and run the game.
-      **Make sure to read the instructions before in order to be able to play the game**
+      *Make sure to read the instructions before in order to be able to play the game*
       
  3. You can export a game you created in our GUI to a new CSV file and save all the details in order to run it again next time:
       - Type(P/F), 
@@ -75,6 +75,19 @@ In the project we have special features in order to accomplish our mission and v
  3. Convert2kml - Another way of viewing each Pacman location, we added a feature that we convert our game to a new KML file
                   which allows the player to view the game in Google-Earth.
 
-**In order to know what each class/function purpose is, I suggest you to look over at our JAVA DOC which explains everything into specific details.**
 
+*UPDATED:* 
+We added some new cool features in order to improve your gaming experience:
 
+1. When you create a new game, your default Radius and Speed for all the pacmans are 1. Now you have the ability to change it! Just press "Define" Tab and choose whatever you like.
+You can change the Default Speed/Radius for all the pacmans or you can choose one single pacman and change his Speed/Radius using his ID. (You can see the Pacman's ID in the GUI above his head)
+
+2. Open / Open & Edit: 
+With the Open tab you can *ONLY* open a saved game but you can't change anything (Radius/Speed/Adding new Fruits/Pacmans) You can only just run the game. In order to open a saved game and to have the ability to change it, we added you a new feature called Open & Edit. When you use that features you have the access to change everything you want in the game. *BUT*, in order to run the game, first you will have to save the changes you made and then you can play!
+
+*Notice*
+
+We made some Limits for the changes you can make in the game:
+
+- *Speed limit: 1-9*
+- *Radius limit: 1-5*
