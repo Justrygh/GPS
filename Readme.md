@@ -85,9 +85,9 @@ You can change the Default Speed/Radius for all the pacmans or you can choose on
 2. Open / Open & Edit: 
 With the Open tab you can *ONLY* open a saved game but you can't change anything (Radius/Speed/Adding new Fruits/Pacmans) You can only just run the game. In order to open a saved game and to have the ability to change it, we added you a new feature called Open & Edit. When you use that features you have the access to change everything you want in the game. *BUT*, in order to run the game, first you will have to save the changes you made and then you can play!
 
-*Notice*
+**Notice**
 
 We made some Limits for the changes you can make in the game:
 
-- *Speed limit: 1-9*
-- *Radius limit: 1-5*
+- **Speed limit: 1-9**
+- **Radius limit: 1-5**
