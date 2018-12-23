@@ -36,7 +36,7 @@ We have been asked to do the following assigments:
 This Project represents a Pacman Game.
 This game purpose is for the Pacmans to eat all the Fruits in the shortest time.
 
-*Attention*:
+**Attention**:
 In order to run the game, you will need to read the instructions first! 
 When you will run the code for the first time, the instructions will pop-up on the GUI.
 
@@ -76,7 +76,7 @@ In the project we have special features in order to accomplish our mission and v
                   which allows the player to view the game in Google-Earth.
 
 
-*UPDATED:* 
+**UPDATED:** 
 We added some new cool features in order to improve your gaming experience:
 
 1. When you create a new game, your default Radius and Speed for all the pacmans are 1. Now you have the ability to change it! Just press "Define" Tab and choose whatever you like.
