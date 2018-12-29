@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Menu;
 import java.awt.MenuBar;
@@ -15,17 +14,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
-
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -36,10 +30,12 @@ import javax.swing.JTextField;
 import Algorithms.ShortestPathAlgo;
 import File_format.Path2kml;
 import Geom.Point3D;
+import Players.Block;
 import Players.Fruit;
 import Players.Game;
+import Players.Ghost;
 import Players.Pacman;
-import Threads.MyThread;
+import Players.Player;
 
 public class MyFrame extends JPanel implements MouseListener, MouseMotionListener {
 
@@ -55,6 +51,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private int H = 642;
 	private int y, x = 0;
 	private int W = 1299;
+	private int Bx1;
+	private int By1;
+	private int Bx2;
+	private int By2;
 
 	private boolean isPacman = false;
 	private boolean isFruit = false;
@@ -62,28 +62,29 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private boolean isDemo = false;
 	private boolean instructions = false;
 	private boolean Stop = false;
+	private boolean isPlayer = false;
+//	private boolean isBlock = false;
+//	private boolean isGhost = false;
+	
 
 	private int i = 0;
 	private int j = 0;
+	private int k = 0;
 	private int p = 0;
+	private int b = 0;
 
-	private Map _Map = new Map();
-
+	private Map _Map;
+	private Player _Player;
+	private boolean[][] _Mat;
+	
 	private ArrayList<Fruit> _Fruits;
 	private ArrayList<Pacman> _Pacmans;
 	private ArrayList<Game> _List;
 	private ArrayList<Image> _Icons;
+	private ArrayList<Image> _GhostsImg;
 	private ArrayList<Path> pList;
-
-	public static void main(String[] args) {
-		JFrame frame = new JFrame("Game GUI");
-		frame.getContentPane().add(new MyFrame());
-		frame.setMenuBar(_MB);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1299, 697);
-		frame.setResizable(true);
-		frame.setVisible(true);
-	}
+	private ArrayList<Ghost> _Ghosts;
+	private ArrayList<Block> _Blocks;
 
 	// **********Private Methods**********//
 
@@ -91,12 +92,28 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		_MB = menu;
 	}
 
+	public boolean[][] getMat(){
+		return this._Mat;
+	}
+
+	private void setMat(boolean[][] mat) {
+		this._Mat = mat;
+	}
+
 	private void setIList(ArrayList<Image> ilist) {
 		this._Icons = ilist;
 	}
 
-	private ArrayList<Image> getIList() {
-		return this._Icons;
+	private void setGIList(ArrayList<Image> glist) {
+		this._GhostsImg = glist;
+	}
+
+	public ArrayList<Block> getBList(){
+		return this._Blocks;
+	}
+
+	private void setBList(ArrayList<Block> blist) {
+		this._Blocks = blist;
 	}
 
 	private void setList(ArrayList<Game> list) {
@@ -113,6 +130,14 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 	public void setFList(ArrayList<Fruit> fList) {
 		this._Fruits = fList;
+	}
+
+	public void setGList(ArrayList<Ghost> gList) {
+		this._Ghosts = gList;
+	}
+
+	public ArrayList<Ghost> getGList() {
+		return this._Ghosts;
 	}
 
 	public ArrayList<Pacman> getPList() {
@@ -135,6 +160,16 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		this.addMouseListener(this);
 	}
 
+	public static void main(String[] args) {
+		JFrame frame = new JFrame("Game GUI");
+		frame.getContentPane().add(new MyFrame());
+		frame.setMenuBar(_MB);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(1299, 697);
+		frame.setResizable(true);
+		frame.setVisible(true);
+	}
+
 	/**
 	 * This function creates our MenuBar. Each button in our MenuBar
 	 * enables/disables functions that we create in other classes. You have
@@ -145,7 +180,13 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		_Pacmans = new ArrayList<Pacman>();
 		_List = new ArrayList<Game>();
 		_Icons = new ArrayList<Image>();
+		_GhostsImg = new ArrayList<Image>();
 		pList = new ArrayList<Path>();
+		_Ghosts = new ArrayList<Ghost>();
+		_Blocks = new ArrayList<Block>();
+		_Player = new Player();
+		 _Map = new Map();
+		_Mat = new boolean[_Map.getHeight()][_Map.getWidth()];
 
 		MenuBar menuBar = new MenuBar();
 		Menu menu1 = new Menu("File");
@@ -172,11 +213,24 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		MenuItem radiusbar = new MenuItem("----------RADIUS----------");
 		MenuItem radiusall = new MenuItem("   Defualt Pacmans   ");
 		MenuItem radiusp = new MenuItem("   Single Pacman   ");
+		Menu menu5 = new Menu("   New Game   ");
+		MenuItem opengame = new MenuItem("   Open File...   ");
+		MenuItem cleargame = new MenuItem("   Clear   ");
+		Menu menu6 = new Menu("   Play   ");
+		MenuItem player = new MenuItem("   Player   ");
+		MenuItem play = new MenuItem("   Lets Play!   ");
+		Menu menu7 = new Menu("   Switch   ");
+		MenuItem switchbar = new MenuItem("   Click Here   ");
+
+
 
 		menuBar.add(menu1);
 		menuBar.add(menu2);
 		menuBar.add(menu3);
 		menuBar.add(menu4);
+		menuBar.add(menu5);
+		menuBar.add(menu6);
+		menuBar.setHelpMenu(menu7);
 
 		menu1.add(here);
 		here.addActionListener(new ActionListener() {
@@ -194,6 +248,9 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				edit.setEnabled(true);
 				here.setEnabled(false);
 				menu2.setEnabled(true);
+				menu6.setEnabled(false);
+				menu5.setEnabled(false);
+				menu7.setEnabled(true);
 			}
 		});
 		here.setEnabled(true);
@@ -219,7 +276,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				}
 				Game Try = new Game(new File(path));
 				ShortestPathAlgo Name = new ShortestPathAlgo(Try.read());
-				setLists(Name);
+				setListsSPA(Name);
 				repaint();
 			}
 		});
@@ -247,7 +304,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				}
 				Game Try = new Game(new File(path));
 				ShortestPathAlgo Name = new ShortestPathAlgo(Try.read());
-				setLists(Name);
+				setListsSPA(Name);
 				i = getPList().size();
 				j = getFList().size();
 				repaint();
@@ -283,7 +340,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				clearLists();
 				Game Try = new Game(new File(path));
 				ShortestPathAlgo Name = new ShortestPathAlgo(Try.read());
-				setLists(Name);
+				setListsSPA(Name);
 				repaint();
 			}
 		});
@@ -334,6 +391,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				menu3.setEnabled(false);
 				pacman.setEnabled(true);
 				fruit.setEnabled(true);
+				menu7.setEnabled(true);
 			}
 		});
 
@@ -345,6 +403,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				fruit.setEnabled(false);
 				menu1.setEnabled(false);
 				menu4.setEnabled(false);
+				menu7.setEnabled(false);
 				isSaved = true;
 				paths(getGraphics());
 				menu3.setEnabled(false);
@@ -363,6 +422,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				menu1.setEnabled(false);
 				menu2.setEnabled(false);
 				menu4.setEnabled(false);
+				menu7.setEnabled(false);
 				run.setEnabled(false);
 				kml.setEnabled(false);
 				stop.setEnabled(true);
@@ -376,13 +436,13 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							for (int j = 0; j < pList.size(); j++) {
 								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
-//									double angel = pList.get(j).getList().get(0).getAngel();
-//									while(angel<0) {
-//										angel+=360;
-//									}
-//									while(angel>360) {
-//										angel-=360;
-//									}
+									//									double angel = pList.get(j).getList().get(0).getAngel();
+									//									while(angel<0) {
+									//										angel+=360;
+									//									}
+									//									while(angel>360) {
+									//										angel-=360;
+									//									}
 									String[] pacData = _Pacmans.get(i).getPoint().split(",");
 									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
 									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
@@ -429,13 +489,13 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							for (int j = 0; j < pList.size(); j++) {
 								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
-//									double angel = pList.get(j).getList().get(0).getAngel();
-//									while(angel<0) {
-//										angel+=360;
-//									}
-//									while(angel>360) {
-//										angel-=360;
-//									}
+									//									double angel = pList.get(j).getList().get(0).getAngel();
+									//									while(angel<0) {
+									//										angel+=360;
+									//									}
+									//									while(angel>360) {
+									//										angel-=360;
+									//									}
 									String[] pacData = _Pacmans.get(i).getPoint().split(",");
 									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
 									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
@@ -672,13 +732,111 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			}
 		});
 
+		menu5.add(opengame);
+		opengame.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cleargame.setEnabled(true);
+				player.setEnabled(true);
+				menu6.setEnabled(true);
+				menu7.setEnabled(true);
+				menu1.setEnabled(false);
+				instructions = true;
+				repaint();
+				JFileChooser chooser = new JFileChooser();
+				int returnName = chooser.showOpenDialog(null);
+				String path = "";
+				if (returnName == JFileChooser.APPROVE_OPTION) {
+					File f = chooser.getSelectedFile();
+					if (f != null && f.getName().endsWith(".csv")) {
+						path = f.getAbsolutePath();
+					}
+				}
+				ArrayList<Play> temp = new ArrayList<Play>();
+				Play convert = new Play(new File(path));
+				temp = _Map.ConvertList2Pixel(convert.read());
+				setLists(temp);
+				repaint();
+			}
+		});
+
+		menu5.add(cleargame);
+		cleargame.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				menu6.setEnabled(false);
+				cleargame.setEnabled(false);
+				menu7.setEnabled(true);
+				opengame.setEnabled(true);
+				clearLists();
+				repaint();
+			}
+		});
+		cleargame.setEnabled(false);
+		
+		menu6.add(player);
+		player.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				isPlayer = true;
+				paintElement();
+				play.setEnabled(true);
+				player.setEnabled(false);
+			}
+		});
+		player.setEnabled(false);
+		
+		menu6.add(play);
+		play.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				play.setEnabled(false);
+				menu6.setEnabled(false);
+				menu7.setEnabled(false);
+				opengame.setEnabled(false);
+			}
+		});
+		play.setEnabled(false);
+		
+		menu7.add(switchbar);
+		switchbar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clearLists();
+				repaint();
+				if(menu5.isEnabled() == true) {
+					menu5.setEnabled(false);
+					menu6.setEnabled(false);
+					menu1.setEnabled(true);
+					menu2.setEnabled(true);
+				}
+				else if(menu1.isEnabled() == true) {
+					menu1.setEnabled(false);
+					menu2.setEnabled(false);
+					menu3.setEnabled(false);
+					menu4.setEnabled(false);
+					menu5.setEnabled(true);
+				}
+			}
+		});
+
 		menu2.setEnabled(false);
 		menu3.setEnabled(false);
 		menu4.setEnabled(false);
+		menu6.setEnabled(false);
+		menu7.setEnabled(false);
 
 		setMB(menuBar);
 	}
-	
+
+	public void setLists(ArrayList<Play> temp) {
+		Play convert = new Play(temp);
+		setPList(convert.getPList());
+		setFList(convert.getFList());
+		setGList(convert.getGList());
+		setBList(convert.getBList());
+	}
+
 	/**
 	 * This function rotates the pacmans mouth depends on the next fruit location.
 	 * @param pac - Current Pacman location in Point3D
@@ -704,13 +862,22 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		ArrayList<Pacman> pList = new ArrayList<Pacman>();
 		ArrayList<Fruit> fList = new ArrayList<Fruit>();
 		ArrayList<Image> iList = new ArrayList<Image>();
+		ArrayList<Block> iBlock = new ArrayList<Block>();
+		ArrayList<Image> iGList = new ArrayList<Image>();
+		ArrayList<Ghost> ghList = new ArrayList<Ghost>();
 		setList(gList);
 		setPList(pList);
 		setFList(fList);
 		setIList(iList);
+		setBList(iBlock);
+		setGIList(iGList);
+		setGList(ghList);
 		i = 0;
 		j = 0;
 		p = 0;
+		k = 0;
+		b = 0;
+		_Player.setPoint(0+","+0+","+0);
 	}
 
 	/**
@@ -775,11 +942,11 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			for (int j = 0; j < _Fruits.size(); j++) {
 				String[] Data1 = _Pacmans.get(i).getPoint().split(",");
 				String[] Data2 = _Fruits.get(j).getPoint().split(",");
-				int pX = (int) (Double.parseDouble(Data1[0]));
-				int pY = (int) (Double.parseDouble(Data1[1]));
+				int pX = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
+				int pY = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
 
-				int fX = (int) (Double.parseDouble(Data2[0]));
-				int fY = (int) (Double.parseDouble(Data2[1]));
+				int fX = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
+				int fY = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
 				if (pX == fX && pY == fY) {
 					_Fruits.get(j).setPicture("Done");
 				}
@@ -794,7 +961,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	 * @param spa - ShortestPathAlgo
 	 */
 
-	public void setLists(ShortestPathAlgo spa) {
+	public void setListsSPA(ShortestPathAlgo spa) {
 		setPList(spa.getPList());
 		setFList(spa.getFList());
 
@@ -829,10 +996,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		for (int i = 0; i < it.size(); i += 2) {
 			String[] Data1 = it.get(i).getPoint().split(",");
 			String[] Data2 = it.get(i + 1).getPoint().split(",");
-			int x1 = (int) ((Double.parseDouble(Data1[0])) * this.getWidth() / W);
-			int y1 = (int) ((Double.parseDouble(Data1[1])) * this.getHeight() / H);
-			int x2 = (int) ((Double.parseDouble(Data2[0])) * this.getWidth() / W);
-			int y2 = (int) ((Double.parseDouble(Data2[1])) * this.getHeight() / H);
+			int x1 = Integer.parseInt(Data1[0]) * this.getWidth() / W;
+			int y1 = Integer.parseInt(Data1[1]) * this.getHeight() / H;
+			int x2 = Integer.parseInt(Data2[0]) * this.getWidth() / W;
+			int y2 = Integer.parseInt(Data2[1]) * this.getHeight() / H;
 			Image img = Toolkit.getDefaultToolkit().getImage("newdata/Done.png");
 			g.drawImage(img, x2 - 16, y2 - 16, null);
 			g.drawLine(x1, y1, x2, y2);
@@ -840,7 +1007,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	/**
-	 * This method paints our Pacmans/Fruits in our GUI. instructions - Boolean that
+	 * This method paints our Pacmans/Fruits/Ghosts/Blocks in our GUI. instructions - Boolean that
 	 * represents when you first press New and want to create a new game gui and
 	 * make the instructions disappear. isSaved - If you pressed the RUN button, it
 	 * will print the Lines even after you rescale the map. isDemo - When you
@@ -850,9 +1017,11 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+
 		if (instructions == true) {
 			g.drawImage(_Map.getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
-		} else {
+		} 
+		else {
 			Image start = Toolkit.getDefaultToolkit().getImage("newdata/Instructions.jpeg");
 			g.drawImage(start, 0, 0, this.getWidth(), this.getHeight(), this);
 		}
@@ -864,21 +1033,54 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			createFruitsIconList(_Fruits.size());
 		}
 
+		if (_GhostsImg.size() < _Ghosts.size()) {
+			createGhostsIconList(_Ghosts.size());
+		}
+		
+		String[] Player = _Player.getPoint().split(",");
+		if(Integer.parseInt(Player[0]) != 0 && Integer.parseInt(Player[1]) != 0) {
+			String[] Data = _Player.getPoint().split(",");
+			int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
+			int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+			g.drawImage(_Player.getImage(), x1-16, y1-16, null);
+			g.setFont(new Font("Monospaced", Font.BOLD, 14));
+			g.setColor(Color.WHITE);
+			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+		}
+
 		String Done = "Done";
 		for (int i = 0; i < _Fruits.size(); i++) {
 			String[] Data = _Fruits.get(i).getPoint().split(",");
-			int x2 = (int) ((Double.parseDouble(Data[0])) * this.getWidth() / W);
-			int y2 = (int) ((Double.parseDouble(Data[1])) * this.getHeight() / H);
-			g.drawImage(_Icons.get(i), x2 - 16, y2 - 16, this);
+			int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
+			int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+			g.drawImage(_Icons.get(i), x1 - 16, y1 - 16, this);
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
-			g.drawString("(" + String.valueOf(x2) + "," + String.valueOf(y2) + ")", x2, y2);
+			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+		}
+		for (int i = 0; i < _Ghosts.size(); i++) {
+			String[] Data = _Ghosts.get(i).getPoint().split(",");
+			int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
+			int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+			g.drawImage(_GhostsImg.get(i), x1 - 16, y1 - 16, this);
+			g.setFont(new Font("Monospaced", Font.BOLD, 14));
+			g.setColor(Color.WHITE);
+			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+		}
+		for (int i = 0; i < _Blocks.size(); i++) {
+			String[] Data = _Blocks.get(i).getPoint().split(",");
+			int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
+			int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+			int blockWidth = _Blocks.get(i).getWidth() * this.getWidth() / W;
+			int blockHeight = _Blocks.get(i).getHeight() * this.getHeight() / H;
+			g.setColor(Color.BLACK);
+			g.fillRect(x1-16, y1-16, blockWidth, blockHeight);
 		}
 		if (isDemo == false) {
 			for (int i = 0; i < _Pacmans.size(); i++) {
 				String[] Data = _Pacmans.get(i).getPoint().split(",");
-				int x1 = (int) ((Double.parseDouble(Data[0])) * this.getWidth() / W);
-				int y1 = (int) ((Double.parseDouble(Data[1])) * this.getHeight() / H);
+				int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
+				int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
 				g.drawImage(Pacman, x1 - 16, y1 - 16, this);
 				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				g.setColor(Color.WHITE);
@@ -892,20 +1094,19 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		if (isSaved == true) {
 			for (int i = 0; i < _List.size(); i += 2) {
 				g.setColor(Color.WHITE);
-				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				String[] Data1 = _List.get(i).getPoint().split(",");
 				String[] Data2 = _List.get(i + 1).getPoint().split(",");
-				int x1 = (int) ((Double.parseDouble(Data1[0])) * this.getWidth() / W);
-				int y1 = (int) ((Double.parseDouble(Data1[1])) * this.getHeight() / H);
-				int x2 = (int) ((Double.parseDouble(Data2[0])) * this.getWidth() / W);
-				int y2 = (int) ((Double.parseDouble(Data2[1])) * this.getHeight() / H);
+				int x1 = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
+				int y1 = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
+				int x2 = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
+				int y2 = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
 				g.drawImage(img, x2 - 16, y2 - 16, null);
 				g.drawLine(x1, y1, x2, y2);
 			}
 			for (int i = 0; i < _Pacmans.size(); i++) {
 				String[] Data = _Pacmans.get(i).getPoint().split(",");
-				int x1 = (int) ((Double.parseDouble(Data[0])) * this.getWidth() / W);
-				int y1 = (int) ((Double.parseDouble(Data[1])) * this.getHeight() / H);
+				int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
+				int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
 				g.drawImage(Pacman, x1 - 16, y1 - 16, this);
 				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				g.setColor(Color.WHITE);
@@ -919,15 +1120,15 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			for (int i = 0; i < _Fruits.size(); i++) {
 				if (_Fruits.get(i).getPicture().equals(Done)) {
 					String[] Data = _Fruits.get(i).getPoint().split(",");
-					int x2 = (int) ((Double.parseDouble(Data[0])) * this.getWidth() / W);
-					int y2 = (int) ((Double.parseDouble(Data[1])) * this.getHeight() / H);
-					g.drawImage(img, x2 - 16, y2 - 16, this);
+					int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
+					int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+					g.drawImage(img, x1 - 16, y1 - 16, this);
 				}
 			}
 			for (int i = 0; i < _Pacmans.size(); i++) {
 				String[] Data = _Pacmans.get(i).getPoint().split(",");
-				int x1 = (int) ((Double.parseDouble(Data[0])) * this.getWidth() / W);
-				int y1 = (int) ((Double.parseDouble(Data[1])) * this.getHeight() / H);
+				int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
+				int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
 				// Draw our image like normal
 				g.drawImage(pacmanIcon(_Pacmans.get(i).getAngel()), x1 - 16, y1 - 16, this);
 				g.setFont(new Font("Monospaced", Font.BOLD, 14));
@@ -939,6 +1140,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			}
 			p++;
 		}
+		setMat(_Map.image2Matrix(_Map.matImg(this.getHeight(), this.getWidth())));
 	}
 
 	/**
@@ -950,11 +1152,30 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	public Image randomFruitsIcon() {
 		Image Apple = Toolkit.getDefaultToolkit().getImage("newdata/Apple.png");
 		Image Fruit = Toolkit.getDefaultToolkit().getImage("newdata/Fruit.png");
-		Image[] Fruits = { Fruit, Apple };
+		Image[] Fruits = {Fruit, Apple};
 		Random random = new Random();
 		int Select = random.nextInt(Fruits.length);
 		Image newImage = Fruits[Select];
 		_Icons.add(newImage);
+		return newImage;
+	}
+
+	/**
+	 * This function generates a random icon for each ghost created.
+	 * 
+	 * @return Ghost Image
+	 */
+
+	public Image randomGhostsIcon() {
+		Image redGhost = Toolkit.getDefaultToolkit().getImage("ourdata/RGhost.png");
+		Image orangeGhost = Toolkit.getDefaultToolkit().getImage("ourdata/OGhost.png");
+		Image blueGhost = Toolkit.getDefaultToolkit().getImage("ourdata/BGhost.png");
+		Image pinkGhost = Toolkit.getDefaultToolkit().getImage("ourdata/PGhost.png");
+		Image[] Ghosts = {redGhost, orangeGhost, blueGhost, pinkGhost};
+		Random random = new Random();
+		int Select = random.nextInt(Ghosts.length);
+		Image newImage = Ghosts[Select];
+		_GhostsImg.add(newImage);
 		return newImage;
 	}
 
@@ -971,9 +1192,21 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	/**
-	 * This function switches between 2 Pacmans icons, 1 with open mouth, the second
-	 * with closed one & their mouth direction.
+	 * This function generates list of random ghosts icons when you open a game
 	 * 
+	 * @param size of the ArrayList of ghosts.
+	 */
+
+	public void createGhostsIconList(int size) {
+		for (int i = 0; i < size; i++) {
+			randomGhostsIcon();
+		}
+	}
+
+	/**
+	 * This function switches between 2 Pacmans icons, 1 with open mouth, the second
+	 * with closed one and their mouth direction.
+	 * @param angel - Angel in degrees.
 	 * @return Pacman image
 	 */
 
@@ -996,14 +1229,17 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	/**
-	 * Paints the Pacman/Fruit when you click on the GUI (Depends on your choice).
-	 * Adds each Pacman/Fruit that was created into ArrayList in order to repaint
+	 * Paints the Pacman/Fruit/Ghost/Block when you click on the GUI (Depends on your choice).
+	 * Adds each Pacman/Fruit/Ghost/Block that was created into ArrayList in order to repaint
 	 * then all.
 	 */
 	protected void paintElement() {
 		Graphics g = getGraphics();
 		// The method getGraphics is called to obtain a Graphics object
 		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
+
+//		Image Ghost = randomGhostsIcon();
+		Image Fruit = randomFruitsIcon();
 
 		x = (int) (x * W / this.getWidth());
 		y = (int) (y * H / this.getHeight());
@@ -1015,16 +1251,64 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			g.setFont(new Font("Monospaced", Font.BOLD, 18));
 			g.setColor(Color.ORANGE);
 			g.drawString("ID: " + i, x - 16, y - 16);
-			_Pacmans.add(new Pacman("Pacman", x + "," + y + "," + "0", "1", "1", "Pacman", String.valueOf(i)));
+			_Pacmans.add(new Pacman("Pacman", x + "," + y + "," + 0, "1", "1", String.valueOf(i)));
 			i++;
 		}
-		if (isFruit == true && g.drawImage(randomFruitsIcon(), x - 16, y - 16, this) == true) {
+		if (isFruit == true && g.drawImage(Fruit, x - 16, y - 16, this) == true) {
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
 			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
-			_Fruits.add(new Fruit("Fruit", x + "," + y + "," + "0", "Apple", String.valueOf(j)));
+			_Fruits.add(new Fruit("Fruit", x + "," + y + "," + 0, String.valueOf(j)));
 			j++;
 		}
+		if (isPlayer == true && g.drawImage(_Player.getImage(), x - 16, y - 16, this) == true) {
+			g.setFont(new Font("Monospaced", Font.BOLD, 14));
+			g.setColor(Color.WHITE);
+			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
+			_Player.setPoint( x + "," + y + "," + 0);
+			isPlayer = false;
+		}
+//		if (isGhost == true && g.drawImage(Ghost, x - 16, y - 16, this) == true) {
+//			g.setFont(new Font("Monospaced", Font.BOLD, 14));
+//			g.setColor(Color.WHITE);
+//			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
+//			_Ghosts.add(new Ghost("Ghost", x + "," + y + "," + 0,"1","1", String.valueOf(k)));
+//			k++;
+//		}
+//		if(isBlock == true) {
+//			Bx1 = Bx1 * W / this.getWidth();
+//			By1 = By1 * H / this.getHeight();
+//
+//			Bx2 = Bx2 * W / this.getWidth();
+//			By2 = By2 * H / this.getHeight();
+//
+//			g.setColor(Color.BLACK);
+//			if(Bx2>Bx1 && By2>By1) {
+//				g.fillRect(Bx1, By1, Bx2-Bx1, By2-By1);
+//				int blockWidth = Bx2-Bx1;
+//				int blockHeight = By2-By1;
+//				_Blocks.add(new Block("Block", Bx1+","+By1+","+0, blockWidth, blockHeight, String.valueOf(b)));
+//			}
+//			else if(Bx2>Bx1 && By1>By2) {
+//				g.fillRect(Bx1, By2, Bx2-Bx1, By1-By2);
+//				int blockWidth = Bx2-Bx1;
+//				int blockHeight = By1-By2;
+//				_Blocks.add(new Block("Block", Bx1+","+By2+","+0, blockWidth, blockHeight, String.valueOf(b)));
+//			}
+//			else if(Bx2<Bx1 && By2>By1) {
+//				g.fillRect(Bx2, By1, Bx1-Bx2, By2-By1);
+//				int blockWidth = Bx1-Bx2;
+//				int blockHeight = By2-By1;
+//				_Blocks.add(new Block("Block", Bx2+","+By1+","+0, blockWidth, blockHeight, String.valueOf(b)));
+//			}
+//			else if(Bx2<Bx1 && By1>By2) {
+//				g.fillRect(Bx2, By2, Bx1-Bx2, By1-By2);
+//				int blockWidth = Bx1-Bx2;
+//				int blockHeight = By1-By2;
+//				_Blocks.add(new Block("Block", Bx2+","+By2+","+0, blockWidth, blockHeight, String.valueOf(b)));
+//			}
+//			b++;
+//		}
 		repaint();
 	}
 
@@ -1049,10 +1333,19 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+//		if(isBlock == true) {
+//			Bx1 = e.getX();
+//			By1 = e.getY();
+//		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+//		if(isBlock == true) {
+//			Bx2 = e.getX();
+//			By2 = e.getY();
+//			paintElement();
+//		}
 	}
 
 	@Override

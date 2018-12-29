@@ -26,6 +26,18 @@ public class Pacman {
 		this._Angel = 0;
 	}
 	
+	public Pacman(String type, String point, String speed, String radius, String id) {
+		this._Type = type;
+		this._Point = point;
+		this._Speed = speed;
+		this._Radius = radius;
+		this._iD = id;
+		this._Time = 0;
+		this._Dis = 0;
+		this._Angel = 0;
+		this._Pic = "0";
+	}
+	
 	public Pacman() {}
 	
 	//**********Private Methods**********//
@@ -34,15 +46,11 @@ public class Pacman {
 	private String _Type;
 	private String _Point;
 	private String _Pic;
+	private String _iD;
 	private double _Time;
 	private double _Dis;
 	private int _FruitsEaten;
-	private String _iD;
 	private double _Angel;
-	
-	public double getAngel() {
-		return _Angel;
-	}
 
 	public void setAngel(double angel) {
 		this._Angel = angel;
@@ -82,6 +90,10 @@ public class Pacman {
 	
 	public void setiD(String id) {
 		this._iD = id;
+	}
+	
+	public double getAngel() {
+		return _Angel;
 	}
 	
 	public String getPicture() {

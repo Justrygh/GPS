@@ -97,8 +97,8 @@ public class Game {
 					if(Data[0].equals(F)) {
 						setType(Data[0]+"ruit");
 						setPoint(Data[3]+","+Data[2]+","+Data[4]);
-						setSpeed(null);
-						setRadius(null);
+						setSpeed("");
+						setRadius("");
 						setPicture(fruitsIcon());
 						setiD(Data[1]);
 					}
@@ -118,7 +118,8 @@ public class Game {
 						setSpeed(Data[4]);
 						setRadius(Data[5]);
 						setPicture("Pacman");
-						setiD("");
+						setiD(String.valueOf(i));
+						i++;
 					}
 					if(Data[0].equals(F)) {
 						setType(Data[0]+"ruit");
@@ -126,7 +127,8 @@ public class Game {
 						setSpeed("");
 						setRadius("");
 						setPicture(fruitsIcon());
-						setiD("");
+						setiD(String.valueOf(j));
+						j++;
 					}
 					Game temp = new Game(getType(), getPoint(), getSpeed(), getRadius(), getPicture(), getiD());
 					_List.add(temp);
@@ -148,23 +150,12 @@ public class Game {
 		String[] Fruits = {"Fruit", "Apple"};
 		Random random = new Random();
 		int Select = random.nextInt(Fruits.length);
-		String newColor = Fruits[Select];
-		if(_Fruits.size() == 2) {
-			_Fruits.clear();
-			_Fruits.add(Select);
-			return newColor;
-		}
-		while(_Fruits.contains(Select)) {
-			Select = random.nextInt(Fruits.length);
-			newColor = Fruits[Select];
-		}
-		_Fruits.add(Select);
-		return newColor;
+		String newFruit = Fruits[Select];
+		return newFruit;
 	}
 	
 	//**********Constructor**********//
 
-	private ArrayList<Integer> _Fruits = new ArrayList<Integer>();
     // Default Constructor. 
 	public Game() {}
     /**
@@ -200,6 +191,16 @@ public class Game {
 		this._iD = id;
 		this._Angel = 0;
 	}
+	
+	public Game(String type, String point, String speed, String radius, String id) {
+		this._Type = type;
+		this._Point = point;
+		this._Speed = speed;
+		this._Radius = radius;
+		this._iD = id;
+		this._Angel = 0;
+	}
+	
 /**
  * the Game Constructor for the Pacman Object. 
  * @param pacman our Object/Player.
@@ -237,6 +238,8 @@ public class Game {
 	private String _Dis;
 	private String _iD;
 	private double _Angel;
+	private int i = 0;
+	private int j = 0;
 
 	//**********Getters**********//
 

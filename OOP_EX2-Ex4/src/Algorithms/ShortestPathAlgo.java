@@ -20,6 +20,10 @@ public class ShortestPathAlgo {
 	 */
 
 	public ShortestPathAlgo(ArrayList<Game> game) {
+		_Fruits = new ArrayList<Fruit>();
+		_Pacmans = new ArrayList<Pacman>();
+		_List = new ArrayList<Game>();
+		
 		String P = "Pacman";
 		String F = "Fruit"; 
 		for(int i=0; i<game.size(); i++) {

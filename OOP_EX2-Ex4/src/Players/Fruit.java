@@ -21,6 +21,14 @@ public class Fruit {
 		this._Angel = 0;
 	}
 	
+	public Fruit(String type, String point, String id) {
+		this._Type = type;
+		this._Point = point;
+		this._iD = id;
+		this._Time = 0;
+		this._Angel = 0;
+	}
+	
 	public Fruit() {}
 	
 	//**********Private Methods**********//
