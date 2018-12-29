@@ -16,7 +16,7 @@ public class Path{
 	private double _Angel;
 	private Map _Map = new Map();
 
-    //Default Constructor.
+	//Default Constructor.
 	public Path() {
 		this.Paths = new ArrayList<Game>();
 	}
@@ -31,12 +31,12 @@ public class Path{
 	public ArrayList<Game> getList() {
 		return this.Paths;
 	}
- /**
-  * This method gets two ArrayLists of Game and Pacman in order to create for each pacman its own path.
-  * @param List our Game List
-  * @param PList our Pacman List
-  * @return the Path 
-  */
+	/**
+	 * This method gets two ArrayLists of Game and Pacman in order to create for each pacman its own path.
+	 * @param List our Game List
+	 * @param PList our Pacman List
+	 * @return the Path 
+	 */
 	public ArrayList<Path> Create(ArrayList<Game> List, ArrayList<Pacman> PList) {
 		ArrayList<Path> _PList = new ArrayList<Path>();
 		String pac = "Pacman";
@@ -63,8 +63,10 @@ public class Path{
 	public ArrayList<Path> Print(ArrayList<Path> pList) {
 
 		for (int i = 0; i < pList.size(); i++) {
-			if (pList.get(i).getList().get(0).getPoint().equals(pList.get(i).getList().get(1).getPoint())) {
-				pList.get(i).getList().remove(1);
+			if (pList.get(i).getList().size() > 1) {
+				if (pList.get(i).getList().get(0).getPoint().equals(pList.get(i).getList().get(1).getPoint())) {
+					pList.get(i).getList().remove(1);
+				}
 			}
 			if (pList.get(i).getList().size() > 1) {
 				String[] pacData = pList.get(i).getList().get(0).getPoint().split(",");
@@ -79,10 +81,10 @@ public class Path{
 					double x = Pac.x() + (vec.x() / _Time);
 					double y = Pac.y() + (vec.y() / _Time);
 					_Point = (x + "," + y + "," + 0);
-				//	_Angel = pList.get(i).getList().get(1).getAngel();
+					//	_Angel = pList.get(i).getList().get(1).getAngel();
 				} else {
 					_Point = (Fru.x() + "," + Fru.y() + "," + 0);
-				//	_Angel = pList.get(i).getList().get(1).getAngel();
+					//	_Angel = pList.get(i).getList().get(1).getAngel();
 					pList.get(i).getList().remove(1);
 				}
 				pList.get(i).getList().get(0).setPoint(_Point);

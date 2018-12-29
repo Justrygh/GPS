@@ -24,6 +24,7 @@ public class Fruit {
 	public Fruit(String type, String point, String id) {
 		this._Type = type;
 		this._Point = point;
+		this._Pic = "";
 		this._iD = id;
 		this._Time = 0;
 		this._Angel = 0;

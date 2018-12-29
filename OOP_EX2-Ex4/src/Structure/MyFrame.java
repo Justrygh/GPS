@@ -835,6 +835,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		setFList(convert.getFList());
 		setGList(convert.getGList());
 		setBList(convert.getBList());
+		setList(saveList());
 	}
 
 	/**
@@ -875,9 +876,12 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		i = 0;
 		j = 0;
 		p = 0;
+		x = 0;
+		y = 0;
 //		k = 0;
 //		b = 0;
 		_Player.setPoint(0+","+0+","+0);
+		_Player.setSpeed("0.0");
 	}
 
 	/**
@@ -1255,19 +1259,28 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			_Pacmans.add(new Pacman("Pacman", x + "," + y + "," + 0, "1", "1", String.valueOf(i)));
 			i++;
 		}
-		if (isFruit == true && g.drawImage(Fruit, x - 16, y - 16, 32 * W / this.getWidth(), 32 * H / this.getHeight(), this) == true) {
+		if (isFruit == true && g.drawImage(Fruit,x-16,y-16,32*W/this.getWidth(),32*H/this.getHeight(),this) == true) {
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
 			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
 			_Fruits.add(new Fruit("Fruit", x + "," + y + "," + 0, String.valueOf(j)));
 			j++;
 		}
-		if (isPlayer == true && g.drawImage(_Player.getImage(), x - 16, y - 16, 32 * W / this.getWidth(), 32 * H / this.getHeight(), this) == true ) {
+		if (isPlayer == true && g.drawImage(_Player.getImage(),x-16,y-16,32*W/this.getWidth(),32*H/this.getHeight(),this) == true ) {
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
 			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
-			_Player.setPoint( x + "," + y + "," + 0);
-			isPlayer = false;
+			_Player.setPoint(x + "," + y + "," + 0);
+			String speed = "1.0";
+			for(int i=0; i<_Pacmans.size(); i++) {
+				if(Double.parseDouble(_Pacmans.get(i).getSpeed()) > Double.parseDouble(speed))
+					speed = String.valueOf(Double.parseDouble(_Pacmans.get(i).getSpeed()) + 1);
+			}
+			for(int i=0; i<_Ghosts.size(); i++) {
+				if(Double.parseDouble(_Ghosts.get(i).getSpeed()) > Double.parseDouble(speed))
+					speed = String.valueOf(Double.parseDouble(_Ghosts.get(i).getSpeed()) + 1);
+			}
+			_Player.setSpeed(speed);
 		}
 		//		if (isGhost == true && g.drawImage(Ghost, x - 16, y - 16, this) == true) {
 		//			g.setFont(new Font("Monospaced", Font.BOLD, 14));
@@ -1364,6 +1377,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		y = e.getY();
 		if(_Mat[y][x] == true)
 			paintElement();
+		isPlayer = false;
 	}
 
 	@Override
