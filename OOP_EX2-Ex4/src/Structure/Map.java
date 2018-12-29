@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import Geom.Point3D;
+import Players.Block;
 import Players.Game;
 import Players.Pacman;
 
@@ -28,8 +29,8 @@ public class Map {
 	private int Width;
 	private int Height;
 	private boolean Flag;
-	private int blockWidth;
-	private int blockHeight;
+	private int H = 642;
+	private int W = 1299;
 	
 	//Default Constructor that Draws the Ariel University MAP at First Pop-up.
 	public Map() {
@@ -60,16 +61,6 @@ public class Map {
 		return this.Height;
 	}
 	
-	public int getBlockWidth() {
-		return this.blockWidth;
-	}
-	/**
-	 * @return Ariel image Height
-	 */
-	public int getBlockHeight() {
-		return this.blockHeight;
-	}
-	
 	public boolean isFlag() {
 		return Flag;
 	}
@@ -93,9 +84,9 @@ public class Map {
 		return mat;
 	}
 	
-	public BufferedImage matImg(int height, int width) {
+	public BufferedImage matImg(int height, int width, ArrayList<Block> list) {
 		Image scaledImg = _Img.getScaledInstance(width, height, Image.SCALE_FAST);
-		BufferedImage done = toBufferedImage(scaledImg);
+		BufferedImage done = toBufferedImage(scaledImg, list);
 		return done;
 	}
 	
@@ -105,7 +96,7 @@ public class Map {
 	 * @param img The Image to be converted
 	 * @return The converted BufferedImage
 	 */
-	public BufferedImage toBufferedImage(Image img)
+	public BufferedImage toBufferedImage(Image img, ArrayList<Block> list)
 	{
 	    if (img instanceof BufferedImage)
 	    {
@@ -118,6 +109,15 @@ public class Map {
 	    // Draw the image on to the buffered image
 	    Graphics2D bGr = bimage.createGraphics();
 	    bGr.drawImage(img, 0, 0, null);
+	    for(int i=0; i<list.size(); i++) {
+	    	String[] Data = list.get(i).getPoint().split(",");
+			int x1 = (int) Double.parseDouble(Data[0]) * bimage.getWidth() / W;
+			int y1 = (int) Double.parseDouble(Data[1]) * bimage.getHeight() / H;
+			int blockWidth = list.get(i).getWidth() * bimage.getWidth() / W;
+			int blockHeight = list.get(i).getHeight() * bimage.getHeight() / H;
+			bGr.setColor(Color.BLACK);
+			bGr.fillRect(x1-16, y1-16, blockWidth, blockHeight);
+	    }
 	    bGr.dispose();
 
 	    // Return the buffered image
