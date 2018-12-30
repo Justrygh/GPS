@@ -73,12 +73,13 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private int i = 0;
 	private int j = 0;
 	private int p = 0;
-	private int count;
+	private int count = 0;
 	//	private int k = 0;
 	//	private int b = 0;
 
 	private Map _Map;
 	private Player _Player;
+	private Player _StartPlayer;
 	private Path _Path;
 	private boolean[][] _Mat;
 
@@ -95,6 +96,14 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 	private static void setMB(MenuBar menu) {
 		_MB = menu;
+	}
+	
+	public Player getPlayer() {
+		return this._Player;
+	}
+	
+	public Player getStartPlayer() {
+		return this._StartPlayer;
 	}
 
 	public boolean[][] getMat(){
@@ -799,8 +808,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		play.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				_StartPlayer = new Player(_Player);
 				isDemo = true;
-				count = 0;
 				play.setEnabled(false);
 				menu6.setEnabled(false);
 				menu7.setEnabled(false);

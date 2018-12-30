@@ -16,19 +16,41 @@ public class Player {
 	private int _Score;
 	private Image _Img;
 	
+	public Player(Player player) {
+		this._Point = player.getPoint();
+		this._Speed = player.getSpeed();
+		this._Radius = player.getRadius();
+		this._Img = player.getImage();
+		this._Angel = player.getAngel();
+		this._Time = player.getTime();
+		this._Dis = player.getDistance();
+		this._Score = player.getScore();
+		this._PacmansEaten = player.getPacmansEaten();
+		this._FruitsEaten = player.getFruitsEaten();
+	}
 	public Player(String point) {
 		this._Point = point;
-		this._Speed = "1";
-		this._Radius = "1";
+		this._Speed = "10.0";
+		this._Radius = "1.0";
 		this._Angel = 0;
+		this._Time = 0;
+		this._Dis = 0;
+		this._Score = 0;
+		this._PacmansEaten = 0;
+		this._FruitsEaten = 0;
 		this._Img = Toolkit.getDefaultToolkit().getImage("ourdata/Player.png");
 	}
 	
 	public Player() {
 		this._Point = 0+","+0+","+0;
 		this._Speed = "10.0";
-		this._Radius = "1";
+		this._Radius = "1.0";
 		this._Angel = 0;
+		this._Time = 0;
+		this._Dis = 0;
+		this._Score = 0;
+		this._PacmansEaten = 0;
+		this._FruitsEaten = 0;
 		this._Img = Toolkit.getDefaultToolkit().getImage("ourdata/Player.png");
 	}
 	
