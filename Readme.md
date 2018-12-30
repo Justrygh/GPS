@@ -89,5 +89,5 @@ With the Open tab you can *ONLY* open a saved game but you can't change anything
 
 We made some Limits for the changes you can make in the game:
 
-- **Speed limit: 1-9**
-- **Radius limit: 1-5**
+- **Speed limit: No LIMIT, MUST be greater than 0**
+- **Radius limit: 1-9**
