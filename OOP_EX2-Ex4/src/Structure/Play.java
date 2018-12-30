@@ -51,7 +51,7 @@ public class Play {
 						if(Data[0].equals(F)) {
 							setType(Data[0]+"ruit");
 							setPoint(Data[3]+","+Data[2]+","+Data[4]);
-							setSpeed("");
+							setSpeed(Data[5]);
 							setRadius("");
 							setiD(Data[1]);
 						}
@@ -97,7 +97,7 @@ public class Play {
 		for(int i=0; i<play.size(); i++) {
 			Play g = play.get(i);
 			if(g.getType().equals(F)) {
-				Fruit Fruit = new Fruit(g.getType(), g.getPoint(),  g.getiD());
+				Fruit Fruit = new Fruit(g.getType(), g.getPoint(), g.getSpeed(),  g.getiD());
 				_Fruits.add(Fruit);
 			}
 			else if(g.getType().equals(P)) {

@@ -9,6 +9,11 @@ public class Player {
 	private String _Speed;
 	private String _Radius;
 	private double _Angel;
+	private double _Time;
+	private double _Dis;
+	private int _FruitsEaten;
+	private int _PacmansEaten;
+	private int _Score;
 	private Image _Img;
 	
 	public Player(String point) {
@@ -45,6 +50,26 @@ public class Player {
 		this._Radius = radius;
 	}
 	
+	public void setTime(double time) {
+		this._Time += time;
+	}
+	
+	public void FruitsEaten() {
+		this._FruitsEaten++;
+	}
+	
+	public void PacmansEaten(int weight) {
+		this._PacmansEaten += weight;
+	}
+	
+	public void setDistance(double distance) {
+		this._Dis = distance;
+	}
+	
+	public void setScore(int score) {
+		this._Score = score;
+	}
+	
 	//**********Getters**********//
 	
 	public double getAngel() {
@@ -65,6 +90,26 @@ public class Player {
 	
 	public Image getImage() {
 		return this._Img;
+	}
+	
+	public double getTime() {
+		return this._Time;
+	}
+	
+	public int getFruitsEaten() {
+		return this._FruitsEaten;
+	}
+	
+	public int getPacmansEaten() {
+		return this._PacmansEaten;
+	}
+	
+	public double getDistance() {
+		return this._Dis;
+	}
+
+	public int getScore() {
+		return _Score;
 	}
 
 }

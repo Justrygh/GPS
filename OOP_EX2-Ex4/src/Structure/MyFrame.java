@@ -51,10 +51,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private int H = 642;
 	private int y, x = 0;
 	private int W = 1299;
-//	private int Bx1;
-//	private int By1;
-//	private int Bx2;
-//	private int By2;
+	//	private int Bx1;
+	//	private int By1;
+	//	private int Bx2;
+	//	private int By2;
 
 	private boolean isPacman = false;
 	private boolean isFruit = false;
@@ -70,8 +70,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private int i = 0;
 	private int j = 0;
 	private int p = 0;
-//	private int k = 0;
-//	private int b = 0;
+	//	private int k = 0;
+	//	private int b = 0;
 
 	private Map _Map;
 	private Player _Player;
@@ -220,7 +220,9 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		MenuItem player = new MenuItem("   Player   ");
 		MenuItem play = new MenuItem("   Lets Play!   ");
 		Menu menu7 = new Menu("   Switch   ");
-		MenuItem switchbar = new MenuItem("   Click Here   ");
+		MenuItem online = new MenuItem("   Play Online   ");
+		MenuItem offline = new MenuItem("   Play Offline   ");
+
 
 
 
@@ -244,6 +246,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				paintElement();
 				isPacman = false;
 				isFruit = false;
+				online.setEnabled(true);
 				open.setEnabled(true);
 				edit.setEnabled(true);
 				here.setEnabled(false);
@@ -636,8 +639,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						if (id >= _Pacmans.size()) {
 							return;
 						}
-						if (textfield2.getText().length() > 1 || textfield2.getText().length() < 1
-								|| textfield2.getText().length() == 1 && Integer.parseInt(textfield2.getText()) <= 0)
+						if (textfield2.getText().length() < 1
+								|| Integer.parseInt(textfield2.getText()) <= 0)
 							return;
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							if (id == Integer.parseInt(_Pacmans.get(i).getiD()))
@@ -736,6 +739,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		opengame.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				offline.setEnabled(true);
 				cleargame.setEnabled(true);
 				player.setEnabled(true);
 				menu6.setEnabled(true);
@@ -798,27 +802,43 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		});
 		play.setEnabled(false);
 
-		menu7.add(switchbar);
-		switchbar.addActionListener(new ActionListener() {
+		menu7.add(online);
+		online.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearLists();
 				repaint();
-				if(menu5.isEnabled() == true) {
-					menu5.setEnabled(false);
-					menu6.setEnabled(false);
+				menu1.setEnabled(false);
+				menu2.setEnabled(false);
+				menu3.setEnabled(false);
+				menu4.setEnabled(false);
+				menu5.setEnabled(true);
+				online.setEnabled(false);
+				offline.setEnabled(true);
+			}
+		});
+		online.setEnabled(false);
+		
+		menu7.add(offline);
+		offline.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clearLists();
+				repaint();
+				menu5.setEnabled(false);
+				menu6.setEnabled(false);
+				if(here.isEnabled() == true) {
+					menu1.setEnabled(true);
+				}
+				else if(here.isEnabled() == false) {
 					menu1.setEnabled(true);
 					menu2.setEnabled(true);
 				}
-				else if(menu1.isEnabled() == true) {
-					menu1.setEnabled(false);
-					menu2.setEnabled(false);
-					menu3.setEnabled(false);
-					menu4.setEnabled(false);
-					menu5.setEnabled(true);
-				}
+				online.setEnabled(true);
+				offline.setEnabled(false);
 			}
 		});
+		offline.setEnabled(false);
 
 		menu2.setEnabled(false);
 		menu3.setEnabled(false);
@@ -878,8 +898,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		p = 0;
 		x = 0;
 		y = 0;
-//		k = 0;
-//		b = 0;
+		//		k = 0;
+		//		b = 0;
 		_Player.setPoint(0+","+0+","+0);
 		_Player.setSpeed("0.0");
 	}
@@ -1040,7 +1060,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		if (_GhostsImg.size() < _Ghosts.size()) {
 			createGhostsIconList(_Ghosts.size());
 		}
-		
+
 		setMat(_Map.image2Matrix(_Map.matImg(this.getHeight(), this.getWidth(), _Blocks)));
 
 		String[] Player = _Player.getPoint().split(",");
@@ -1263,7 +1283,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
 			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
-			_Fruits.add(new Fruit("Fruit", x + "," + y + "," + 0, String.valueOf(j)));
+			_Fruits.add(new Fruit("Fruit", x + "," + y + "," + 0, "1", String.valueOf(j)));
 			j++;
 		}
 		if (isPlayer == true && g.drawImage(_Player.getImage(),x-16,y-16,32*W/this.getWidth(),32*H/this.getHeight(),this) == true ) {
@@ -1375,16 +1395,18 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseClicked(MouseEvent e) {
 		x = e.getX();
 		y = e.getY();
-		if(_Mat[y][x] == true)
+		if(_Mat[y][x] == true) {
 			paintElement();
-		isPlayer = false;
+			isPlayer = false;
+		}
+		
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		paintComponent(_Map.getImage().createGraphics().create(0, 0, e.getX(), e.getY()));
-//		H = this.getHeight();
-//		W = this.getWidth();
+		//		H = this.getHeight();
+		//		W = this.getWidth();
 	}
 
 	@Override

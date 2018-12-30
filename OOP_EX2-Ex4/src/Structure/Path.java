@@ -89,10 +89,6 @@ public class Path{
 				}
 				pList.get(i).getList().get(0).setPoint(_Point);
 				pList.get(i).getList().get(0).setAngel(_Angel);
-				if (pList.get(i).getList().size() == 1) {
-					pList.remove(i);
-					i--;
-				}
 			} else {
 				pList.remove(i);
 				i--;

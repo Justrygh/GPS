@@ -51,6 +51,8 @@ public class Pacman {
 	private double _Dis;
 	private int _FruitsEaten;
 	private double _Angel;
+	
+	//**********Setters**********//
 
 	public void setAngel(double angel) {
 		this._Angel = angel;
@@ -91,6 +93,8 @@ public class Pacman {
 	public void setiD(String id) {
 		this._iD = id;
 	}
+	
+	//**********Getters**********//
 	
 	public double getAngel() {
 		return _Angel;
