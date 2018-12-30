@@ -63,18 +63,23 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private boolean instructions = false;
 	private boolean Stop = false;
 	private boolean isPlayer = false;
+	private boolean isClicked = false;
 	//	private boolean isBlock = false;
 	//	private boolean isGhost = false;
+	
+	private Thread threadobj;
 
 
 	private int i = 0;
 	private int j = 0;
 	private int p = 0;
+	private int count;
 	//	private int k = 0;
 	//	private int b = 0;
 
 	private Map _Map;
 	private Player _Player;
+	private Path _Path;
 	private boolean[][] _Mat;
 
 	private ArrayList<Fruit> _Fruits;
@@ -186,6 +191,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		_Blocks = new ArrayList<Block>();
 		_Player = new Player();
 		_Map = new Map();
+		_Path = new Path();
 		_Mat = new boolean[_Map.getHeight()][_Map.getWidth()];
 
 		MenuBar menuBar = new MenuBar();
@@ -430,12 +436,11 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				kml.setEnabled(false);
 				stop.setEnabled(true);
 				calculatePath();
-				Path p = new Path();
-				pList = p.Create(getList(), getPList());
-				changeFruitIcon();
+				pList = _Path.Create(getList(), getPList());
+				removeFruitIcon();
 				Thread t1 = new Thread(new Runnable() {
 					public void run() {
-						pList = p.Print(pList);
+						pList = _Path.Print(pList);
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							for (int j = 0; j < pList.size(); j++) {
 								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
@@ -458,8 +463,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 								}
 							}
 						}
-						changeFruitIcon();
-						paintComponent(getGraphics());
+						removeFruitIcon();
+						repaint();
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e1) {
@@ -485,10 +490,9 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				stop.setEnabled(true);
 				start.setEnabled(false);
 				Stop = false;
-				Path p = new Path();
 				Thread t1 = new Thread(new Runnable() {
 					public void run() {
-						pList = p.Print(pList);
+						pList = _Path.Print(pList);
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							for (int j = 0; j < pList.size(); j++) {
 								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
@@ -511,8 +515,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 								}
 							}
 						}
-						changeFruitIcon();
-						paintComponent(getGraphics());
+						removeFruitIcon();
+						repaint();
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e1) {
@@ -768,6 +772,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		cleargame.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				isDemo = false;
 				menu6.setEnabled(false);
 				cleargame.setEnabled(false);
 				menu7.setEnabled(true);
@@ -794,10 +799,74 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		play.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				isDemo = true;
+				count = 0;
 				play.setEnabled(false);
 				menu6.setEnabled(false);
 				menu7.setEnabled(false);
 				opengame.setEnabled(false);
+				calculatePath();
+				pList = _Path.Create(getList(), getPList());
+				removeFruitIcon();
+				Thread t1 = new Thread(new Runnable() {
+					public void run() {
+						pList = _Path.Print(pList);
+						for (int i = 0; i < _Pacmans.size(); i++) {
+							for (int j = 0; j < pList.size(); j++) {
+								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
+									String[] pacData = _Pacmans.get(i).getPoint().split(",");
+									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
+									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
+											Double.parseDouble(pacData[1]));
+									Point3D Fru = new Point3D(Double.parseDouble(fruData[0]),
+											Double.parseDouble(fruData[1]));
+									double angel = rotatePac(Pac, Fru);
+									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
+									_Pacmans.get(i).setAngel(angel);
+								}
+							}
+						}
+						if(count == 0 && _Ghosts.size() > 0) {
+							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
+							for(int i=0; i<temp.size(); i++) {
+								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
+								
+								String[] Data1 = _Ghosts.get(i).getPoint().split(",");
+								String[] Data2 = _Player.getPoint().split(",");
+								int pX = (int) Double.parseDouble(Data1[0]);
+								int pY = (int) Double.parseDouble(Data1[1]);
+
+								int fX = (int) Double.parseDouble(Data2[0]);
+								int fY = (int) Double.parseDouble(Data2[1]);
+								if (pX == fX && pY == fY && count == 0) {
+									_Player.setScore(-20);
+									count = 3;
+								}
+							}
+						}
+						else if(count > 0)
+							count--;
+						synchronized(threadobj) {
+							while(isClicked == false) {
+								try {
+									Thread.sleep(1);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+							isClicked = false;
+						}
+						removeFruitIcon();
+						isPlayerAteFruit();
+						isPlayerAtePacman();
+						repaint();
+						if (_Fruits.size() > 0 || _Pacmans.size() > 0)
+							threadobj.run();
+						System.out.println(_Player.getScore());
+					}
+				});
+				threadobj = new Thread(t1);
+				threadobj.start();
 			}
 		});
 		play.setEnabled(false);
@@ -818,7 +887,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			}
 		});
 		online.setEnabled(false);
-		
+
 		menu7.add(offline);
 		offline.addActionListener(new ActionListener() {
 			@Override
@@ -848,6 +917,11 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 		setMB(menuBar);
 	}
+	
+	/**
+	 * This function saves the lists after we read the data from the CSV file.
+	 * @param temp - ArrayList of Play contains all the data from the CSV file.
+	 */
 
 	public void setLists(ArrayList<Play> temp) {
 		Play convert = new Play(temp);
@@ -901,7 +975,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		//		k = 0;
 		//		b = 0;
 		_Player.setPoint(0+","+0+","+0);
-		_Player.setSpeed("0.0");
+		_Player.setSpeed("10.0");
 	}
 
 	/**
@@ -973,6 +1047,88 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				int fY = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
 				if (pX == fX && pY == fY) {
 					_Fruits.get(j).setPicture("Done");
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Removes the fruits eaten from the ArrayList.
+	 */
+	
+	public void removeFruitIcon() {
+		for (int i = 0; i < _Pacmans.size(); i++) {
+			for (int j = 0; j < _Fruits.size(); j++) {
+				String[] Data1 = _Pacmans.get(i).getPoint().split(",");
+				String[] Data2 = _Fruits.get(j).getPoint().split(",");
+				int pX = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
+				int pY = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
+
+				int fX = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
+				int fY = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
+				if (pX == fX && pY == fY) {
+					_Fruits.remove(j);
+					_Icons.remove(j);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Removes the Fruits that the Player ate, and calculates the new path for the Pacmans (if they are any left)
+	 */
+	public void isPlayerAteFruit() {
+		for (int j = 0; j < _Fruits.size(); j++) {
+			String[] Data1 = _Player.getPoint().split(",");
+			String[] Data2 = _Fruits.get(j).getPoint().split(",");
+			int pX = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
+			int pY = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
+
+			int fX = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
+			int fY = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
+			
+			double distance = Math.sqrt(Math.pow(fX-pX, 2) + Math.pow(fY-pY, 2)) 
+					- Double.parseDouble(_Player.getRadius());
+			if (distance <= Double.parseDouble(_Player.getSpeed())) {
+				_Player.setScore((int)Double.parseDouble(_Fruits.get(j).getWeight()));
+				_Player.FruitsEaten();
+				_Fruits.remove(j);
+				if(_Pacmans.size() > 0) {
+					_List = new ArrayList<Game>();
+					pList = new ArrayList<Path>();
+					setList(saveList());
+					calculatePath();
+					pList = _Path.Create(getList(), getPList());
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Removes the Pacmans that the Player ate, and calculates the new path for the Pacmans (if they are any left)
+	 */
+	public void isPlayerAtePacman() {
+		for (int i = 0; i < _Pacmans.size(); i++) {
+			String[] Data1 = _Player.getPoint().split(",");
+			String[] Data2 = _Pacmans.get(i).getPoint().split(",");
+			int pX = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
+			int pY = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
+
+			int fX = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
+			int fY = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
+			
+			double distance = Math.sqrt(Math.pow(fX-pX, 2) + Math.pow(fY-pY, 2)) 
+					- Double.parseDouble(_Player.getRadius());
+			if (distance <= Double.parseDouble(_Player.getSpeed())) {
+				_Player.setScore((int)Double.parseDouble(_Pacmans.get(i).getSpeed()));
+				_Player.PacmansEaten();
+				_Pacmans.remove(i);
+				if(_Pacmans.size() > 0) {
+					_List = new ArrayList<Game>();
+					pList = new ArrayList<Path>();
+					setList(saveList());
+					calculatePath();
+					pList = _Path.Create(getList(), getPList());
 				}
 			}
 		}
@@ -1065,16 +1221,14 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 		String[] Player = _Player.getPoint().split(",");
 		if(Integer.parseInt(Player[0]) != 0 && Integer.parseInt(Player[1]) != 0) {
-			String[] Data = _Player.getPoint().split(",");
-			int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
-			int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+			int x1 = (int) Double.parseDouble(Player[0]) * this.getWidth() / W;
+			int y1 = (int) Double.parseDouble(Player[1]) * this.getHeight() / H;
 			g.drawImage(_Player.getImage(), x1-16, y1-16, 32 * this.getWidth() / W, 32 * this.getHeight() / H, null);
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
 			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
 		}
 
-		String Done = "Done";
 		for (int i = 0; i < _Fruits.size(); i++) {
 			String[] Data = _Fruits.get(i).getPoint().split(",");
 			int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
@@ -1143,14 +1297,6 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			}
 		}
 		if (isDemo == true) {
-			for (int i = 0; i < _Fruits.size(); i++) {
-				if (_Fruits.get(i).getPicture().equals(Done)) {
-					String[] Data = _Fruits.get(i).getPoint().split(",");
-					int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
-					int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
-					g.drawImage(img, x1 - 16, y1 - 16, 32 * this.getWidth() / W, 32 * this.getHeight() / H, this);
-				}
-			}
 			for (int i = 0; i < _Pacmans.size(); i++) {
 				String[] Data = _Pacmans.get(i).getPoint().split(",");
 				int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
@@ -1291,15 +1437,12 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			g.setColor(Color.WHITE);
 			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
 			_Player.setPoint(x + "," + y + "," + 0);
-			String speed = "1.0";
-			for(int i=0; i<_Pacmans.size(); i++) {
-				if(Double.parseDouble(_Pacmans.get(i).getSpeed()) > Double.parseDouble(speed))
-					speed = String.valueOf(Double.parseDouble(_Pacmans.get(i).getSpeed()) + 1);
-			}
 			for(int i=0; i<_Ghosts.size(); i++) {
-				if(Double.parseDouble(_Ghosts.get(i).getSpeed()) > Double.parseDouble(speed))
-					speed = String.valueOf(Double.parseDouble(_Ghosts.get(i).getSpeed()) + 1);
+				if(Double.parseDouble(_Ghosts.get(i).getSpeed()) > Double.parseDouble(_Player.getSpeed())) {
+					_Player.setSpeed(String.valueOf(Double.parseDouble(_Ghosts.get(i).getSpeed())));
+				}
 			}
+			String speed = String.valueOf(Double.parseDouble(_Player.getSpeed()) * 2);
 			_Player.setSpeed(speed);
 		}
 		//		if (isGhost == true && g.drawImage(Ghost, x - 16, y - 16, this) == true) {
@@ -1395,11 +1538,21 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseClicked(MouseEvent e) {
 		x = e.getX();
 		y = e.getY();
-		if(_Mat[y][x] == true) {
+		
+		if(_Mat[y][x] == true && isPlayer == true) {
 			paintElement();
 			isPlayer = false;
 		}
-		
+		if(isDemo == true && isClicked == false) {
+			_Player = _Path.movePlayer(x, y, _Player);
+			String[] Data = _Player.getPoint().split(",");
+			int x1 = (int)Double.parseDouble(Data[0]) * this.getWidth() / W;
+			int y1 = (int)Double.parseDouble(Data[1]) * this.getHeight() / H;
+			if(_Mat[y1][x1] == false) 
+				_Player.setScore(-1);
+			isClicked = true;
+		}
+
 	}
 
 	@Override

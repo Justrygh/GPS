@@ -3,7 +3,9 @@ package Structure;
 import java.util.ArrayList;
 import Geom.Point3D;
 import Players.Game;
+import Players.Ghost;
 import Players.Pacman;
+import Players.Player;
 
 public class Path{
 	/**
@@ -54,6 +56,45 @@ public class Path{
 			_PList.add(it);
 		}
 		return _PList;
+	}
+
+	public ArrayList<Ghost> chasePlayer(ArrayList<Ghost> list, Player player){
+		for(int i=0; i<list.size(); i++) {
+			String[] ghostData = list.get(i).getPoint().split(",");
+			String[] playerData = player.getPoint().split(",");
+			Point3D Ghost = new Point3D(Double.parseDouble(ghostData[0]), Double.parseDouble(ghostData[1]));
+			Point3D Player = new Point3D(Double.parseDouble(playerData[0]), Double.parseDouble(playerData[1]));
+			Point3D vec = new Point3D(Player.x() - Ghost.x(), Player.y() - Ghost.y());
+			double distance = _Map.distanceBetween2Points(Ghost, Player)
+					- Double.parseDouble(list.get(i).getRadius());
+			double time = distance / Double.parseDouble(list.get(i).getSpeed());
+			if (time > 1) {
+				double x = Ghost.x() + (vec.x() / time);
+				double y = Ghost.y() + (vec.y() / time);
+				_Point = (x + "," + y + "," + 0);
+			}
+			else {
+				_Point = (Player.x() + "," + Player.y() + "," + 0);
+			}
+			list.get(i).setPoint(_Point);
+		}
+		ArrayList<Ghost> newgList = new ArrayList<Ghost>();
+		for (int i = 0; i < list.size(); i++) {
+			newgList.add(list.get(i));
+		}
+		return newgList;
+	}
+	
+	public Player movePlayer(int x, int y, Player player) {
+		String[] Data = player.getPoint().split(",");
+		Point3D oldPlayer = new Point3D(Double.parseDouble(Data[0]), Double.parseDouble(Data[1]));
+		Point3D newPlayer = new Point3D(x, y);
+		Point3D vec = new Point3D(newPlayer.x() - oldPlayer.x(), newPlayer.y() - oldPlayer.y());
+		double distance = _Map.distanceBetween2Points(oldPlayer, newPlayer);
+		Point3D newPoint =  new Point3D(oldPlayer.x() + (vec.x()/distance*Double.parseDouble(player.getSpeed())), 
+				oldPlayer.y() + (vec.y()/distance*Double.parseDouble(player.getSpeed())));
+		player.setPoint(newPoint.ix()+","+newPoint.iy()+","+0);
+		return player;
 	}
 	/**
 	 * This method gets ArrayList of Path and returns a new ArrayList of the Path to Print.

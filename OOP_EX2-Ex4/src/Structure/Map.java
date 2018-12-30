@@ -28,7 +28,6 @@ public class Map {
 	private BufferedImage _Img;
 	private int Width;
 	private int Height;
-	private boolean Flag;
 	private int H = 642;
 	private int W = 1299;
 	
@@ -61,13 +60,13 @@ public class Map {
 		return this.Height;
 	}
 	
-	public boolean isFlag() {
-		return Flag;
-	}
-	
-	public void setFlag(boolean flag) {
-		Flag = flag;
-	}
+	/**
+	 * 
+	 * @param img - Converts the current Image colors to matrix of booleans.
+	 * ** If the current (i,j) color is black or the current (i,j) is the frame board the current value will be false
+	 * else the current value will be true. ** 
+	 * @return Converted boolean matrix
+	 */
 	
 	public boolean[][] image2Matrix(BufferedImage img){
 		boolean[][] mat = new boolean[img.getHeight()][img.getWidth()];

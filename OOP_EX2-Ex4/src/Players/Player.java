@@ -26,7 +26,7 @@ public class Player {
 	
 	public Player() {
 		this._Point = 0+","+0+","+0;
-		this._Speed = "1";
+		this._Speed = "10.0";
 		this._Radius = "1";
 		this._Angel = 0;
 		this._Img = Toolkit.getDefaultToolkit().getImage("ourdata/Player.png");
@@ -55,11 +55,11 @@ public class Player {
 	}
 	
 	public void FruitsEaten() {
-		this._FruitsEaten++;
+		this._FruitsEaten ++;
 	}
 	
-	public void PacmansEaten(int weight) {
-		this._PacmansEaten += weight;
+	public void PacmansEaten() {
+		this._PacmansEaten ++;
 	}
 	
 	public void setDistance(double distance) {
@@ -67,7 +67,7 @@ public class Player {
 	}
 	
 	public void setScore(int score) {
-		this._Score = score;
+		this._Score += score;
 	}
 	
 	//**********Getters**********//
