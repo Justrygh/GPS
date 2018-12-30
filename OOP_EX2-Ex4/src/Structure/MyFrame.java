@@ -1068,6 +1068,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		//		b = 0;
 		_Player.setPoint(0+","+0+","+0);
 		_Player.setSpeed("10.0");
+		_Player.resetScore();
 	}
 
 	/**
