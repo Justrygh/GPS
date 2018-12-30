@@ -233,7 +233,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		MenuItem cleargame = new MenuItem("   Clear   ");
 		Menu menu6 = new Menu("   Play   ");
 		MenuItem player = new MenuItem("   Player   ");
-		MenuItem play = new MenuItem("   Lets Play!   ");
+		MenuItem play = new MenuItem("   Click & Play   ");
+		MenuItem autoplay = new MenuItem("   Auto Play   ");
 		Menu menu7 = new Menu("   Switch   ");
 		MenuItem online = new MenuItem("   Play Online   ");
 		MenuItem offline = new MenuItem("   Play Offline   ");
@@ -799,6 +800,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				isPlayer = true;
 				paintElement();
 				play.setEnabled(true);
+				autoplay.setEnabled(true);
 				player.setEnabled(false);
 			}
 		});
@@ -811,6 +813,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				_StartPlayer = new Player(_Player);
 				isDemo = true;
 				play.setEnabled(false);
+				autoplay.setEnabled(false);
 				menu6.setEnabled(false);
 				menu7.setEnabled(false);
 				opengame.setEnabled(false);
@@ -879,6 +882,86 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			}
 		});
 		play.setEnabled(false);
+		
+		menu6.add(autoplay);
+		autoplay.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				_StartPlayer = new Player(_Player);
+				isDemo = true;
+				play.setEnabled(false);
+				autoplay.setEnabled(false);
+				menu6.setEnabled(false);
+				menu7.setEnabled(false);
+				opengame.setEnabled(false);
+				calculatePath();
+				pList = _Path.Create(getList(), getPList());
+				removeFruitIcon();
+				Thread t1 = new Thread(new Runnable() {
+					public void run() {
+						pList = _Path.Print(pList);
+						for (int i = 0; i < _Pacmans.size(); i++) {
+							for (int j = 0; j < pList.size(); j++) {
+								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
+									String[] pacData = _Pacmans.get(i).getPoint().split(",");
+									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
+									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
+											Double.parseDouble(pacData[1]));
+									Point3D Fru = new Point3D(Double.parseDouble(fruData[0]),
+											Double.parseDouble(fruData[1]));
+									double angel = rotatePac(Pac, Fru);
+									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
+									_Pacmans.get(i).setAngel(angel);
+								}
+							}
+						}
+						if(count == 0 && _Ghosts.size() > 0) {
+							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
+							for(int i=0; i<temp.size(); i++) {
+								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
+								
+								String[] Data1 = _Ghosts.get(i).getPoint().split(",");
+								String[] Data2 = _Player.getPoint().split(",");
+								int pX = (int) Double.parseDouble(Data1[0]);
+								int pY = (int) Double.parseDouble(Data1[1]);
+
+								int fX = (int) Double.parseDouble(Data2[0]);
+								int fY = (int) Double.parseDouble(Data2[1]);
+								if (pX == fX && pY == fY && count == 0) {
+									_Player.setScore(-20);
+									count = 3;
+								}
+							}
+						}
+						else if(count > 0)
+							count--;
+						if(_Pacmans.size() > 0) {
+							_Path.movePlayer2Pacman(_Pacmans, _Player);
+						}
+						else {
+							_Path.movePlayer2Fruit(_Fruits, _Player);
+						}
+						removeFruitIcon();
+						isPlayerAteFruit();
+						isPlayerAtePacman();
+						repaint();
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						if (_Fruits.size() > 0 || _Pacmans.size() > 0)
+							threadobj.run();
+					}
+				});
+				threadobj = new Thread(t1);
+				threadobj.start();
+			}
+		});
+		autoplay.setEnabled(false);
+		
+		
 
 		menu7.add(online);
 		online.addActionListener(new ActionListener() {

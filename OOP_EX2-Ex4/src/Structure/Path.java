@@ -2,6 +2,7 @@ package Structure;
 
 import java.util.ArrayList;
 import Geom.Point3D;
+import Players.Fruit;
 import Players.Game;
 import Players.Ghost;
 import Players.Pacman;
@@ -83,6 +84,46 @@ public class Path{
 			newgList.add(list.get(i));
 		}
 		return newgList;
+	}
+	
+	public Player movePlayer2Fruit(ArrayList<Fruit> list, Player player) {
+		Fruit temp = new Fruit();
+		double distance = Integer.MAX_VALUE;
+		for(int i=0; i<list.size(); i++) {
+			String[] Fruit = (list.get(i).getPoint().split(","));
+			String[] Player = (player.getPoint().split(","));
+			Point3D Fru = new Point3D(Double.parseDouble(Fruit[0]), Double.parseDouble(Fruit[1]));
+			Point3D Pla = new Point3D(Double.parseDouble(Player[0]), Double.parseDouble(Player[1]));
+			double tempdistance = _Map.distanceBetween2Points(Fru, Pla) 
+					- Double.parseDouble(player.getRadius());
+			if(tempdistance < distance) {
+				distance = tempdistance;
+				temp = list.get(i);
+			}
+		}
+		String[] Fruit = (temp.getPoint().split(","));
+		player = movePlayer((int)Double.parseDouble(Fruit[0]), (int)Double.parseDouble(Fruit[1]), player);
+		return player;
+	}
+	
+	public Player movePlayer2Pacman(ArrayList<Pacman> list, Player player) {
+		Pacman temp = new Pacman();
+		double distance = Integer.MAX_VALUE;
+		for(int i=0; i<list.size(); i++) {
+			String[] Pacman = (list.get(i).getPoint().split(","));
+			String[] Player = (player.getPoint().split(","));
+			Point3D Pac = new Point3D(Double.parseDouble(Pacman[0]), Double.parseDouble(Pacman[1]));
+			Point3D Pla = new Point3D(Double.parseDouble(Player[0]), Double.parseDouble(Player[1]));
+			double tempdistance = _Map.distanceBetween2Points(Pac, Pla) 
+					- Double.parseDouble(player.getRadius());
+			if(tempdistance < distance) {
+				distance = tempdistance;
+				temp = list.get(i);
+			}
+		}
+		String[] Pacman = (temp.getPoint().split(","));
+		player = movePlayer((int)Double.parseDouble(Pacman[0]), (int)Double.parseDouble(Pacman[1]), player);
+		return player;
 	}
 	
 	public Player movePlayer(int x, int y, Player player) {
