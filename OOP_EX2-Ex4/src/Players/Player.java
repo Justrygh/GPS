@@ -92,6 +92,10 @@ public class Player {
 		this._Score += score;
 	}
 	
+	public void resetScore() {
+		this._Score = 0;
+	}
+	
 	//**********Getters**********//
 	
 	public double getAngel() {
