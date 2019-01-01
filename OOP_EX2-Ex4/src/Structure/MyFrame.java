@@ -2,6 +2,7 @@ package Structure;
 
 import java.awt.Color;
 
+
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -25,7 +26,12 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import Algorithms.ShortestPathAlgo;
 import File_format.Path2kml;
@@ -64,6 +70,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private boolean Stop = false;
 	private boolean isPlayer = false;
 	private boolean isClicked = false;
+	private boolean isOnline = false;
 	//	private boolean isBlock = false;
 	//	private boolean isGhost = false;
 
@@ -73,13 +80,14 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private int i = 0;
 	private int j = 0;
 	private int p = 0;
-	private int count = 0;
+	private int ghostStop = 0;
+	private final int MaxTime = 100;
+	private int _gameID;
 	//	private int k = 0;
 	//	private int b = 0;
 
 	private Map _Map;
 	private Player _Player;
-	private Player _StartPlayer;
 	private Path _Path;
 	private boolean[][] _Mat;
 
@@ -91,6 +99,9 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private ArrayList<Path> pList;
 	private ArrayList<Ghost> _Ghosts;
 	private ArrayList<Block> _Blocks;
+	private ArrayList<Long> _Ids;
+	private ArrayList<Integer> _Helper;
+
 
 	// **********Private Methods**********//
 
@@ -100,10 +111,6 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 	public Player getPlayer() {
 		return this._Player;
-	}
-
-	public Player getStartPlayer() {
-		return this._StartPlayer;
 	}
 
 	public boolean[][] getMat(){
@@ -144,6 +151,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 	public void setFList(ArrayList<Fruit> fList) {
 		this._Fruits = fList;
+	}
+
+	public void setiDList(ArrayList<Long> ids) {
+		this._Ids = ids;
 	}
 
 	public void setGList(ArrayList<Ghost> gList) {
@@ -198,6 +209,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		pList = new ArrayList<Path>();
 		_Ghosts = new ArrayList<Ghost>();
 		_Blocks = new ArrayList<Block>();
+		_Ids = new ArrayList<Long>();
 		_Player = new Player();
 		_Map = new Map();
 		_Path = new Path();
@@ -231,8 +243,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		Menu menu5 = new Menu("   New Game   ");
 		MenuItem opengame = new MenuItem("   Open File...   ");
 		MenuItem cleargame = new MenuItem("   Clear   ");
-		Menu menu6 = new Menu("   Play   ");
+		Menu menu6 = new Menu("   Adjust   ");
 		MenuItem player = new MenuItem("   Player   ");
+		MenuItem insertid = new MenuItem("   Insert ID   ");
+		Menu menu8 = new Menu("   Play   ");
 		MenuItem easybar = new MenuItem("----------Difficult: Easy----------");
 		MenuItem play = new MenuItem("   Click & Play   ");
 		MenuItem autoplay = new MenuItem("   Auto Play   ");
@@ -242,6 +256,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		Menu menu7 = new Menu("   Switch   ");
 		MenuItem online = new MenuItem("   Online   ");
 		MenuItem offline = new MenuItem("   Offline   ");
+		JPopupMenu popup = new JPopupMenu();
 
 		menuBar.add(menu1);
 		menuBar.add(menu2);
@@ -267,6 +282,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				menu2.setEnabled(true);
 				menu7.setEnabled(true);
 				menu7.remove(offline);
+				helpUsNow();
 			}
 		});
 		here.setEnabled(true);
@@ -606,6 +622,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						if (textfield.getText().length() > 1 || textfield.getText().length() < 1
 								|| textfield.getText().length() == 1 && Integer.parseInt(textfield.getText()) <= 0)
 							return;
+						for(int i=0; i<textfield.getText().length(); i++) {
+							if(textfield.getText().charAt(i) < 48 || textfield.getText().charAt(i) > 57)
+								return;
+						}
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							_Pacmans.get(i).setSpeed(textfield.getText());
 						}
@@ -638,7 +658,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				f.add(label1);
 				f.add(label2);
 				f.setBounds(W / 3, H / 2, 0, 0);
-				f.setSize(250, 150);
+				f.setSize(200, 150);
 				f.setLayout(null);
 				f.setVisible(true);
 				f.setResizable(false);
@@ -646,9 +666,17 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				b.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
+						for(int i=0; i<textfield1.getText().length(); i++) {
+							if(textfield1.getText().charAt(i) < 48 || textfield1.getText().charAt(i) > 57)
+								return;
+						}
 						int id = Integer.parseInt(textfield1.getText());
 						if (id >= _Pacmans.size()) {
 							return;
+						}
+						for(int i=0; i<textfield2.getText().length(); i++) {
+							if(textfield2.getText().charAt(i) < 48 || textfield2.getText().charAt(i) > 57)
+								return;
 						}
 						if (textfield2.getText().length() < 1
 								|| Integer.parseInt(textfield2.getText()) <= 0)
@@ -686,6 +714,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				b.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
+						for(int i=0; i<textfield.getText().length(); i++) {
+							if(textfield.getText().charAt(i) < 48 || textfield.getText().charAt(i) > 57)
+								return;
+						}
 						if (textfield.getText().length() > 1 || textfield.getText().length() < 1
 								|| textfield.getText().length() == 1 && Integer.parseInt(textfield.getText()) <= 0)
 							return;
@@ -721,7 +753,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				f.add(label1);
 				f.add(label2);
 				f.setBounds(W / 3, H / 2, 0, 0);
-				f.setSize(250, 150);
+				f.setSize(200, 150);
 				f.setLayout(null);
 				f.setVisible(true);
 				f.setResizable(false);
@@ -729,9 +761,17 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				b.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
+						for(int i=0; i<textfield1.getText().length(); i++) {
+							if(textfield1.getText().charAt(i) < 48 || textfield1.getText().charAt(i) > 57)
+								return;
+						}
 						int id = Integer.parseInt(textfield1.getText());
 						if (id >= _Pacmans.size()) {
 							return;
+						}
+						for(int i=0; i<textfield2.getText().length(); i++) {
+							if(textfield2.getText().charAt(i) < 48 || textfield2.getText().charAt(i) > 57)
+								return;
 						}
 						if (textfield2.getText().length() > 1 || textfield2.getText().length() < 1
 								|| textfield2.getText().length() == 1 && Integer.parseInt(textfield2.getText()) <= 0)
@@ -751,25 +791,27 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				cleargame.setEnabled(true);
-				player.setEnabled(true);
 				menu6.setEnabled(true);
 				menu7.setEnabled(true);
+				menu8.setEnabled(false);
 				menu7.remove(online);
 				menuBar.remove(menu1);
 				menuBar.remove(menu2);
 				menuBar.remove(menu3);
 				menuBar.remove(menu4);
-				instructions = true;
 				repaint();
 				JFileChooser chooser = new JFileChooser();
 				int returnName = chooser.showOpenDialog(null);
 				String path = "";
+				String name = "";
 				if (returnName == JFileChooser.APPROVE_OPTION) {
 					File f = chooser.getSelectedFile();
 					if (f != null && f.getName().endsWith(".csv")) {
 						path = f.getAbsolutePath();
+						name = f.getName().substring(f.getName().length()-5, f.getName().length()-4);
 					}
 				}
+				_gameID = _Helper.get(Integer.valueOf(name));
 				ArrayList<Play> temp = new ArrayList<Play>();
 				Play convert = new Play(new File(path));
 				temp = _Map.ConvertList2Pixel(convert.read());
@@ -785,6 +827,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				isDemo = false;
 				isPlayer = false;
 				menu6.setEnabled(false);
+				menu8.setEnabled(false);
 				cleargame.setEnabled(false);
 				menu7.setEnabled(true);
 				opengame.setEnabled(true);
@@ -794,35 +837,111 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		});
 		cleargame.setEnabled(false);
 
+		menu6.add(insertid);
+		insertid.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame f = new JFrame("Insert ID");
+				JButton b = new JButton("Submit");
+				b.setBounds(90, 100, 100, 20);
+				JLabel label1 = new JLabel();
+				label1.setText("First ID:");
+				label1.setBounds(10, -15, 100, 100);
+				JLabel label2 = new JLabel();
+				label2.setText("Second ID:");
+				label2.setBounds(10, 10, 100, 100);
+				JLabel label3 = new JLabel();
+				label3.setText("Third ID:");
+				label3.setBounds(10, 35, 100, 100);
+				JTextField textfield1 = new JTextField();
+				textfield1.setBounds(90, 25, 100, 20);
+				JTextField textfield2 = new JTextField();
+				textfield2.setBounds(90, 50, 100, 20);
+				JTextField textfield3 = new JTextField();
+				textfield3.setBounds(90, 75, 100, 20);
+				f.add(textfield1);
+				f.add(textfield2);
+				f.add(textfield3);
+				f.add(b);
+				f.add(label1);
+				f.add(label2);
+				f.add(label3);
+				f.setBounds(_Map.getWidth() / 2, _Map.getHeight() / 2, 0, 0);
+				f.setSize(220, 180);
+				f.setLayout(null);
+				f.setVisible(true);
+				f.setResizable(false);
+
+				b.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						if (textfield1.getText().length() != 0
+								&& textfield1.getText().length() != 9){
+							return;
+						}
+						if (textfield3.getText().length() != 0
+								&& textfield3.getText().length() != 9) {
+							return;
+						}
+						if (textfield3.getText().length() != 0
+								&& textfield3.getText().length() != 9) {
+							return;
+						}
+						for(int i=0; i<textfield1.getText().length(); i++) {
+							if(textfield1.getText().charAt(i) < 48 || textfield1.getText().charAt(i) > 57)
+								return;
+						}
+						for(int i=0; i<textfield2.getText().length(); i++) {
+							if(textfield2.getText().charAt(i) < 48 || textfield2.getText().charAt(i) > 57)
+								return;
+						}
+						for(int i=0; i<textfield3.getText().length(); i++) {
+							if(textfield3.getText().charAt(i) < 48 || textfield3.getText().charAt(i) > 57)
+								return;
+						}
+						if (textfield1.getText().length() == 0){
+							textfield1.setText("0");
+						}
+						if (textfield2.getText().length() == 0){
+							textfield2.setText("0");
+						}
+						if (textfield3.getText().length() == 0){
+							textfield3.setText("0");
+						}
+						_Ids.add(Long.parseLong(textfield1.getText()));
+						_Ids.add(Long.parseLong(textfield2.getText()));
+						_Ids.add(Long.parseLong(textfield3.getText()));
+						f.dispose();
+						player.setEnabled(true);
+						insertid.setEnabled(false);
+					}
+				});
+			}
+		});
+
 		menu6.add(player);
 		player.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				isPlayer = true;
 				paintElement();
-				play.setEnabled(true);
-				autoplay.setEnabled(true);
-				playhard.setEnabled(true);
-				autoplayhard.setEnabled(true);
-				player.setEnabled(false);
+				menu8.setEnabled(true);
+				menu6.setEnabled(false);
 			}
 		});
 		player.setEnabled(false);
 
-		menu6.add(easybar);
+		menu8.add(easybar);
 		easybar.setEnabled(false);
 
-		menu6.add(play);
+		menu8.add(play);
 		play.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				_StartPlayer = new Player(_Player);
 				isDemo = true;
-				play.setEnabled(false);
-				autoplay.setEnabled(false);
-				playhard.setEnabled(false);
-				autoplayhard.setEnabled(false);
-				menu6.setEnabled(false);
+				repaint();
+				menu5.setEnabled(false);
+				menu8.setEnabled(false);
 				menu7.setEnabled(false);
 				opengame.setEnabled(false);
 				calculatePath();
@@ -846,7 +965,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 								}
 							}
 						}
-						if(count == 0 && _Ghosts.size() > 0) {
+						if(ghostStop == 0 && _Ghosts.size() > 0) {
 							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
 							for(int i=0; i<temp.size(); i++) {
 								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
@@ -858,18 +977,19 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 								int fX = (int) Double.parseDouble(Data2[0]);
 								int fY = (int) Double.parseDouble(Data2[1]);
-								if (pX == fX && pY == fY && count == 0) {
+								if (pX == fX && pY == fY && ghostStop == 0) {
 									_Player.setScore(-20);
-									count = 3;
+									_Player.ghostKill();
+									ghostStop = 3;
 								}
 							}
 						}
-						else if(count > 0)
-							count--;
+						else if(ghostStop > 0)
+							ghostStop--;
 						synchronized(threadobj) {
 							while(isClicked == false) {
 								try {
-									Thread.sleep(1);
+									Thread.sleep(100);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
@@ -880,28 +1000,31 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						isPlayerAteFruit();
 						isPlayerAtePacman();
 						repaint();
-						if (_Fruits.size() > 0 || _Pacmans.size() > 0)
+						_Player.Time();
+						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
-						System.out.println(_Player.getScore());
+						else {
+							double score = (MaxTime - _Player.getTime())/10;
+							_Player.setScore(score);
+							popup.show(createPopup(), 0 , 0);
+							sendReport();
+							menu5.setEnabled(true);
+						}
 					}
 				});
 				threadobj = new Thread(t1);
 				threadobj.start();
 			}
 		});
-		play.setEnabled(false);
 
-		menu6.add(autoplay);
+		menu8.add(autoplay);
 		autoplay.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				_StartPlayer = new Player(_Player);
 				isDemo = true;
-				play.setEnabled(false);
-				autoplay.setEnabled(false);
-				playhard.setEnabled(false);
-				autoplayhard.setEnabled(false);
-				menu6.setEnabled(false);
+				repaint();
+				menu5.setEnabled(false);
+				menu8.setEnabled(false);
 				menu7.setEnabled(false);
 				opengame.setEnabled(false);
 				calculatePath();
@@ -925,7 +1048,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 								}
 							}
 						}
-						if(count == 0 && _Ghosts.size() > 0) {
+						if(ghostStop == 0 && _Ghosts.size() > 0) {
 							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
 							for(int i=0; i<temp.size(); i++) {
 								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
@@ -937,54 +1060,59 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 								int fX = (int) Double.parseDouble(Data2[0]);
 								int fY = (int) Double.parseDouble(Data2[1]);
-								if (pX == fX && pY == fY && count == 0) {
+								if (pX == fX && pY == fY && ghostStop == 0) {
 									_Player.setScore(-20);
-									count = 3;
+									_Player.ghostKill();
+									ghostStop = 3;
 								}
 							}
 						}
-						else if(count > 0)
-							count--;
+						else if(ghostStop > 0)
+							ghostStop--;
 						if(_Pacmans.size() > 0) {
 							_Path.movePlayer2Pacman(_Pacmans, _Player);
 						}
-						else {
+						else if(_Fruits.size() > 0) {
 							_Path.movePlayer2Fruit(_Fruits, _Player);
 						}
 						removeFruitIcon();
 						isPlayerAteFruit();
 						isPlayerAtePacman();
 						repaint();
+						_Player.Time();
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						if (_Fruits.size() > 0 || _Pacmans.size() > 0)
+						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
+						else {
+							double score = (MaxTime - _Player.getTime())/10;
+							_Player.setScore(score);
+							popup.show(createPopup(), 0 , 0);
+							sendReport();
+							menu5.setEnabled(true);
+						}
 					}
 				});
 				threadobj = new Thread(t1);
 				threadobj.start();
 			}
 		});
-		autoplay.setEnabled(false);
 
-		menu6.add(hardbar);
+		menu8.add(hardbar);
 		hardbar.setEnabled(false);
 
-		menu6.add(playhard);
+		menu8.add(playhard);
 		playhard.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				_StartPlayer = new Player(_Player);
 				isDemo = true;
-				play.setEnabled(false);
-				autoplay.setEnabled(false);
-				playhard.setEnabled(false);
-				autoplayhard.setEnabled(false);
-				menu6.setEnabled(false);
+				repaint();
+				menu5.setEnabled(false);
+				menu8.setEnabled(false);
 				menu7.setEnabled(false);
 				opengame.setEnabled(false);
 				calculatePath();
@@ -1018,7 +1146,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 							}
 							isClicked = false;
 						}
-						if(count == 0 && _Ghosts.size() > 0) {
+						if(ghostStop == 0 && _Ghosts.size() > 0) {
 							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
 							for(int i=0; i<temp.size(); i++) {
 								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
@@ -1030,40 +1158,44 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 								int fX = (int) Double.parseDouble(Data2[0]);
 								int fY = (int) Double.parseDouble(Data2[1]);
-								if (pX == fX && pY == fY && count == 0) {
+								if (pX == fX && pY == fY && ghostStop == 0) {
 									_Player.setScore(-20);
-									count = 3;
+									_Player.ghostKill();
+									ghostStop = 3;
 								}
 							}
 						}
-						else if(count > 0)
-							count--;
+						else if(ghostStop > 0)
+							ghostStop--;
 						removeFruitIcon();
 						isPlayerAteFruit();
 						isPlayerAtePacman();
 						repaint();
-						if (_Fruits.size() > 0 || _Pacmans.size() > 0)
+						_Player.Time();
+						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
-						System.out.println(_Player.getScore());
+						else {
+							double score = (MaxTime - _Player.getTime())/10;
+							_Player.setScore(score);
+							popup.show(createPopup(), 0 , 0);
+							sendReport();
+							menu5.setEnabled(true);
+						}
 					}
 				});
 				threadobj = new Thread(t1);
 				threadobj.start();
 			}
 		});
-		playhard.setEnabled(false);
 
-		menu6.add(autoplayhard);
+		menu8.add(autoplayhard);
 		autoplayhard.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				_StartPlayer = new Player(_Player);
 				isDemo = true;
-				play.setEnabled(false);
-				autoplay.setEnabled(false);
-				playhard.setEnabled(false);
-				autoplayhard.setEnabled(false);
-				menu6.setEnabled(false);
+				repaint();
+				menu5.setEnabled(false);
+				menu8.setEnabled(false);
 				menu7.setEnabled(false);
 				opengame.setEnabled(false);
 				calculatePath();
@@ -1093,7 +1225,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						else {
 							_Path.movePlayer2Fruit(_Fruits, _Player);
 						}
-						if(count == 0 && _Ghosts.size() > 0) {
+						if(ghostStop == 0 && _Ghosts.size() > 0) {
 							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
 							for(int i=0; i<temp.size(); i++) {
 								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
@@ -1105,34 +1237,42 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 
 								int fX = (int) Double.parseDouble(Data2[0]);
 								int fY = (int) Double.parseDouble(Data2[1]);
-								if (pX == fX && pY == fY && count == 0) {
+								if (pX == fX && pY == fY && ghostStop == 0) {
 									_Player.setScore(-20);
-									count = 3;
+									_Player.ghostKill();
+									ghostStop = 3;
 								}
 							}
 						}
-						else if(count > 0)
-							count--;
+						else if(ghostStop > 0)
+							ghostStop--;
 						removeFruitIcon();
 						isPlayerAteFruit();
 						isPlayerAtePacman();
 						repaint();
+						_Player.Time();
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						if (_Fruits.size() > 0 || _Pacmans.size() > 0)
+						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
+						else {
+							double score = MaxTime - _Player.getTime();
+							_Player.setScore(score);
+							popup.show(createPopup(), 0 , 0);
+							sendReport();
+							menu5.setEnabled(true);
+						}
 					}
 				});
 				threadobj = new Thread(t1);
 				threadobj.start();
 			}
 		});
-		autoplayhard.setEnabled(false);
-		
+
 		menu7.add(online);
 		online.addActionListener(new ActionListener() {
 			@Override
@@ -1141,14 +1281,17 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				repaint();
 				isPacman = false;
 				isFruit = false;
+				isOnline = true;
 				menuBar.remove(menu1);
 				menuBar.remove(menu2);
 				menuBar.remove(menu3);
 				menuBar.remove(menu4);
 				menuBar.add(menu5);
 				menuBar.add(menu6);
+				menuBar.add(menu8);
 				menu5.setEnabled(true);
 				menu6.setEnabled(false);
+				menu8.setEnabled(false);
 				menu7.remove(online);
 				menu7.add(offline);
 			}
@@ -1161,8 +1304,10 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				clearLists();
 				repaint();
 				isPlayer = false;
+				isOnline = false;
 				menuBar.remove(menu5);
 				menuBar.remove(menu6);
+				menuBar.remove(menu8);
 				menuBar.add(menu1);
 				menuBar.add(menu2);
 				menuBar.add(menu3);
@@ -1228,6 +1373,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		ArrayList<Block> iBlock = new ArrayList<Block>();
 		ArrayList<Image> iGList = new ArrayList<Image>();
 		ArrayList<Ghost> ghList = new ArrayList<Ghost>();
+		ArrayList<Long> iDs = new ArrayList<Long>();
 		setList(gList);
 		setPList(pList);
 		setFList(fList);
@@ -1235,6 +1381,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		setBList(iBlock);
 		setGIList(iGList);
 		setGList(ghList);
+		setiDList(iDs);
 		i = 0;
 		j = 0;
 		p = 0;
@@ -1242,9 +1389,66 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		y = 0;
 		//		k = 0;
 		//		b = 0;
+		ghostStop = 0;
+		_Player.resetGhostKill();
+		_Player.resetWrongLocation();
 		_Player.setPoint(0+","+0+","+0);
 		_Player.setSpeed("10.0");
 		_Player.resetScore();
+	}
+
+	public JFrame createPopup() {
+		JFrame f = new JFrame("Score");
+		JLabel label1 = new JLabel();
+		label1.setText("Your Score: " + _Player.getScore());
+		label1.setBounds(60, -15, 150, 100);
+		JLabel label2 = new JLabel();
+		label2.setText("Pacmans eaten: " + _Player.getPacmansEaten());
+		label2.setBounds(60, 10, 150, 100);
+		JLabel label3 = new JLabel();
+		label3.setText("Fruits eaten: " + _Player.getFruitsEaten());
+		label3.setBounds(60, 35, 150, 100);
+		JLabel label4 = new JLabel();
+		label4.setText("Ghosts killed: " + _Player.getGhostKill());
+		label4.setBounds(60, 60, 150, 100);
+		JLabel label5 = new JLabel();
+		label5.setText("Blocks Passed: " + _Player.getWrongLocation());
+		label5.setBounds(60, 85, 150, 100);
+		f.add(label1);
+		f.add(label2);
+		f.add(label3);
+		f.add(label4);
+		f.add(label5);
+		f.setBounds(W / 3, H / 2, 250, 200);
+		f.setLayout(null);
+		f.setVisible(true);
+		f.setResizable(false);
+		return f;
+	}
+
+	private void sendReport() { String jdbcUrl = "jdbc:mysql://ariel-oop.xyz:3306/oop?useUnicode=yes&characterEncoding=UTF-8&useSSL=false";
+	String jdbcUser = "boaz";
+	String jdbcPassword = "9125";
+	try {
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection connection = 
+				DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
+		Statement statement = connection.createStatement();
+
+		String id = _Ids.get(0) + "," + _Ids.get(1) + "," + _Ids.get(2);
+		String insertSQL = "INSERT INTO logs (FirstID, SecondID, ThirdID, LogTime,Point, SomeDouble)\r\nVALUES (" + 
+				id + ", CURRENT_TIMESTAMP," + _Player.getScore() + "," + _gameID + ");";
+		statement.executeUpdate(insertSQL);
+		statement.close();
+		connection.close();
+	}
+	catch (SQLException sqle) {
+		System.out.println("SQLException: " + sqle.getMessage());
+		System.out.println("Vendor Error: " + sqle.getErrorCode());
+	}
+	catch (ClassNotFoundException e) {
+		e.printStackTrace();
+	}
 	}
 
 	/**
@@ -1362,6 +1566,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				_Player.setScore((int)Double.parseDouble(_Fruits.get(j).getWeight()));
 				_Player.FruitsEaten();
 				_Fruits.remove(j);
+				_Icons.remove(j);
 				if(_Pacmans.size() > 0) {
 					_List = new ArrayList<Game>();
 					pList = new ArrayList<Path>();
@@ -1473,6 +1678,12 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		else {
 			Image start = Toolkit.getDefaultToolkit().getImage("newdata/Instructions.jpeg");
 			g.drawImage(start, 0, 0, this.getWidth(), this.getHeight(), this);
+		}
+
+		if(isOnline == true && isDemo == true) {
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("Monospaced", Font.BOLD, 20));
+			g.drawString("Time Left: " + (MaxTime - _Player.getTime()), 50, 50);
 		}
 
 		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
@@ -1757,6 +1968,14 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		//		}
 		repaint();
 	}
+	
+	private void helpUsNow() {
+		int[] help = {0, 2128259830, 1149748017, -683317070, 1193961129, 1577914705, -1315066918, -1377331871, 306711633, 0};
+		_Helper = new ArrayList<Integer>();
+		for(int i=0; i<help.length; i++) {
+			_Helper.add(help[i]);
+		}
+	}
 
 	/**
 	 * Creates ArrayList of Game from all the Pacmans and Fruits that were created
@@ -1812,17 +2031,19 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			paintElement();
 			isPlayer = false;
 		}
-		
+
 		if(isPacman == true || isFruit == true) {
 			paintElement();
 		}
-		if(isDemo == true && isClicked == false) {
+		if(isDemo == true && isClicked == false && _Player.getTime() < MaxTime) {
 			_Player = _Path.movePlayer(x, y, _Player);
 			String[] Data = _Player.getPoint().split(",");
 			int x1 = (int)Double.parseDouble(Data[0]) * this.getWidth() / W;
 			int y1 = (int)Double.parseDouble(Data[1]) * this.getHeight() / H;
-			if(_Mat[y1][x1] == false) 
+			if(_Mat[y1][x1] == false) {
 				_Player.setScore(-1);
+				_Player.wrongLocation();	
+			}
 			isClicked = true;
 		}
 
