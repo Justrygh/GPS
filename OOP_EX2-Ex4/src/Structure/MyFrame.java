@@ -1017,7 +1017,7 @@ public class MyFrame extends JPanel implements MouseListener {
 							double score = MaxTime - _Player.getTime();
 							_Player.setScore(score);
 							popup.show(createPopup(), 0 , 0);
-							//sendReport();
+							sendReport();
 							menu5.setEnabled(true);
 						}
 					}
@@ -1102,7 +1102,7 @@ public class MyFrame extends JPanel implements MouseListener {
 							double score = (MaxTime - _Player.getTime());
 							_Player.setScore(score);
 							popup.show(createPopup(), 0 , 0);
-							//sendReport();
+							sendReport();
 							menu5.setEnabled(true);
 						}
 					}
