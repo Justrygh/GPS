@@ -32,7 +32,7 @@ public class Player {
 	}
 	public Player(String point) {
 		this._Point = point;
-		this._Speed = "10.0";
+		this._Speed = "20.0";
 		this._Radius = "1.0";
 		this._Angel = 0;
 		this._Time = 0;
@@ -46,7 +46,7 @@ public class Player {
 	
 	public Player() {
 		this._Point = 0+","+0+","+0;
-		this._Speed = "10.0";
+		this._Speed = "20.0";
 		this._Radius = "1.0";
 		this._Angel = 0;
 		this._Time = 0;
@@ -77,7 +77,7 @@ public class Player {
 	}
 	
 	public void Time() {
-		this._Time ++;
+		this._Time += 0.1;
 	}
 	
 	public void FruitsEaten() {
