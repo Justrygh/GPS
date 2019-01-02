@@ -77,7 +77,7 @@ public class Player {
 	}
 	
 	public void Time() {
-		this._Time += 0.1;
+		this._Time ++;
 	}
 	
 	public void FruitsEaten() {
