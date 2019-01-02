@@ -84,7 +84,6 @@ public class MyFrame extends JPanel implements MouseListener {
 	private int j = 0;
 	private int p = 0;
 	private int ghostStop = 0;
-	private int moves = 0;
 	private final double MaxTime = 100.0;
 	private int _gameID;
 	//	private int k = 0;
@@ -959,7 +958,7 @@ public class MyFrame extends JPanel implements MouseListener {
 				removeFruitIcon();
 				Thread t1 = new Thread(new Runnable() {
 					public void run() {
-						pList = _Path.Print1(pList);
+						pList = _Path.Print(pList);
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							for (int j = 0; j < pList.size(); j++) {
 								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
@@ -976,7 +975,7 @@ public class MyFrame extends JPanel implements MouseListener {
 							}
 						}
 						if(ghostStop == 0 && _Ghosts.size() > 0) {
-							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer1(_Ghosts, _Player));
+							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
 							for(int i=0; i<temp.size(); i++) {
 								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
 
@@ -988,9 +987,9 @@ public class MyFrame extends JPanel implements MouseListener {
 								int fX = (int) Double.parseDouble(Data2[0]);
 								int fY = (int) Double.parseDouble(Data2[1]);
 								if (pX == fX && pY == fY && ghostStop == 0) {
-									_Player.setScore(-20);
-									_Player.ghostKill();
 									ghostStop = 3;
+									_Player.ghostKill();
+									_Player.setScore(-20);
 								}
 							}
 						}
@@ -1007,18 +1006,16 @@ public class MyFrame extends JPanel implements MouseListener {
 							isClicked = false;
 						}
 						removeFruitIcon();
-						isPlayerAteFruit1();
-						isPlayerAtePacman1();
+						isPlayerAteFruit();
+						isPlayerAtePacman();
 						repaint();
-						for(int i=0; i<10; i++) 
-							_Player.Time();
 						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
 						else {
 							double score = Double.parseDouble(new DecimalFormat("##.#").format(MaxTime - _Player.getTime()));
 							_Player.setScore(score);
 							popup.show(createPopup(), 0 , 0);
-							//sendReport();
+							sendReport();
 							menu5.setEnabled(true);
 						}
 					}
@@ -1072,9 +1069,9 @@ public class MyFrame extends JPanel implements MouseListener {
 								int fX = (int) Double.parseDouble(Data2[0]);
 								int fY = (int) Double.parseDouble(Data2[1]);
 								if (pX == fX && pY == fY && ghostStop == 0) {
-									_Player.setScore(-20);
-									_Player.ghostKill();
 									ghostStop = 3;
+									_Player.ghostKill();
+									_Player.setScore(-20);
 								}
 							}
 						}
@@ -1091,7 +1088,6 @@ public class MyFrame extends JPanel implements MouseListener {
 						isPlayerAtePacman();
 						repaint();
 						_Player.Time();
-						moves++;
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -1103,7 +1099,7 @@ public class MyFrame extends JPanel implements MouseListener {
 							double score = Double.parseDouble(new DecimalFormat("##.#").format(MaxTime - _Player.getTime()));
 							_Player.setScore(score);
 							popup.show(createPopup(), 0 , 0);
-							//sendReport();
+							sendReport();
 							menu5.setEnabled(true);
 						}
 					}
@@ -1130,7 +1126,7 @@ public class MyFrame extends JPanel implements MouseListener {
 				removeFruitIcon();
 				Thread t1 = new Thread(new Runnable() {
 					public void run() {
-						pList = _Path.Print1(pList);
+						pList = _Path.Print(pList);
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							for (int j = 0; j < pList.size(); j++) {
 								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
@@ -1157,7 +1153,7 @@ public class MyFrame extends JPanel implements MouseListener {
 							isClicked = false;
 						}
 						if(ghostStop == 0 && _Ghosts.size() > 0) {
-							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer1(_Ghosts, _Player));
+							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
 							for(int i=0; i<temp.size(); i++) {
 								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
 
@@ -1169,20 +1165,19 @@ public class MyFrame extends JPanel implements MouseListener {
 								int fX = (int) Double.parseDouble(Data2[0]);
 								int fY = (int) Double.parseDouble(Data2[1]);
 								if (pX == fX && pY == fY && ghostStop == 0) {
-									_Player.setScore(-20);
-									_Player.ghostKill();
 									ghostStop = 3;
+									_Player.ghostKill();
+									_Player.setScore(-20);
 								}
 							}
 						}
 						else if(ghostStop > 0)
 							ghostStop--;
 						removeFruitIcon();
-						isPlayerAteFruit1();
-						isPlayerAtePacman1();
+						isPlayerAteFruit();
+						isPlayerAtePacman();
 						repaint();
-						for(int i=0; i<10; i++) 
-							_Player.Time();
+						_Player.Time();
 						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
 						else {
@@ -1248,9 +1243,9 @@ public class MyFrame extends JPanel implements MouseListener {
 								int fX = (int) Double.parseDouble(Data2[0]);
 								int fY = (int) Double.parseDouble(Data2[1]);
 								if (pX == fX && pY == fY && ghostStop == 0) {
-									_Player.setScore(-20);
-									_Player.ghostKill();
 									ghostStop = 3;
+									_Player.ghostKill();
+									_Player.setScore(-20);
 								}
 							}
 						}
@@ -1261,7 +1256,6 @@ public class MyFrame extends JPanel implements MouseListener {
 						isPlayerAtePacman();
 						repaint();
 						_Player.Time();
-						moves++;
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -1546,7 +1540,6 @@ public class MyFrame extends JPanel implements MouseListener {
 
 	/**
 	 * Removes the Fruits that the Player ate, and calculates the new path for the Pacmans (if they are any left)
-	 * Note: This function calculates when the user is NOT playing against the server.
 	 */
 	public void isPlayerAteFruit() {
 		for (int j = 0; j < _Fruits.size(); j++) {
@@ -1560,38 +1553,6 @@ public class MyFrame extends JPanel implements MouseListener {
 
 			double distance = Math.sqrt(Math.pow(fX-pX, 2) + Math.pow(fY-pY, 2)) 
 					- Double.parseDouble(_Player.getRadius());
-			if (distance <= Double.parseDouble(_Player.getSpeed())/10) {
-				_Player.setScore((int)Double.parseDouble(_Fruits.get(j).getWeight()));
-				_Player.FruitsEaten();
-				_Fruits.remove(j);
-				_Icons.remove(j);
-				if(_Pacmans.size() > 0) {
-					_List = new ArrayList<Game>();
-					pList = new ArrayList<Path>();
-					setList(saveList());
-					calculatePath();
-					pList = _Path.Create(getList(), getPList());
-				}
-			}
-		}
-	}
-	/**
-	 * Removes the Fruits that the Player ate, and calculates the new path for the Pacmans (if they are any left)
-	 * Note: This function calculates when the user is playing against the server.
-	 */
-	
-	public void isPlayerAteFruit1() {
-		for (int j = 0; j < _Fruits.size(); j++) {
-			String[] Data1 = _Player.getPoint().split(",");
-			String[] Data2 = _Fruits.get(j).getPoint().split(",");
-			int pX = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
-			int pY = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
-
-			int fX = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
-			int fY = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
-
-			double distance = Math.sqrt(Math.pow(fX-pX, 2) + Math.pow(fY-pY, 2)) 
-					- Double.parseDouble(_Player.getRadius());
 			if (distance <= Double.parseDouble(_Player.getSpeed())) {
 				_Player.setScore((int)Double.parseDouble(_Fruits.get(j).getWeight()));
 				_Player.FruitsEaten();
@@ -1610,7 +1571,6 @@ public class MyFrame extends JPanel implements MouseListener {
 
 	/**
 	 * Removes the Pacmans that the Player ate, and calculates the new path for the Pacmans (if they are any left)
-	 * Note: This function calculates when the user is NOT playing against the server.
 	 */
 	public void isPlayerAtePacman() {
 		for (int i = 0; i < _Pacmans.size(); i++) {
@@ -1624,38 +1584,6 @@ public class MyFrame extends JPanel implements MouseListener {
 
 			double distance = Math.sqrt(Math.pow(fX-pX, 2) + Math.pow(fY-pY, 2)) 
 					- Double.parseDouble(_Player.getRadius());
-			if (distance <= Double.parseDouble(_Player.getSpeed())/10) {
-				_Player.setScore((int)Double.parseDouble(_Pacmans.get(i).getSpeed()));
-				_Player.PacmansEaten();
-				_Pacmans.remove(i);
-				if(_Pacmans.size() > 0) {
-					_List = new ArrayList<Game>();
-					pList = new ArrayList<Path>();
-					setList(saveList());
-					calculatePath();
-					pList = _Path.Create(getList(), getPList());
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Removes the Pacmans that the Player ate, and calculates the new path for the Pacmans (if they are any left)
-	 * Note: This function calculates when the user is playing against the server.
-	 */
-	
-	public void isPlayerAtePacman1() {
-		for (int i = 0; i < _Pacmans.size(); i++) {
-			String[] Data1 = _Player.getPoint().split(",");
-			String[] Data2 = _Pacmans.get(i).getPoint().split(",");
-			int pX = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
-			int pY = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
-
-			int fX = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
-			int fY = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
-
-			double distance = Math.sqrt(Math.pow(fX-pX, 2) + Math.pow(fY-pY, 2)) 
-					- Double.parseDouble(_Player.getRadius());
 			if (distance <= Double.parseDouble(_Player.getSpeed())) {
 				_Player.setScore((int)Double.parseDouble(_Pacmans.get(i).getSpeed()));
 				_Player.PacmansEaten();
@@ -1670,7 +1598,6 @@ public class MyFrame extends JPanel implements MouseListener {
 			}
 		}
 	}
-
 	/**
 	 * This function takes a CSV file points, Converts them to Pixels and updates
 	 * each list. (Fruits + Pacmans + Game)
@@ -1772,7 +1699,7 @@ public class MyFrame extends JPanel implements MouseListener {
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
 			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1+newW/3, y1+newH/2);
-			if(isDemo == true && moves%10 == 0) {
+			if(isDemo == true) {
 				if(_Mat[y1][x1] == false) {
 					_Player.setScore(-1);
 					_Player.wrongLocation();
@@ -2108,7 +2035,7 @@ public class MyFrame extends JPanel implements MouseListener {
 		}
 
 		else if(isDemo == true && isClicked == false && _Player.getTime() < MaxTime) {
-			_Path.movePlayer1(x, y, _Player);
+			_Path.movePlayer(x, y, _Player);
 			isClicked = true;
 		}
 

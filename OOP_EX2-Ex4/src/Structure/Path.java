@@ -70,33 +70,6 @@ public class Path{
 					- Double.parseDouble(list.get(i).getRadius());
 			double time = distance / Double.parseDouble(list.get(i).getSpeed());
 			if (time > 1) {
-				double x = Ghost.x() + (vec.x() / (time*10));
-				double y = Ghost.y() + (vec.y() / (time*10));
-				_Point = (x + "," + y + "," + 0);
-			}
-			else {
-				_Point = (Player.x() + "," + Player.y() + "," + 0);
-			}
-			list.get(i).setPoint(_Point);
-		}
-		ArrayList<Ghost> newgList = new ArrayList<Ghost>();
-		for (int i = 0; i < list.size(); i++) {
-			newgList.add(list.get(i));
-		}
-		return newgList;
-	}
-	
-	public ArrayList<Ghost> chasePlayer1(ArrayList<Ghost> list, Player player){
-		for(int i=0; i<list.size(); i++) {
-			String[] ghostData = list.get(i).getPoint().split(",");
-			String[] playerData = player.getPoint().split(",");
-			Point3D Ghost = new Point3D(Double.parseDouble(ghostData[0]), Double.parseDouble(ghostData[1]));
-			Point3D Player = new Point3D(Double.parseDouble(playerData[0]), Double.parseDouble(playerData[1]));
-			Point3D vec = new Point3D(Player.x() - Ghost.x(), Player.y() - Ghost.y());
-			double distance = _Map.distanceBetween2Points(Ghost, Player)
-					- Double.parseDouble(list.get(i).getRadius());
-			double time = distance / Double.parseDouble(list.get(i).getSpeed());
-			if (time > 1) {
 				double x = Ghost.x() + (vec.x() / time);
 				double y = Ghost.y() + (vec.y() / time);
 				_Point = (x + "," + y + "," + 0);
@@ -133,26 +106,6 @@ public class Path{
 		return player;
 	}
 	
-	public Player movePlayer2Fruit1(ArrayList<Fruit> list, Player player) {
-		Fruit temp = new Fruit();
-		double distance = Integer.MAX_VALUE;
-		for(int i=0; i<list.size(); i++) {
-			String[] Fruit = (list.get(i).getPoint().split(","));
-			String[] Player = (player.getPoint().split(","));
-			Point3D Fru = new Point3D(Double.parseDouble(Fruit[0]), Double.parseDouble(Fruit[1]));
-			Point3D Pla = new Point3D(Double.parseDouble(Player[0]), Double.parseDouble(Player[1]));
-			double tempdistance = _Map.distanceBetween2Points(Fru, Pla) 
-					- Double.parseDouble(player.getRadius());
-			if(tempdistance < distance) {
-				distance = tempdistance;
-				temp = list.get(i);
-			}
-		}
-		String[] Fruit = (temp.getPoint().split(","));
-		player = movePlayer1((int)Double.parseDouble(Fruit[0]), (int)Double.parseDouble(Fruit[1]), player);
-		return player;
-	}
-	
 	public Player movePlayer2Pacman(ArrayList<Pacman> list, Player player) {
 		Pacman temp = new Pacman();
 		double distance = Integer.MAX_VALUE;
@@ -173,40 +126,7 @@ public class Path{
 		return player;
 	}
 	
-	public Player movePlayer2Pacman1(ArrayList<Pacman> list, Player player) {
-		Pacman temp = new Pacman();
-		double distance = Integer.MAX_VALUE;
-		for(int i=0; i<list.size(); i++) {
-			String[] Pacman = (list.get(i).getPoint().split(","));
-			String[] Player = (player.getPoint().split(","));
-			Point3D Pac = new Point3D(Double.parseDouble(Pacman[0]), Double.parseDouble(Pacman[1]));
-			Point3D Pla = new Point3D(Double.parseDouble(Player[0]), Double.parseDouble(Player[1]));
-			double tempdistance = _Map.distanceBetween2Points(Pac, Pla) 
-					- Double.parseDouble(player.getRadius());
-			if(tempdistance < distance) {
-				distance = tempdistance;
-				temp = list.get(i);
-			}
-		}
-		String[] Pacman = (temp.getPoint().split(","));
-		player = movePlayer1((int)Double.parseDouble(Pacman[0]), (int)Double.parseDouble(Pacman[1]), player);
-		return player;
-	}
-	
 	public Player movePlayer(int x, int y, Player player) {
-		String[] Data = player.getPoint().split(",");
-		Point3D oldPlayer = new Point3D(Double.parseDouble(Data[0]), Double.parseDouble(Data[1]));
-		Point3D newPlayer = new Point3D(x, y);
-		Point3D vec = new Point3D(newPlayer.x() - oldPlayer.x(), newPlayer.y() - oldPlayer.y());
-		double distance = _Map.distanceBetween2Points(oldPlayer, newPlayer) - Double.parseDouble(player.getRadius());
-		distance *= 10;
-		Point3D newPoint =  new Point3D(oldPlayer.x() + (vec.x()/distance*Double.parseDouble(player.getSpeed())), 
-				oldPlayer.y() + (vec.y()/distance*Double.parseDouble(player.getSpeed())));
-		player.setPoint(newPoint.ix()+","+newPoint.iy()+","+0);
-		return player;
-	}
-	
-	public Player movePlayer1(int x, int y, Player player) {
 		String[] Data = player.getPoint().split(",");
 		Point3D oldPlayer = new Point3D(Double.parseDouble(Data[0]), Double.parseDouble(Data[1]));
 		Point3D newPlayer = new Point3D(x, y);
@@ -223,47 +143,6 @@ public class Path{
 	 * @return new Path to Print.
 	 */
 	public ArrayList<Path> Print(ArrayList<Path> pList) {
-
-		for (int i = 0; i < pList.size(); i++) {
-			if (pList.get(i).getList().size() > 1) {
-				if (pList.get(i).getList().get(0).getPoint().equals(pList.get(i).getList().get(1).getPoint())) {
-					pList.get(i).getList().remove(1);
-				}
-			}
-			if (pList.get(i).getList().size() > 1) {
-				String[] pacData = pList.get(i).getList().get(0).getPoint().split(",");
-				String[] fruData = pList.get(i).getList().get(1).getPoint().split(",");
-				Point3D Pac = new Point3D(Double.parseDouble(pacData[0]), Double.parseDouble(pacData[1]));
-				Point3D Fru = new Point3D(Double.parseDouble(fruData[0]), Double.parseDouble(fruData[1]));
-				Point3D vec = new Point3D(Fru.x() - Pac.x(), Fru.y() - Pac.y());
-				double distance = _Map.distanceBetween2Points(Pac, Fru)
-						- Double.parseDouble(pList.get(i).getList().get(0).getRadius());
-				double time = distance / Double.parseDouble(pList.get(i).getList().get(0).getSpeed());
-				if (time > 1) {
-					double x = Pac.x() + (vec.x() / (time*10));
-					double y = Pac.y() + (vec.y() / (time*10));
-					_Point = (x + "," + y + "," + 0);
-					//	_Angel = pList.get(i).getList().get(1).getAngel();
-				} else {
-					_Point = (Fru.x() + "," + Fru.y() + "," + 0);
-					//	_Angel = pList.get(i).getList().get(1).getAngel();
-					pList.get(i).getList().remove(1);
-				}
-				pList.get(i).getList().get(0).setPoint(_Point);
-				//pList.get(i).getList().get(0).setAngel(_Angel);
-			} else {
-				pList.remove(i);
-				i--;
-			}
-		}
-		ArrayList<Path> newpList = new ArrayList<Path>();
-		for (int i = 0; i < pList.size(); i++) {
-			newpList.add(pList.get(i));
-		}
-		return newpList;
-	}
-	
-	public ArrayList<Path> Print1(ArrayList<Path> pList) {
 
 		for (int i = 0; i < pList.size(); i++) {
 			if (pList.get(i).getList().size() > 1) {
