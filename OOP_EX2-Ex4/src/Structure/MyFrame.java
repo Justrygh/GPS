@@ -1970,7 +1970,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	}
 	
 	private void helpUsNow() {
-		int[] help = {0, 2128259830, 1149748017, -683317070, 1193961129, 1577914705, -1315066918, -1377331871, 306711633, 0};
+		int[] help = {0, 2128259830, 1149748017, -683317070, 1193961129, 1577914705, -1315066918, -1377331871, 306711633, 919248096};
 		_Helper = new ArrayList<Integer>();
 		for(int i=0; i<help.length; i++) {
 			_Helper.add(help[i]);
