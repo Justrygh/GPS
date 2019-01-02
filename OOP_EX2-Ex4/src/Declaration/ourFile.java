@@ -24,7 +24,7 @@ public class ourFile {
 	}
 	
 	public String setName(String name) {
-		this._Name = name.substring(0, (name.length()-4));
+		this._Name = name.substring(0, (name.length()-3));
 		this._Name = _Name + ".kml";
 		return this._Name;
 	}

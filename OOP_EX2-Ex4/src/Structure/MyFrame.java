@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,7 +42,7 @@ import Players.Ghost;
 import Players.Pacman;
 import Players.Player;
 
-public class MyFrame extends JPanel implements MouseListener, MouseMotionListener {
+public class MyFrame extends JPanel implements MouseListener {
 
 	/**
 	 * @author Eli
@@ -57,6 +56,8 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	private int H = 642;
 	private int y, x = 0;
 	private int W = 1299;
+	private int newH = 32;
+	private int newW = 32;
 	//	private int Bx1;
 	//	private int By1;
 	//	private int Bx2;
@@ -841,81 +842,87 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		insertid.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFrame f = new JFrame("Insert ID");
-				JButton b = new JButton("Submit");
-				b.setBounds(90, 100, 100, 20);
-				JLabel label1 = new JLabel();
-				label1.setText("First ID:");
-				label1.setBounds(10, -15, 100, 100);
-				JLabel label2 = new JLabel();
-				label2.setText("Second ID:");
-				label2.setBounds(10, 10, 100, 100);
-				JLabel label3 = new JLabel();
-				label3.setText("Third ID:");
-				label3.setBounds(10, 35, 100, 100);
-				JTextField textfield1 = new JTextField();
-				textfield1.setBounds(90, 25, 100, 20);
-				JTextField textfield2 = new JTextField();
-				textfield2.setBounds(90, 50, 100, 20);
-				JTextField textfield3 = new JTextField();
-				textfield3.setBounds(90, 75, 100, 20);
-				f.add(textfield1);
-				f.add(textfield2);
-				f.add(textfield3);
-				f.add(b);
-				f.add(label1);
-				f.add(label2);
-				f.add(label3);
-				f.setBounds(_Map.getWidth() / 2, _Map.getHeight() / 2, 0, 0);
-				f.setSize(220, 180);
-				f.setLayout(null);
-				f.setVisible(true);
-				f.setResizable(false);
+				if(_Ids.size() == 0) {
+					JFrame f = new JFrame("Insert ID");
+					JButton b = new JButton("Submit");
+					b.setBounds(90, 100, 100, 20);
+					JLabel label1 = new JLabel();
+					label1.setText("First ID:");
+					label1.setBounds(10, -15, 100, 100);
+					JLabel label2 = new JLabel();
+					label2.setText("Second ID:");
+					label2.setBounds(10, 10, 100, 100);
+					JLabel label3 = new JLabel();
+					label3.setText("Third ID:");
+					label3.setBounds(10, 35, 100, 100);
+					JTextField textfield1 = new JTextField();
+					textfield1.setBounds(90, 25, 100, 20);
+					JTextField textfield2 = new JTextField();
+					textfield2.setBounds(90, 50, 100, 20);
+					JTextField textfield3 = new JTextField();
+					textfield3.setBounds(90, 75, 100, 20);
+					f.add(textfield1);
+					f.add(textfield2);
+					f.add(textfield3);
+					f.add(b);
+					f.add(label1);
+					f.add(label2);
+					f.add(label3);
+					f.setBounds(_Map.getWidth() / 2, _Map.getHeight() / 2, 0, 0);
+					f.setSize(220, 180);
+					f.setLayout(null);
+					f.setVisible(true);
+					f.setResizable(false);
 
-				b.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						if (textfield1.getText().length() != 0
-								&& textfield1.getText().length() != 9){
-							return;
-						}
-						if (textfield3.getText().length() != 0
-								&& textfield3.getText().length() != 9) {
-							return;
-						}
-						if (textfield3.getText().length() != 0
-								&& textfield3.getText().length() != 9) {
-							return;
-						}
-						for(int i=0; i<textfield1.getText().length(); i++) {
-							if(textfield1.getText().charAt(i) < 48 || textfield1.getText().charAt(i) > 57)
+					b.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							if (textfield1.getText().length() != 0
+									&& textfield1.getText().length() != 9){
 								return;
-						}
-						for(int i=0; i<textfield2.getText().length(); i++) {
-							if(textfield2.getText().charAt(i) < 48 || textfield2.getText().charAt(i) > 57)
+							}
+							if (textfield3.getText().length() != 0
+									&& textfield3.getText().length() != 9) {
 								return;
-						}
-						for(int i=0; i<textfield3.getText().length(); i++) {
-							if(textfield3.getText().charAt(i) < 48 || textfield3.getText().charAt(i) > 57)
+							}
+							if (textfield3.getText().length() != 0
+									&& textfield3.getText().length() != 9) {
 								return;
+							}
+							for(int i=0; i<textfield1.getText().length(); i++) {
+								if(textfield1.getText().charAt(i) < 48 || textfield1.getText().charAt(i) > 57)
+									return;
+							}
+							for(int i=0; i<textfield2.getText().length(); i++) {
+								if(textfield2.getText().charAt(i) < 48 || textfield2.getText().charAt(i) > 57)
+									return;
+							}
+							for(int i=0; i<textfield3.getText().length(); i++) {
+								if(textfield3.getText().charAt(i) < 48 || textfield3.getText().charAt(i) > 57)
+									return;
+							}
+							if (textfield1.getText().length() == 0){
+								textfield1.setText("0");
+							}
+							if (textfield2.getText().length() == 0){
+								textfield2.setText("0");
+							}
+							if (textfield3.getText().length() == 0){
+								textfield3.setText("0");
+							}
+							_Ids.add(Long.parseLong(textfield1.getText()));
+							_Ids.add(Long.parseLong(textfield2.getText()));
+							_Ids.add(Long.parseLong(textfield3.getText()));
+							f.dispose();
+							player.setEnabled(true);
+							insertid.setEnabled(false);
 						}
-						if (textfield1.getText().length() == 0){
-							textfield1.setText("0");
-						}
-						if (textfield2.getText().length() == 0){
-							textfield2.setText("0");
-						}
-						if (textfield3.getText().length() == 0){
-							textfield3.setText("0");
-						}
-						_Ids.add(Long.parseLong(textfield1.getText()));
-						_Ids.add(Long.parseLong(textfield2.getText()));
-						_Ids.add(Long.parseLong(textfield3.getText()));
-						f.dispose();
-						player.setEnabled(true);
-						insertid.setEnabled(false);
-					}
-				});
+					});
+				}
+				else {
+					player.setEnabled(true);
+					insertid.setEnabled(false);
+				}
 			}
 		});
 
@@ -1004,7 +1011,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
 						else {
-							double score = (MaxTime - _Player.getTime())/10;
+							double score = MaxTime - _Player.getTime();
 							_Player.setScore(score);
 							popup.show(createPopup(), 0 , 0);
 							sendReport();
@@ -1081,18 +1088,17 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						repaint();
 						_Player.Time();
 						try {
-							Thread.sleep(500);
+							Thread.sleep(1000);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
 						else {
-							double score = (MaxTime - _Player.getTime())/10;
+							double score = MaxTime - _Player.getTime();
 							_Player.setScore(score);
 							popup.show(createPopup(), 0 , 0);
-							sendReport();
+							//sendReport();
 							menu5.setEnabled(true);
 						}
 					}
@@ -1175,7 +1181,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
 						else {
-							double score = (MaxTime - _Player.getTime())/10;
+							double score = MaxTime - _Player.getTime();
 							_Player.setScore(score);
 							popup.show(createPopup(), 0 , 0);
 							sendReport();
@@ -1222,7 +1228,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						if(_Pacmans.size() > 0) {
 							_Path.movePlayer2Pacman(_Pacmans, _Player);
 						}
-						else {
+						else if(_Fruits.size() > 0) {
 							_Path.movePlayer2Fruit(_Fruits, _Player);
 						}
 						if(ghostStop == 0 && _Ghosts.size() > 0) {
@@ -1254,7 +1260,6 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
@@ -1366,35 +1371,20 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 	 * Clears all the privates variables
 	 */
 	public void clearLists() {
-		ArrayList<Game> gList = new ArrayList<Game>();
-		ArrayList<Pacman> pList = new ArrayList<Pacman>();
-		ArrayList<Fruit> fList = new ArrayList<Fruit>();
-		ArrayList<Image> iList = new ArrayList<Image>();
-		ArrayList<Block> iBlock = new ArrayList<Block>();
-		ArrayList<Image> iGList = new ArrayList<Image>();
-		ArrayList<Ghost> ghList = new ArrayList<Ghost>();
-		ArrayList<Long> iDs = new ArrayList<Long>();
-		setList(gList);
-		setPList(pList);
-		setFList(fList);
-		setIList(iList);
-		setBList(iBlock);
-		setGIList(iGList);
-		setGList(ghList);
-		setiDList(iDs);
+		_Fruits = new ArrayList<Fruit>();;
+		_Pacmans = new ArrayList<Pacman>();
+		_List = new ArrayList<Game>();
+		_Icons = new ArrayList<Image>();
+		_GhostsImg  = new ArrayList<Image>();
+		_Ghosts = new ArrayList<Ghost>();
+		_Blocks = new ArrayList<Block>();
+		_Player = new Player();
+		ghostStop = 0;
 		i = 0;
 		j = 0;
 		p = 0;
-		x = 0;
-		y = 0;
 		//		k = 0;
 		//		b = 0;
-		ghostStop = 0;
-		_Player.resetGhostKill();
-		_Player.resetWrongLocation();
-		_Player.setPoint(0+","+0+","+0);
-		_Player.setSpeed("10.0");
-		_Player.resetScore();
 	}
 
 	public JFrame createPopup() {
@@ -1703,29 +1693,35 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		if(Integer.parseInt(Player[0]) != 0 && Integer.parseInt(Player[1]) != 0) {
 			int x1 = (int) Double.parseDouble(Player[0]) * this.getWidth() / W;
 			int y1 = (int) Double.parseDouble(Player[1]) * this.getHeight() / H;
-			g.drawImage(_Player.getImage(), x1-16, y1-16, 32 * this.getWidth() / W, 32 * this.getHeight() / H, null);
+			g.drawImage(_Player.getImage(), x1-newW/2, y1-newH/2, newW, newH, null);
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
-			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1+newW/3, y1+newH/2);
+			if(isDemo == true) {
+				if(_Mat[y1][x1] == false) {
+					_Player.setScore(-1);
+					_Player.wrongLocation();
+				}
+			}
 		}
 
 		for (int i = 0; i < _Fruits.size(); i++) {
 			String[] Data = _Fruits.get(i).getPoint().split(",");
 			int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
 			int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
-			g.drawImage(_Icons.get(i), x1 - 16, y1 - 16, 32 * this.getWidth() / W, 32 * this.getHeight() / H, this);
+			g.drawImage(_Icons.get(i), x1-newW/2, y1-newH/2, newW, newH, this);
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
-			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1+newW/3, y1+newH/2);
 		}
 		for (int i = 0; i < _Ghosts.size(); i++) {
 			String[] Data = _Ghosts.get(i).getPoint().split(",");
 			int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
 			int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
-			g.drawImage(_GhostsImg.get(i), x1 - 16, y1 - 16, 32 * this.getWidth() / W, 32 * this.getHeight() / H, this);
+			g.drawImage(_GhostsImg.get(i), x1-newW/2, y1-newH/2, newW, newH, this);
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
-			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1+newW/3, y1+newH/2);
 		}
 		for (int i = 0; i < _Blocks.size(); i++) {
 			String[] Data = _Blocks.get(i).getPoint().split(",");
@@ -1734,20 +1730,20 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			int blockWidth = _Blocks.get(i).getWidth() * this.getWidth() / W;
 			int blockHeight = _Blocks.get(i).getHeight() * this.getHeight() / H;
 			g.setColor(Color.BLACK);
-			g.fillRect(x1-16, y1-16, blockWidth, blockHeight);
+			g.fillRect(x1-newW/2, y1-newH/2, blockWidth, blockHeight);
 		}
 		if (isDemo == false) {
 			for (int i = 0; i < _Pacmans.size(); i++) {
 				String[] Data = _Pacmans.get(i).getPoint().split(",");
 				int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
 				int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
-				g.drawImage(Pacman, x1 - 16, y1 - 16, 32 * this.getWidth() / W, 32 * this.getHeight() / H, this);
+				g.drawImage(Pacman, x1-newW/2, y1-newH/2, newW, newH, this);
 				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				g.setColor(Color.WHITE);
-				g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+				g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1+newW/3, y1+newH/2);
 				g.setFont(new Font("Monospaced", Font.BOLD, 18));
 				g.setColor(Color.ORANGE);
-				g.drawString("ID: " + _Pacmans.get(i).getiD(), x1 - 16, y1 - 16);
+				g.drawString("ID: " + _Pacmans.get(i).getiD(), x1-newW/2, y1-newH/2);
 			}
 		}
 
@@ -1760,20 +1756,20 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				int y1 = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
 				int x2 = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
 				int y2 = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
-				g.drawImage(img, x2 - 16, y2 - 16, 32 * this.getWidth() / W, 32 * this.getHeight() / H, null);
+				g.drawImage(img, x2-newW/2, y2-newH/2, newW, newH, null);
 				g.drawLine(x1, y1, x2, y2);
 			}
 			for (int i = 0; i < _Pacmans.size(); i++) {
 				String[] Data = _Pacmans.get(i).getPoint().split(",");
 				int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
 				int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
-				g.drawImage(Pacman, x1 - 16, y1 - 16, 32 * this.getWidth() / W, 32 * this.getHeight() / H, this);
+				g.drawImage(Pacman, x1-newW/2, y1-newH/2, newW, newH, this);
 				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				g.setColor(Color.WHITE);
-				g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+				g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1+newW/3, y1+newH/2);
 				g.setFont(new Font("Monospaced", Font.BOLD, 18));
 				g.setColor(Color.ORANGE);
-				g.drawString("ID: " + _Pacmans.get(i).getiD(), x1 - 16, y1 - 16);
+				g.drawString("ID: " + _Pacmans.get(i).getiD(), x1-newW/2, y1-newH/2);
 			}
 		}
 		if (isDemo == true) {
@@ -1782,13 +1778,13 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 				int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
 				int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
 				// Draw our image like normal
-				g.drawImage(pacmanIcon(_Pacmans.get(i).getAngel()), x1 - 16, y1 - 16, 32 * this.getWidth() / W, 32 * this.getHeight() / H, this);
+				g.drawImage(pacmanIcon(_Pacmans.get(i).getAngel()), x1-newW/2, y1-newH/2, newW, newH, this);
 				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				g.setColor(Color.WHITE);
-				g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1, y1);
+				g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1+newW/3, y1+newH/2);
 				g.setFont(new Font("Monospaced", Font.BOLD, 18));
 				g.setColor(Color.ORANGE);
-				g.drawString("ID: " + _Pacmans.get(i).getiD(), x1 - 16, y1 - 16);
+				g.drawString("ID: " + _Pacmans.get(i).getiD(), x1-newW/2, y1-newH/2);
 			}
 			p++;
 		}
@@ -1892,30 +1888,36 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		//Image Ghost = randomGhostsIcon();
 		Image Fruit = randomFruitsIcon();
 
+		newW = 32*this.getWidth()/W;
+		newH = 32*this.getHeight()/H;
+
 		x = (int) (x * W / this.getWidth());
 		y = (int) (y * H / this.getHeight());
 
-		if (isPacman == true && g.drawImage(Pacman, x - 16, y - 16, 32 * W / this.getWidth(), 32 * H / this.getHeight(), this) == true) {
+		int x1 = newW/2 * this.getWidth() / W;
+		int y1 = newH/2 * this.getHeight() / H;
+
+		if (isPacman == true && g.drawImage(Pacman, x-x1, y-y1 , newW, newH, this) == true) {
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
-			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
+			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x+newW/3, y+newH/2);
 			g.setFont(new Font("Monospaced", Font.BOLD, 18));
 			g.setColor(Color.ORANGE);
-			g.drawString("ID: " + i, x - 16, y - 16);
+			g.drawString("ID: " + i, x-newW/2, y-newH/2);
 			_Pacmans.add(new Pacman("Pacman", x + "," + y + "," + 0, "1", "1", String.valueOf(i)));
 			i++;
 		}
-		if (isFruit == true && g.drawImage(Fruit,x-16,y-16,32*W/this.getWidth(),32*H/this.getHeight(),this) == true) {
+		if (isFruit == true && g.drawImage(Fruit, x-x1 ,y-y1 ,newW ,newH ,this) == true) {
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
-			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
+			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x+newW/3, y+newH/2);
 			_Fruits.add(new Fruit("Fruit", x + "," + y + "," + 0, "1", String.valueOf(j)));
 			j++;
 		}
-		if (isPlayer == true && g.drawImage(_Player.getImage(),x-16,y-16,32*W/this.getWidth(),32*H/this.getHeight(),this) == true ) {
+		if (isPlayer == true && g.drawImage(_Player.getImage(), x-x1, y-y1, newW, newH,this) == true ) {
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
-			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x, y);
+			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x+newW/3, y+newH/2);
 			_Player.setPoint(x + "," + y + "," + 0);
 			for(int i=0; i<_Ghosts.size(); i++) {
 				if(Double.parseDouble(_Ghosts.get(i).getSpeed()) > Double.parseDouble(_Player.getSpeed())) {
@@ -1968,7 +1970,7 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 		//		}
 		repaint();
 	}
-	
+
 	private void helpUsNow() {
 		int[] help = {0, 2128259830, 1149748017, -683317070, 1193961129, 1577914705, -1315066918, -1377331871, 306711633, 919248096};
 		_Helper = new ArrayList<Integer>();
@@ -2032,32 +2034,15 @@ public class MyFrame extends JPanel implements MouseListener, MouseMotionListene
 			isPlayer = false;
 		}
 
-		if(isPacman == true || isFruit == true) {
+		else if(isPacman == true || isFruit == true) {
 			paintElement();
 		}
-		if(isDemo == true && isClicked == false && _Player.getTime() < MaxTime) {
-			_Player = _Path.movePlayer(x, y, _Player);
-			String[] Data = _Player.getPoint().split(",");
-			int x1 = (int)Double.parseDouble(Data[0]) * this.getWidth() / W;
-			int y1 = (int)Double.parseDouble(Data[1]) * this.getHeight() / H;
-			if(_Mat[y1][x1] == false) {
-				_Player.setScore(-1);
-				_Player.wrongLocation();	
-			}
+
+		else if(isDemo == true && isClicked == false && _Player.getTime() < MaxTime) {
+			_Path.movePlayer(x, y, _Player);
 			isClicked = true;
 		}
 
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		paintComponent(_Map.getImage().createGraphics().create(0, 0, e.getX(), e.getY()));
-		//		H = this.getHeight();
-		//		W = this.getWidth();
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
 	}
 
 }

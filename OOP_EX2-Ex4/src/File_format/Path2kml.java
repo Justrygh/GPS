@@ -117,13 +117,10 @@ public class Path2kml {
 		for(int i=0; i<pac.size(); i++) {
 			Pacman Replace=pac.get(i);
 			long Time = (int)(Replace.getTime()*1000);
-			long Temp = (int)(Replace.getTime() + (Replace.getDistance() / Double.parseDouble(Replace.getSpeed()))*1000);
 			String sTime = Instant.ofEpochMilli(TimeStamp + Time).atOffset(ZoneOffset.UTC).toString();
-			String eTime = Instant.ofEpochMilli(TimeStamp + Temp).atOffset(ZoneOffset.UTC).toString();
 			Builder.append("<Placemark>");
 			Builder.append("<TimeSpan>");
 			Builder.append("<begin>" + sTime + "</begin>");
-			Builder.append("<end>" + eTime + "</end>");
 			Builder.append("</TimeSpan>");
 			Builder.append("<name>");
 			Builder.append(Replace.getType() + "ID: " + Replace.getiD());

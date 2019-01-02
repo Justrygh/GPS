@@ -16,7 +16,7 @@ public class Path{
 	/*** PRIVATE VARIABELS ***/
 	private ArrayList<Game> Paths;
 	private String _Point;
-	private double _Angel;
+	//private double _Angel;
 	private Map _Map = new Map();
 
 	//Default Constructor.
@@ -131,7 +131,7 @@ public class Path{
 		Point3D oldPlayer = new Point3D(Double.parseDouble(Data[0]), Double.parseDouble(Data[1]));
 		Point3D newPlayer = new Point3D(x, y);
 		Point3D vec = new Point3D(newPlayer.x() - oldPlayer.x(), newPlayer.y() - oldPlayer.y());
-		double distance = _Map.distanceBetween2Points(oldPlayer, newPlayer);
+		double distance = _Map.distanceBetween2Points(oldPlayer, newPlayer) - Double.parseDouble(player.getRadius());
 		Point3D newPoint =  new Point3D(oldPlayer.x() + (vec.x()/distance*Double.parseDouble(player.getSpeed())), 
 				oldPlayer.y() + (vec.y()/distance*Double.parseDouble(player.getSpeed())));
 		player.setPoint(newPoint.ix()+","+newPoint.iy()+","+0);
@@ -170,7 +170,7 @@ public class Path{
 					pList.get(i).getList().remove(1);
 				}
 				pList.get(i).getList().get(0).setPoint(_Point);
-				pList.get(i).getList().get(0).setAngel(_Angel);
+				//pList.get(i).getList().get(0).setAngel(_Angel);
 			} else {
 				pList.remove(i);
 				i--;

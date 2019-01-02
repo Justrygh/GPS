@@ -74,7 +74,7 @@ public class Csv2kml {
 				Filters place = new Filters(Data[1], Data[3], Data[10], (Data[7]+","+Data[6]+","+Data[8]));
 				List.add(place);
 			}
-			String temp=_Csv2kml.substring(0, _Csv2kml.length()-4);
+			String temp=_Csv2kml.substring(0, _Csv2kml.length()-3);
 			ourFile file=new ourFile(temp, List);
 
 			return file;

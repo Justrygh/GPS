@@ -10,10 +10,11 @@ public class Player {
 	private String _Radius;
 	private double _Angel;
 	private double _Time;
-	private double _Dis;
 	private int _FruitsEaten;
 	private int _PacmansEaten;
-	private int _Score;
+	private double _Score;
+	private int ghostKill;
+	private int wrongLocation;
 	private Image _Img;
 	
 	public Player(Player player) {
@@ -23,10 +24,11 @@ public class Player {
 		this._Img = player.getImage();
 		this._Angel = player.getAngel();
 		this._Time = player.getTime();
-		this._Dis = player.getDistance();
 		this._Score = player.getScore();
 		this._PacmansEaten = player.getPacmansEaten();
 		this._FruitsEaten = player.getFruitsEaten();
+		this.ghostKill = player.getGhostKill();
+		this.wrongLocation = player.getWrongLocation();
 	}
 	public Player(String point) {
 		this._Point = point;
@@ -34,10 +36,11 @@ public class Player {
 		this._Radius = "1.0";
 		this._Angel = 0;
 		this._Time = 0;
-		this._Dis = 0;
 		this._Score = 0;
 		this._PacmansEaten = 0;
 		this._FruitsEaten = 0;
+		this.ghostKill = 0;
+		this.wrongLocation = 0;
 		this._Img = Toolkit.getDefaultToolkit().getImage("ourdata/Player.png");
 	}
 	
@@ -47,10 +50,11 @@ public class Player {
 		this._Radius = "1.0";
 		this._Angel = 0;
 		this._Time = 0;
-		this._Dis = 0;
 		this._Score = 0;
 		this._PacmansEaten = 0;
 		this._FruitsEaten = 0;
+		this.ghostKill = 0;
+		this.wrongLocation = 0;
 		this._Img = Toolkit.getDefaultToolkit().getImage("ourdata/Player.png");
 	}
 	
@@ -72,8 +76,8 @@ public class Player {
 		this._Radius = radius;
 	}
 	
-	public void setTime(double time) {
-		this._Time += time;
+	public void Time() {
+		this._Time ++;
 	}
 	
 	public void FruitsEaten() {
@@ -84,22 +88,30 @@ public class Player {
 		this._PacmansEaten ++;
 	}
 	
-	public void setDistance(double distance) {
-		this._Dis = distance;
-	}
-	
-	public void setScore(int score) {
+	public void setScore(double score) {
 		this._Score += score;
 	}
 	
-	public void resetScore() {
-		this._Score = 0;
+	public void ghostKill() {
+		this.ghostKill ++;
+	}
+	
+	public void wrongLocation() {
+		this.wrongLocation ++;
 	}
 	
 	//**********Getters**********//
 	
+	public int getWrongLocation() {
+		return this.wrongLocation;
+	}
+	
+	public int getGhostKill() {
+		return this.ghostKill;
+	}
+	
 	public double getAngel() {
-		return _Angel;
+		return this._Angel;
 	}
 	
 	public String getPoint() {
@@ -129,13 +141,9 @@ public class Player {
 	public int getPacmansEaten() {
 		return this._PacmansEaten;
 	}
-	
-	public double getDistance() {
-		return this._Dis;
-	}
 
-	public int getScore() {
-		return _Score;
+	public double getScore() {
+		return this._Score;
 	}
 
 }
