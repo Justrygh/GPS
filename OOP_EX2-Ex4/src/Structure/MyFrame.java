@@ -31,6 +31,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 
 import Algorithms.ShortestPathAlgo;
 import File_format.Path2kml;
@@ -1014,10 +1015,10 @@ public class MyFrame extends JPanel implements MouseListener {
 						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
 						else {
-							double score = MaxTime - _Player.getTime();
+							double score = Double.parseDouble(new DecimalFormat("##.#").format(MaxTime - _Player.getTime()));
 							_Player.setScore(score);
 							popup.show(createPopup(), 0 , 0);
-							sendReport();
+							//sendReport();
 							menu5.setEnabled(true);
 						}
 					}
@@ -1099,10 +1100,10 @@ public class MyFrame extends JPanel implements MouseListener {
 						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
 						else {
-							double score = (MaxTime - _Player.getTime());
+							double score = Double.parseDouble(new DecimalFormat("##.#").format(MaxTime - _Player.getTime()));
 							_Player.setScore(score);
 							popup.show(createPopup(), 0 , 0);
-							sendReport();
+							//sendReport();
 							menu5.setEnabled(true);
 						}
 					}
@@ -1185,7 +1186,7 @@ public class MyFrame extends JPanel implements MouseListener {
 						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
 						else {
-							double score = (MaxTime - _Player.getTime());
+							double score = Double.parseDouble(new DecimalFormat("##.#").format(MaxTime - _Player.getTime()));
 							_Player.setScore(score);
 							popup.show(createPopup(), 0 , 0);
 							sendReport();
@@ -1269,7 +1270,7 @@ public class MyFrame extends JPanel implements MouseListener {
 						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
 						else {
-							double score = (int) (MaxTime - _Player.getTime());
+							double score = Double.parseDouble(new DecimalFormat("##.#").format(MaxTime - _Player.getTime()));
 							_Player.setScore(score);
 							popup.show(createPopup(), 0 , 0);
 							sendReport();
@@ -1375,7 +1376,7 @@ public class MyFrame extends JPanel implements MouseListener {
 	 * Clears all the privates variables
 	 */
 	public void clearLists() {
-		_Fruits = new ArrayList<Fruit>();;
+		_Fruits = new ArrayList<Fruit>();
 		_Pacmans = new ArrayList<Pacman>();
 		_List = new ArrayList<Game>();
 		_Icons = new ArrayList<Image>();
@@ -1747,7 +1748,7 @@ public class MyFrame extends JPanel implements MouseListener {
 			g.fillRect(5, 0, 205, 25);
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("Monospaced", Font.BOLD, 20));
-			g.drawString("Time Left: " + (MaxTime - _Player.getTime()), 10, 20);
+			g.drawString("Time Left: " + Double.parseDouble(new DecimalFormat("##.#").format(MaxTime - _Player.getTime())), 10, 20);
 		}
 
 		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
@@ -1988,18 +1989,11 @@ public class MyFrame extends JPanel implements MouseListener {
 			_Fruits.add(new Fruit("Fruit", x + "," + y + "," + 0, "1", String.valueOf(j)));
 			j++;
 		}
-		if (isPlayer == true && g.drawImage(_Player.getImage(), x-x1, y-y1, newW, newH,this) == true ) {
+		if (isPlayer == true && g.drawImage(_Player.getImage(), x-x1, y-y1, newW, newH,this) == true) {
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
 			g.drawString("(" + Integer.toString(x) + "," + Integer.toString(y) + ")", x+newW/3, y+newH/2);
 			_Player.setPoint(x + "," + y + "," + 0);
-			for(int i=0; i<_Ghosts.size(); i++) {
-				if(Double.parseDouble(_Ghosts.get(i).getSpeed()) > Double.parseDouble(_Player.getSpeed())) {
-					_Player.setSpeed(String.valueOf(Double.parseDouble(_Ghosts.get(i).getSpeed())));
-				}
-			}
-			String speed = String.valueOf(Double.parseDouble(_Player.getSpeed()) * 2);
-			_Player.setSpeed(speed);
 		}
 		//		if (isGhost == true && g.drawImage(Ghost, x - 16, y - 16, this) == true) {
 		//			g.setFont(new Font("Monospaced", Font.BOLD, 14));

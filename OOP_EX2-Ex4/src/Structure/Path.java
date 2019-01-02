@@ -69,7 +69,7 @@ public class Path{
 			double distance = _Map.distanceBetween2Points(Ghost, Player)
 					- Double.parseDouble(list.get(i).getRadius());
 			double time = distance / Double.parseDouble(list.get(i).getSpeed());
-			if (time > 0.1) {
+			if (time > 1) {
 				double x = Ghost.x() + (vec.x() / (time*10));
 				double y = Ghost.y() + (vec.y() / (time*10));
 				_Point = (x + "," + y + "," + 0);
@@ -199,8 +199,9 @@ public class Path{
 		Point3D newPlayer = new Point3D(x, y);
 		Point3D vec = new Point3D(newPlayer.x() - oldPlayer.x(), newPlayer.y() - oldPlayer.y());
 		double distance = _Map.distanceBetween2Points(oldPlayer, newPlayer) - Double.parseDouble(player.getRadius());
-		Point3D newPoint =  new Point3D(oldPlayer.x() + (vec.x()/distance*(Double.parseDouble(player.getSpeed())/10)), 
-				oldPlayer.y() + (vec.y()/distance*(Double.parseDouble(player.getSpeed())/10)));
+		distance *= 10;
+		Point3D newPoint =  new Point3D(oldPlayer.x() + (vec.x()/distance*Double.parseDouble(player.getSpeed())), 
+				oldPlayer.y() + (vec.y()/distance*Double.parseDouble(player.getSpeed())));
 		player.setPoint(newPoint.ix()+","+newPoint.iy()+","+0);
 		return player;
 	}
@@ -238,7 +239,7 @@ public class Path{
 				double distance = _Map.distanceBetween2Points(Pac, Fru)
 						- Double.parseDouble(pList.get(i).getList().get(0).getRadius());
 				double time = distance / Double.parseDouble(pList.get(i).getList().get(0).getSpeed());
-				if (time > 0.1) {
+				if (time > 1) {
 					double x = Pac.x() + (vec.x() / (time*10));
 					double y = Pac.y() + (vec.y() / (time*10));
 					_Point = (x + "," + y + "," + 0);
