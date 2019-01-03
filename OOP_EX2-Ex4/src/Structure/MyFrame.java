@@ -1653,6 +1653,9 @@ public class MyFrame extends JPanel implements MouseListener {
 		}
 
 		setMat(_Map.image2Matrix(_Map.matImg(this.getHeight(), this.getWidth(), _Blocks)));
+		
+		newW = 32*this.getWidth()/W;
+		newH = 32*this.getHeight()/H;
 
 		Data Player = new Data(_Player);
 		if(Player.getiX() != 0 && Player.getiY() != 0) {
@@ -1695,19 +1698,7 @@ public class MyFrame extends JPanel implements MouseListener {
 			int blockWidth = _Blocks.get(i).getWidth() * this.getWidth() / W;
 			int blockHeight = _Blocks.get(i).getHeight() * this.getHeight() / H;
 			g.setColor(Color.BLACK);
-			g.fillRect(x1-newW/2, y1-newH/2, blockWidth, blockHeight);
-			g.setColor(Color.RED);
-			g.fillOval(x1-newW/2-5, y1-newH/2-5, 10, 10);
-			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1-newW, y1-newH);
-			g.setColor(Color.BLUE);
-			g.fillOval(x1-newW/2-5, y1-newH/2+blockHeight-5, 10, 10);
-			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1+blockHeight) + ")", x1-newW, y1+blockHeight+newH);
-			g.setColor(Color.GREEN);
-			g.fillOval(x1-newW/2+blockWidth-5, y1-newH/2-5, 10, 10);
-			g.drawString("(" + String.valueOf(x1+blockWidth) + "," + String.valueOf(y1) + ")", x1+newW+blockWidth, y1-newH);
-			g.setColor(Color.YELLOW);
-			g.fillOval(x1-newW/2+blockWidth-5, y1-newH/2+blockHeight-5, 10, 10);
-			g.drawString("(" + String.valueOf(x1+blockWidth) + "," + String.valueOf(y1+blockHeight) + ")", x1+newW+blockWidth, y1+blockHeight+newH);
+			g.fillRect(x1, y1, blockWidth, blockHeight);
 		}
 		if (isDemo == false) {
 			for (int i = 0; i < _Pacmans.size(); i++) {
