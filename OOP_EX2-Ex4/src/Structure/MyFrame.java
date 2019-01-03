@@ -1,4 +1,4 @@
-package Structure;
+Package Structure;
 
 import java.awt.Color;
 
@@ -19,7 +19,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
+
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -34,6 +36,7 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 
 import Algorithms.ShortestPathAlgo;
+import Declaration.Data;
 import File_format.Path2kml;
 import Geom.Point3D;
 import Players.Block;
@@ -122,14 +125,6 @@ public class MyFrame extends JPanel implements MouseListener {
 
 	private void setMat(boolean[][] mat) {
 		this._Mat = mat;
-	}
-
-	private void setIList(ArrayList<Image> ilist) {
-		this._Icons = ilist;
-	}
-
-	private void setGIList(ArrayList<Image> glist) {
-		this._GhostsImg = glist;
 	}
 
 	public ArrayList<Block> getBList(){
@@ -477,12 +472,10 @@ public class MyFrame extends JPanel implements MouseListener {
 									//									while(angel>360) {
 									//										angel-=360;
 									//									}
-									String[] pacData = _Pacmans.get(i).getPoint().split(",");
-									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
-									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
-											Double.parseDouble(pacData[1]));
-									Point3D Fru = new Point3D(Double.parseDouble(fruData[0]),
-											Double.parseDouble(fruData[1]));
+									Data pac = new Data(_Pacmans.get(i));
+									Data fru = new Data(pList.get(i).getList().get(0));
+									Point3D Pac = new Point3D(pac.getX(), pac.getY());
+									Point3D Fru = new Point3D(fru.getX(), fru.getY());
 									double angel = rotatePac(Pac, Fru);
 									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
 									_Pacmans.get(i).setAngel(angel);
@@ -529,12 +522,10 @@ public class MyFrame extends JPanel implements MouseListener {
 									//									while(angel>360) {
 									//										angel-=360;
 									//									}
-									String[] pacData = _Pacmans.get(i).getPoint().split(",");
-									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
-									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
-											Double.parseDouble(pacData[1]));
-									Point3D Fru = new Point3D(Double.parseDouble(fruData[0]),
-											Double.parseDouble(fruData[1]));
+									Data pac = new Data(_Pacmans.get(i));
+									Data fru = new Data(pList.get(i).getList().get(0));
+									Point3D Pac = new Point3D(pac.getX(), pac.getY());
+									Point3D Fru = new Point3D(fru.getX(), fru.getY());
 									double angel = rotatePac(Pac, Fru);
 									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
 									_Pacmans.get(i).setAngel(angel);
@@ -962,12 +953,10 @@ public class MyFrame extends JPanel implements MouseListener {
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							for (int j = 0; j < pList.size(); j++) {
 								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
-									String[] pacData = _Pacmans.get(i).getPoint().split(",");
-									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
-									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
-											Double.parseDouble(pacData[1]));
-									Point3D Fru = new Point3D(Double.parseDouble(fruData[0]),
-											Double.parseDouble(fruData[1]));
+									Data pac = new Data(_Pacmans.get(i));
+									Data fru = new Data(pList.get(i).getList().get(0));
+									Point3D Pac = new Point3D(pac.getX(), pac.getY());
+									Point3D Fru = new Point3D(fru.getX(), fru.getY());
 									double angel = rotatePac(Pac, Fru);
 									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
 									_Pacmans.get(i).setAngel(angel);
@@ -978,15 +967,10 @@ public class MyFrame extends JPanel implements MouseListener {
 							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
 							for(int i=0; i<temp.size(); i++) {
 								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
-
-								String[] Data1 = _Ghosts.get(i).getPoint().split(",");
-								String[] Data2 = _Player.getPoint().split(",");
-								int pX = (int) Double.parseDouble(Data1[0]);
-								int pY = (int) Double.parseDouble(Data1[1]);
-
-								int fX = (int) Double.parseDouble(Data2[0]);
-								int fY = (int) Double.parseDouble(Data2[1]);
-								if (pX == fX && pY == fY && ghostStop == 0) {
+								Data ghost = new Data(_Ghosts.get(i));
+								Data player = new Data(_Player);
+								if (player.getiX() == ghost.getiX() && 
+										player.getiY() == ghost.getiY() && ghostStop == 0) {
 									ghostStop = 3;
 									_Player.ghostKill();
 									_Player.setScore(-20);
@@ -1044,12 +1028,10 @@ public class MyFrame extends JPanel implements MouseListener {
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							for (int j = 0; j < pList.size(); j++) {
 								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
-									String[] pacData = _Pacmans.get(i).getPoint().split(",");
-									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
-									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
-											Double.parseDouble(pacData[1]));
-									Point3D Fru = new Point3D(Double.parseDouble(fruData[0]),
-											Double.parseDouble(fruData[1]));
+									Data pac = new Data(_Pacmans.get(i));
+									Data fru = new Data(pList.get(i).getList().get(0));
+									Point3D Pac = new Point3D(pac.getX(), pac.getY());
+									Point3D Fru = new Point3D(fru.getX(), fru.getY());
 									double angel = rotatePac(Pac, Fru);
 									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
 									_Pacmans.get(i).setAngel(angel);
@@ -1060,15 +1042,10 @@ public class MyFrame extends JPanel implements MouseListener {
 							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
 							for(int i=0; i<temp.size(); i++) {
 								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
-
-								String[] Data1 = _Ghosts.get(i).getPoint().split(",");
-								String[] Data2 = _Player.getPoint().split(",");
-								int pX = (int) Double.parseDouble(Data1[0]);
-								int pY = (int) Double.parseDouble(Data1[1]);
-
-								int fX = (int) Double.parseDouble(Data2[0]);
-								int fY = (int) Double.parseDouble(Data2[1]);
-								if (pX == fX && pY == fY && ghostStop == 0) {
+								Data ghost = new Data(_Ghosts.get(i));
+								Data player = new Data(_Player);
+								if (player.getiX() == ghost.getiX() && 
+										player.getiY() == ghost.getiY() && ghostStop == 0) {
 									ghostStop = 3;
 									_Player.ghostKill();
 									_Player.setScore(-20);
@@ -1130,12 +1107,10 @@ public class MyFrame extends JPanel implements MouseListener {
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							for (int j = 0; j < pList.size(); j++) {
 								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
-									String[] pacData = _Pacmans.get(i).getPoint().split(",");
-									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
-									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
-											Double.parseDouble(pacData[1]));
-									Point3D Fru = new Point3D(Double.parseDouble(fruData[0]),
-											Double.parseDouble(fruData[1]));
+									Data pac = new Data(_Pacmans.get(i));
+									Data fru = new Data(pList.get(i).getList().get(0));
+									Point3D Pac = new Point3D(pac.getX(), pac.getY());
+									Point3D Fru = new Point3D(fru.getX(), fru.getY());
 									double angel = rotatePac(Pac, Fru);
 									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
 									_Pacmans.get(i).setAngel(angel);
@@ -1156,15 +1131,10 @@ public class MyFrame extends JPanel implements MouseListener {
 							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
 							for(int i=0; i<temp.size(); i++) {
 								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
-
-								String[] Data1 = _Ghosts.get(i).getPoint().split(",");
-								String[] Data2 = _Player.getPoint().split(",");
-								int pX = (int) Double.parseDouble(Data1[0]);
-								int pY = (int) Double.parseDouble(Data1[1]);
-
-								int fX = (int) Double.parseDouble(Data2[0]);
-								int fY = (int) Double.parseDouble(Data2[1]);
-								if (pX == fX && pY == fY && ghostStop == 0) {
+								Data ghost = new Data(_Ghosts.get(i));
+								Data player = new Data(_Player);
+								if (player.getiX() == ghost.getiX() && 
+										player.getiY() == ghost.getiY() && ghostStop == 0) {
 									ghostStop = 3;
 									_Player.ghostKill();
 									_Player.setScore(-20);
@@ -1212,12 +1182,10 @@ public class MyFrame extends JPanel implements MouseListener {
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							for (int j = 0; j < pList.size(); j++) {
 								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
-									String[] pacData = _Pacmans.get(i).getPoint().split(",");
-									String[] fruData = pList.get(j).getList().get(0).getPoint().split(",");
-									Point3D Pac = new Point3D(Double.parseDouble(pacData[0]),
-											Double.parseDouble(pacData[1]));
-									Point3D Fru = new Point3D(Double.parseDouble(fruData[0]),
-											Double.parseDouble(fruData[1]));
+									Data pac = new Data(_Pacmans.get(i));
+									Data fru = new Data(pList.get(i).getList().get(0));
+									Point3D Pac = new Point3D(pac.getX(), pac.getY());
+									Point3D Fru = new Point3D(fru.getX(), fru.getY());
 									double angel = rotatePac(Pac, Fru);
 									_Pacmans.get(i).setPoint(pList.get(j).getList().get(0).getPoint());
 									_Pacmans.get(i).setAngel(angel);
@@ -1234,15 +1202,10 @@ public class MyFrame extends JPanel implements MouseListener {
 							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
 							for(int i=0; i<temp.size(); i++) {
 								_Ghosts.get(i).setPoint(temp.get(i).getPoint());
-
-								String[] Data1 = _Ghosts.get(i).getPoint().split(",");
-								String[] Data2 = _Player.getPoint().split(",");
-								int pX = (int) Double.parseDouble(Data1[0]);
-								int pY = (int) Double.parseDouble(Data1[1]);
-
-								int fX = (int) Double.parseDouble(Data2[0]);
-								int fY = (int) Double.parseDouble(Data2[1]);
-								if (pX == fX && pY == fY && ghostStop == 0) {
+								Data ghost = new Data(_Ghosts.get(i));
+								Data player = new Data(_Player);
+								if (player.getiX() == ghost.getiX() && 
+										player.getiY() == ghost.getiY() && ghostStop == 0) {
 									ghostStop = 3;
 									_Player.ghostKill();
 									_Player.setScore(-20);
@@ -1403,7 +1366,7 @@ public class MyFrame extends JPanel implements MouseListener {
 		label4.setText("Ghosts killed: " + _Player.getGhostKill());
 		label4.setBounds(60, 60, 150, 100);
 		JLabel label5 = new JLabel();
-		label5.setText("Blocks Passed: " + _Player.getWrongLocation());
+		label5.setText("_Blocks Passed: " + _Player.getWrongLocation());
 		label5.setBounds(60, 85, 150, 100);
 		f.add(label1);
 		f.add(label2);
@@ -1502,13 +1465,13 @@ public class MyFrame extends JPanel implements MouseListener {
 	public void changeFruitIcon() {
 		for (int i = 0; i < _Pacmans.size(); i++) {
 			for (int j = 0; j < _Fruits.size(); j++) {
-				String[] Data1 = _Pacmans.get(i).getPoint().split(",");
-				String[] Data2 = _Fruits.get(j).getPoint().split(",");
-				int pX = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
-				int pY = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
+				Data pacData = new Data(_Pacmans.get(i));
+				Data fruData = new Data(_Fruits.get(j));
+				int pX = pacData.getiX() * this.getWidth() / W;
+				int pY = pacData.getiY() * this.getHeight() / H;
 
-				int fX = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
-				int fY = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
+				int fX = fruData.getiX() * this.getWidth() / W;
+				int fY = fruData.getiY() * this.getHeight() / H;
 				if (pX == fX && pY == fY) {
 					_Fruits.get(j).setPicture("Done");
 				}
@@ -1523,13 +1486,13 @@ public class MyFrame extends JPanel implements MouseListener {
 	public void removeFruitIcon() {
 		for (int i = 0; i < _Pacmans.size(); i++) {
 			for (int j = 0; j < _Fruits.size(); j++) {
-				String[] Data1 = _Pacmans.get(i).getPoint().split(",");
-				String[] Data2 = _Fruits.get(j).getPoint().split(",");
-				int pX = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
-				int pY = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
+				Data pacData = new Data(_Pacmans.get(i));
+				Data fruData = new Data(_Fruits.get(j));
+				int pX = pacData.getiX() * this.getWidth() / W;
+				int pY = pacData.getiY() * this.getHeight() / H;
 
-				int fX = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
-				int fY = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
+				int fX = fruData.getiX() * this.getWidth() / W;
+				int fY = fruData.getiY() * this.getHeight() / H;
 				if (pX == fX && pY == fY) {
 					_Fruits.remove(j);
 					_Icons.remove(j);
@@ -1543,13 +1506,13 @@ public class MyFrame extends JPanel implements MouseListener {
 	 */
 	public void isPlayerAteFruit() {
 		for (int j = 0; j < _Fruits.size(); j++) {
-			String[] Data1 = _Player.getPoint().split(",");
-			String[] Data2 = _Fruits.get(j).getPoint().split(",");
-			int pX = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
-			int pY = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
+			Data playerData = new Data(_Player);
+			Data fruData = new Data(_Fruits.get(j));
+			int pX = playerData.getiX() * this.getWidth() / W;
+			int pY = playerData.getiY() * this.getHeight() / H;
 
-			int fX = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
-			int fY = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
+			int fX = fruData.getiX() * this.getWidth() / W;
+			int fY = fruData.getiY() * this.getHeight() / H;
 
 			double distance = Math.sqrt(Math.pow(fX-pX, 2) + Math.pow(fY-pY, 2)) 
 					- Double.parseDouble(_Player.getRadius());
@@ -1574,13 +1537,13 @@ public class MyFrame extends JPanel implements MouseListener {
 	 */
 	public void isPlayerAtePacman() {
 		for (int i = 0; i < _Pacmans.size(); i++) {
-			String[] Data1 = _Player.getPoint().split(",");
-			String[] Data2 = _Pacmans.get(i).getPoint().split(",");
-			int pX = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
-			int pY = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
+			Data playerData = new Data(_Player);
+			Data pacData = new Data(_Pacmans.get(i));
+			int pX = playerData.getiX() * this.getWidth() / W;
+			int pY = playerData.getiY() * this.getHeight() / H;
 
-			int fX = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
-			int fY = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
+			int fX = pacData.getiX() * this.getWidth() / W;
+			int fY = pacData.getiY() * this.getHeight() / H;
 
 			double distance = Math.sqrt(Math.pow(fX-pX, 2) + Math.pow(fY-pY, 2)) 
 					- Double.parseDouble(_Player.getRadius());
@@ -1638,12 +1601,12 @@ public class MyFrame extends JPanel implements MouseListener {
 		ArrayList<Game> it = getList();
 		g.setColor(Color.WHITE);
 		for (int i = 0; i < it.size(); i += 2) {
-			String[] Data1 = it.get(i).getPoint().split(",");
-			String[] Data2 = it.get(i + 1).getPoint().split(",");
-			int x1 = Integer.parseInt(Data1[0]) * this.getWidth() / W;
-			int y1 = Integer.parseInt(Data1[1]) * this.getHeight() / H;
-			int x2 = Integer.parseInt(Data2[0]) * this.getWidth() / W;
-			int y2 = Integer.parseInt(Data2[1]) * this.getHeight() / H;
+			Data Data1 = new Data(it.get(i));
+			Data Data2 = new Data(it.get(i + 1));
+			int x1 = Data1.getiX() * this.getWidth() / W;
+			int y1 = Data1.getiY() * this.getHeight() / H;
+			int x2 = Data2.getiX() * this.getWidth() / W;
+			int y2 = Data2.getiY() * this.getHeight() / H;
 			Image img = Toolkit.getDefaultToolkit().getImage("newdata/Done.png");
 			g.drawImage(img, x2 - 16, y2 - 16, null);
 			g.drawLine(x1, y1, x2, y2);
@@ -1651,7 +1614,7 @@ public class MyFrame extends JPanel implements MouseListener {
 	}
 
 	/**
-	 * This method paints our Pacmans/Fruits/Ghosts/Blocks in our GUI. instructions - Boolean that
+	 * This method paints our Pacmans/Fruits/Ghosts/_Blocks in our GUI. instructions - Boolean that
 	 * represents when you first press New and want to create a new game gui and
 	 * make the instructions disappear. isSaved - If you pressed the RUN button, it
 	 * will print the Lines even after you rescale the map. isDemo - When you
@@ -1669,7 +1632,7 @@ public class MyFrame extends JPanel implements MouseListener {
 			Image start = Toolkit.getDefaultToolkit().getImage("newdata/Instructions.jpeg");
 			g.drawImage(start, 0, 0, this.getWidth(), this.getHeight(), this);
 		}
-		
+
 		if(isOnline == true && isTimer == true) {
 			g.setColor(Color.BLACK);
 			g.fillRect(5, 0, 205, 25);
@@ -1691,10 +1654,10 @@ public class MyFrame extends JPanel implements MouseListener {
 
 		setMat(_Map.image2Matrix(_Map.matImg(this.getHeight(), this.getWidth(), _Blocks)));
 
-		String[] Player = _Player.getPoint().split(",");
-		if(Integer.parseInt(Player[0]) != 0 && Integer.parseInt(Player[1]) != 0) {
-			int x1 = (int) Double.parseDouble(Player[0]) * this.getWidth() / W;
-			int y1 = (int) Double.parseDouble(Player[1]) * this.getHeight() / H;
+		Data Player = new Data(_Player);
+		if(Player.getiX() != 0 && Player.getiY() != 0) {
+			int x1 = Player.getiX() * this.getWidth() / W;
+			int y1 = Player.getiY() * this.getHeight() / H;
 			g.drawImage(_Player.getImage(), x1-newW/2, y1-newH/2, newW, newH, null);
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
@@ -1708,37 +1671,49 @@ public class MyFrame extends JPanel implements MouseListener {
 		}
 
 		for (int i = 0; i < _Fruits.size(); i++) {
-			String[] Data = _Fruits.get(i).getPoint().split(",");
-			int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
-			int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+			Data fruData = new Data(_Fruits.get(i));
+			int x1 = fruData.getiX() * this.getWidth() / W;
+			int y1 = fruData.getiY() * this.getHeight() / H;
 			g.drawImage(_Icons.get(i), x1-newW/2, y1-newH/2, newW, newH, this);
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
 			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1+newW/3, y1+newH/2);
 		}
 		for (int i = 0; i < _Ghosts.size(); i++) {
-			String[] Data = _Ghosts.get(i).getPoint().split(",");
-			int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
-			int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+			Data ghoData = new Data(_Ghosts.get(i));
+			int x1 = ghoData.getiX() * this.getWidth() / W;
+			int y1 = ghoData.getiY() * this.getHeight() / H;
 			g.drawImage(_GhostsImg.get(i), x1-newW/2, y1-newH/2, newW, newH, this);
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
 			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1+newW/3, y1+newH/2);
 		}
 		for (int i = 0; i < _Blocks.size(); i++) {
-			String[] Data = _Blocks.get(i).getPoint().split(",");
-			int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
-			int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+			Data bloData = new Data(_Blocks.get(i));
+			int x1 = bloData.getiX() * this.getWidth() / W;
+			int y1 = bloData.getiY() * this.getHeight() / H;
 			int blockWidth = _Blocks.get(i).getWidth() * this.getWidth() / W;
 			int blockHeight = _Blocks.get(i).getHeight() * this.getHeight() / H;
 			g.setColor(Color.BLACK);
 			g.fillRect(x1-newW/2, y1-newH/2, blockWidth, blockHeight);
+			g.setColor(Color.RED);
+			g.fillOval(x1-newW/2-5, y1-newH/2-5, 10, 10);
+			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1-newW, y1-newH);
+			g.setColor(Color.BLUE);
+			g.fillOval(x1-newW/2-5, y1-newH/2+blockHeight-5, 10, 10);
+			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1+blockHeight) + ")", x1-newW, y1+blockHeight+newH);
+			g.setColor(Color.GREEN);
+			g.fillOval(x1-newW/2+blockWidth-5, y1-newH/2-5, 10, 10);
+			g.drawString("(" + String.valueOf(x1+blockWidth) + "," + String.valueOf(y1) + ")", x1+newW+blockWidth, y1-newH);
+			g.setColor(Color.YELLOW);
+			g.fillOval(x1-newW/2+blockWidth-5, y1-newH/2+blockHeight-5, 10, 10);
+			g.drawString("(" + String.valueOf(x1+blockWidth) + "," + String.valueOf(y1+blockHeight) + ")", x1+newW+blockWidth, y1+blockHeight+newH);
 		}
 		if (isDemo == false) {
 			for (int i = 0; i < _Pacmans.size(); i++) {
-				String[] Data = _Pacmans.get(i).getPoint().split(",");
-				int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
-				int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+				Data pacData = new Data(_Pacmans.get(i));
+				int x1 = pacData.getiX() * this.getWidth() / W;
+				int y1 = pacData.getiY() * this.getHeight() / H;
 				g.drawImage(Pacman, x1-newW/2, y1-newH/2, newW, newH, this);
 				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				g.setColor(Color.WHITE);
@@ -1752,19 +1727,19 @@ public class MyFrame extends JPanel implements MouseListener {
 		if (isSaved == true) {
 			for (int i = 0; i < _List.size(); i += 2) {
 				g.setColor(Color.WHITE);
-				String[] Data1 = _List.get(i).getPoint().split(",");
-				String[] Data2 = _List.get(i + 1).getPoint().split(",");
-				int x1 = (int) Double.parseDouble(Data1[0]) * this.getWidth() / W;
-				int y1 = (int) Double.parseDouble(Data1[1]) * this.getHeight() / H;
-				int x2 = (int) Double.parseDouble(Data2[0]) * this.getWidth() / W;
-				int y2 = (int) Double.parseDouble(Data2[1]) * this.getHeight() / H;
+				Data Data1 = new Data(_List.get(i));
+				Data Data2 = new Data(_List.get(i + 1));
+				int x1 = Data1.getiX() * this.getWidth() / W;
+				int y1 = Data1.getiY() * this.getHeight() / H;
+				int x2 = Data2.getiX() * this.getWidth() / W;
+				int y2 = Data2.getiY() * this.getHeight() / H;
 				g.drawImage(img, x2-newW/2, y2-newH/2, newW, newH, null);
 				g.drawLine(x1, y1, x2, y2);
 			}
 			for (int i = 0; i < _Pacmans.size(); i++) {
-				String[] Data = _Pacmans.get(i).getPoint().split(",");
-				int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
-				int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+				Data pacData = new Data(_Pacmans.get(i));
+				int x1 = pacData.getiX() * this.getWidth() / W;
+				int y1 = pacData.getiY() * this.getHeight() / H;
 				g.drawImage(Pacman, x1-newW/2, y1-newH/2, newW, newH, this);
 				g.setFont(new Font("Monospaced", Font.BOLD, 14));
 				g.setColor(Color.WHITE);
@@ -1776,9 +1751,9 @@ public class MyFrame extends JPanel implements MouseListener {
 		}
 		if (isDemo == true) {
 			for (int i = 0; i < _Pacmans.size(); i++) {
-				String[] Data = _Pacmans.get(i).getPoint().split(",");
-				int x1 = (int) Double.parseDouble(Data[0]) * this.getWidth() / W;
-				int y1 = (int) Double.parseDouble(Data[1]) * this.getHeight() / H;
+				Data pacData = new Data(_Pacmans.get(i));
+				int x1 = pacData.getiX() * this.getWidth() / W;
+				int y1 = pacData.getiY() * this.getHeight() / H;
 				// Draw our image like normal
 				g.drawImage(pacmanIcon(_Pacmans.get(i).getAngel()), x1-newW/2, y1-newH/2, newW, newH, this);
 				g.setFont(new Font("Monospaced", Font.BOLD, 14));
