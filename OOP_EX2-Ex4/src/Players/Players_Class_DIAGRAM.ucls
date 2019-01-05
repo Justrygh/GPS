@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.2" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="Players.Fruit" project="GPS-UpdatedPacman" 
+    file="/GPS-UpdatedPacman/OOP_EX2-Ex4/src/Players/Fruit.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="497" width="229" x="130" y="12"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="Players.Pacman" project="GPS-UpdatedPacman" 
+    file="/GPS-UpdatedPacman/OOP_EX2-Ex4/src/Players/Pacman.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="659" width="283" x="399" y="12"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="Players.Ghost" project="GPS-UpdatedPacman" 
+    file="/GPS-UpdatedPacman/OOP_EX2-Ex4/src/Players/Ghost.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="425" width="237" x="722" y="12"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="Players.Game" project="GPS-UpdatedPacman" 
+    file="/GPS-UpdatedPacman/OOP_EX2-Ex4/src/Players/Game.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="785" width="272" x="999" y="12"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="Players.Block" project="GPS-UpdatedPacman" 
+    file="/GPS-UpdatedPacman/OOP_EX2-Ex4/src/Players/Block.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="371" width="197" x="1311" y="12"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="Players.Player" project="GPS-UpdatedPacman" 
+    file="/GPS-UpdatedPacman/OOP_EX2-Ex4/src/Players/Player.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="695" width="149" x="1548" y="12"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
