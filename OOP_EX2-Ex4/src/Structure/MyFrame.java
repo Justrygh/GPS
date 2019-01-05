@@ -50,7 +50,8 @@ public class MyFrame extends JPanel implements MouseListener {
 
 	/**
 	 * @author Eli
-	 * @author Qusai This class is the main Class that represents our GUI + Game.
+	 * @author Qusai 
+	 * This class is the main Class that represents our GUI + Game.
 	 */
 
 	// **********Private Variables**********//
@@ -1300,7 +1301,11 @@ public class MyFrame extends JPanel implements MouseListener {
 
 		setMB(menuBar);
 	}
-
+/**
+ * in this function we Create a new ArrayList of "Points" 
+ * especially Adding this Points help the Player to create the Path
+ *  for reaching each (Fruit/Pacman) in Our Game/Map. 
+ */
 	public void createPoints() {
 		_Points = new ArrayList<Point3D>();
 		for(int i=0; i<_Blocks.size(); i++) {
@@ -1318,7 +1323,16 @@ public class MyFrame extends JPanel implements MouseListener {
 			_Points.add(temp);
 		}
 	}
-
+       /**
+	 * in this Function We make our Algorithm for calculating the Path 
+	 * for each Point like(Fruit/Pacman) , Especially this Algorithm
+	 * The Player that We Place it in our Game , can Go Randomly for 
+	 * Pacman / Fruit 
+	 * **************************ATTENTION********************************
+	 * The Player goes Randomly This means that he can go to fruit first *
+	 * or to the Pacman.                                                 *
+	 * *******************************************************************
+	 */
 	public void movePlayerAlgo() {
 		Point3D temp = new Point3D(0,0);
 		Data player = new Data(_Player);
@@ -1370,7 +1384,10 @@ public class MyFrame extends JPanel implements MouseListener {
 			movePlayerAlgo1();
 		}
 	}
-
+/**
+ * This Function is the same Algo Function But with some
+ *  rules in Addition to make the Path that we create better.
+ */
 	public void movePlayerAlgo1() {
 		if(_Points.size() == 0) 
 			createPoints();
@@ -1459,7 +1476,10 @@ public class MyFrame extends JPanel implements MouseListener {
 		//		k = 0;
 		//		b = 0;
 	}
-
+/**
+ * This function is For creating A POPUP massege in the end of the Game
+ * @return POPUP Massege with all the Scores and the Details about the game.
+ */
 	public JFrame createPopup() {
 		JFrame f = new JFrame("Score");
 		JLabel label1 = new JLabel();
@@ -1488,7 +1508,10 @@ public class MyFrame extends JPanel implements MouseListener {
 		f.setResizable(false);
 		return f;
 	}
-
+/**
+  * Send Report Function Help us to Connect to our DATA-BASE that 
+  * we add to it our Score and the ID's.
+  */
 	private void sendReport() { String jdbcUrl = "jdbc:mysql://ariel-oop.xyz:3306/oop?useUnicode=yes&characterEncoding=UTF-8&useSSL=false";
 	String jdbcUser = "boaz";
 	String jdbcPassword = "9125";
