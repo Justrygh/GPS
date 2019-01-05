@@ -4,7 +4,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 
 public class Player {
-	
+//*********Private variables *********//
 	private String _Point;
 	private String _Speed;
 	private String _Radius;
@@ -16,7 +16,10 @@ public class Player {
 	private int ghostKill;
 	private int wrongLocation;
 	private Image _Img;
-	
+	/**
+	 * the First Constructor
+	 * @param player our Palyer in the Game.
+	 */
 	public Player(Player player) {
 		this._Point = player.getPoint();
 		this._Speed = player.getSpeed();
@@ -30,6 +33,10 @@ public class Player {
 		this.ghostKill = player.getGhostKill();
 		this.wrongLocation = player.getWrongLocation();
 	}
+	/**
+	 * the Second Constructor is the Point's
+	 * @param point our Point's for the Player.
+	 */
 	public Player(String point) {
 		this._Point = point;
 		this._Speed = "20.0";
@@ -43,7 +50,9 @@ public class Player {
 		this.wrongLocation = 0;
 		this._Img = Toolkit.getDefaultToolkit().getImage("ourdata/Player.png");
 	}
-	
+	/**
+	 * Default Constructor
+	 */
 	public Player() {
 		this._Point = 0+","+0+","+0;
 		this._Speed = "20.0";
@@ -58,7 +67,7 @@ public class Player {
 		this._Img = Toolkit.getDefaultToolkit().getImage("ourdata/Player.png");
 	}
 	
-	//**********Setters**********//
+	//********** Setters & Getters **********//
 	
 	public void setAngel(double angel) {
 		this._Angel = angel;
@@ -99,8 +108,6 @@ public class Player {
 	public void wrongLocation() {
 		this.wrongLocation ++;
 	}
-	
-	//**********Getters**********//
 	
 	public int getWrongLocation() {
 		return this.wrongLocation;
