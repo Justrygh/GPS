@@ -1,5 +1,6 @@
 package Declaration;
 
+import Geom.Point3D;
 import Players.Block;
 import Players.Fruit;
 import Players.Game;
@@ -12,6 +13,8 @@ public class Data {
 	private double x;
 	private double y;
 	private String[] data;
+	
+	public Data() {}
 	
 	public Data(String point) {
 		this.data = point.split(",");

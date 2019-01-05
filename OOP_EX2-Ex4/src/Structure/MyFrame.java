@@ -1,7 +1,6 @@
-Package Structure;
+package Structure;
 
 import java.awt.Color;
-
 
 import java.awt.Font;
 import java.awt.Graphics;
@@ -19,7 +18,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -45,6 +43,8 @@ import Players.Game;
 import Players.Ghost;
 import Players.Pacman;
 import Players.Player;
+
+
 
 public class MyFrame extends JPanel implements MouseListener {
 
@@ -92,11 +92,12 @@ public class MyFrame extends JPanel implements MouseListener {
 	//	private int k = 0;
 	//	private int b = 0;
 
-	private Map _Map;
+	private MyMap _Map;
 	private Player _Player;
 	private Path _Path;
 	private boolean[][] _Mat;
 
+	private ArrayList<Point3D> _Points;
 	private ArrayList<Fruit> _Fruits;
 	private ArrayList<Pacman> _Pacmans;
 	private ArrayList<Game> _List;
@@ -129,6 +130,10 @@ public class MyFrame extends JPanel implements MouseListener {
 
 	public ArrayList<Block> getBList(){
 		return this._Blocks;
+	}
+
+	public ArrayList<Point3D> getPoints(){
+		return this._Points;
 	}
 
 	private void setBList(ArrayList<Block> blist) {
@@ -209,7 +214,7 @@ public class MyFrame extends JPanel implements MouseListener {
 		_Blocks = new ArrayList<Block>();
 		_Ids = new ArrayList<Long>();
 		_Player = new Player();
-		_Map = new Map();
+		_Map = new MyMap();
 		_Path = new Path();
 		_Mat = new boolean[_Map.getHeight()][_Map.getWidth()];
 
@@ -810,6 +815,7 @@ public class MyFrame extends JPanel implements MouseListener {
 				Play convert = new Play(new File(path));
 				temp = _Map.ConvertList2Pixel(convert.read());
 				setLists(temp);
+				createPoints();
 				repaint();
 			}
 		});
@@ -928,6 +934,7 @@ public class MyFrame extends JPanel implements MouseListener {
 				paintElement();
 				menu8.setEnabled(true);
 				menu6.setEnabled(false);
+				repaint();
 			}
 		});
 		player.setEnabled(false);
@@ -944,7 +951,8 @@ public class MyFrame extends JPanel implements MouseListener {
 				menu8.setEnabled(false);
 				menu7.setEnabled(false);
 				opengame.setEnabled(false);
-				calculatePath();
+				if(getPList().size() > 0)
+					calculatePath();
 				pList = _Path.Create(getList(), getPList());
 				removeFruitIcon();
 				Thread t1 = new Thread(new Runnable() {
@@ -989,6 +997,7 @@ public class MyFrame extends JPanel implements MouseListener {
 							}
 							isClicked = false;
 						}
+						_Player.Time();
 						removeFruitIcon();
 						isPlayerAteFruit();
 						isPlayerAtePacman();
@@ -1019,7 +1028,8 @@ public class MyFrame extends JPanel implements MouseListener {
 				menu8.setEnabled(false);
 				menu7.setEnabled(false);
 				opengame.setEnabled(false);
-				calculatePath();
+				if(getPList().size() > 0)
+					calculatePath();
 				pList = _Path.Create(getList(), getPList());
 				removeFruitIcon();
 				Thread t1 = new Thread(new Runnable() {
@@ -1054,19 +1064,14 @@ public class MyFrame extends JPanel implements MouseListener {
 						}
 						else if(ghostStop > 0)
 							ghostStop--;
-						if(_Pacmans.size() > 0) {
-							_Path.movePlayer2Pacman(_Pacmans, _Player);
-						}
-						else if(_Fruits.size() > 0) {
-							_Path.movePlayer2Fruit(_Fruits, _Player);
-						}
+						_Player.Time();
+						movePlayerAlgo();
 						removeFruitIcon();
 						isPlayerAteFruit();
 						isPlayerAtePacman();
 						repaint();
-						_Player.Time();
 						try {
-							Thread.sleep(100);
+							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -1098,7 +1103,8 @@ public class MyFrame extends JPanel implements MouseListener {
 				menu8.setEnabled(false);
 				menu7.setEnabled(false);
 				opengame.setEnabled(false);
-				calculatePath();
+				if(getPList().size() > 0)
+					calculatePath();
 				pList = _Path.Create(getList(), getPList());
 				removeFruitIcon();
 				Thread t1 = new Thread(new Runnable() {
@@ -1143,11 +1149,11 @@ public class MyFrame extends JPanel implements MouseListener {
 						}
 						else if(ghostStop > 0)
 							ghostStop--;
+						_Player.Time();
 						removeFruitIcon();
 						isPlayerAteFruit();
 						isPlayerAtePacman();
 						repaint();
-						_Player.Time();
 						if (_Fruits.size() > 0 && _Player.getTime() < MaxTime)
 							threadobj.run();
 						else {
@@ -1173,7 +1179,8 @@ public class MyFrame extends JPanel implements MouseListener {
 				menu8.setEnabled(false);
 				menu7.setEnabled(false);
 				opengame.setEnabled(false);
-				calculatePath();
+				if(getPList().size() > 0)
+					calculatePath();
 				pList = _Path.Create(getList(), getPList());
 				removeFruitIcon();
 				Thread t1 = new Thread(new Runnable() {
@@ -1192,12 +1199,7 @@ public class MyFrame extends JPanel implements MouseListener {
 								}
 							}
 						}
-						if(_Pacmans.size() > 0) {
-							_Path.movePlayer2Pacman(_Pacmans, _Player);
-						}
-						else if(_Fruits.size() > 0) {
-							_Path.movePlayer2Fruit(_Fruits, _Player);
-						}
+						movePlayerAlgo();
 						if(ghostStop == 0 && _Ghosts.size() > 0) {
 							ArrayList<Ghost> temp = new ArrayList<Ghost>(_Path.chasePlayer(_Ghosts, _Player));
 							for(int i=0; i<temp.size(); i++) {
@@ -1214,11 +1216,11 @@ public class MyFrame extends JPanel implements MouseListener {
 						}
 						else if(ghostStop > 0)
 							ghostStop--;
+						_Player.Time();
 						removeFruitIcon();
 						isPlayerAteFruit();
 						isPlayerAtePacman();
 						repaint();
-						_Player.Time();
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -1249,6 +1251,7 @@ public class MyFrame extends JPanel implements MouseListener {
 				isPacman = false;
 				isFruit = false;
 				isOnline = true;
+				isPlayer = false;
 				menuBar.remove(menu1);
 				menuBar.remove(menu2);
 				menuBar.remove(menu3);
@@ -1296,6 +1299,112 @@ public class MyFrame extends JPanel implements MouseListener {
 		menu7.setEnabled(false);
 
 		setMB(menuBar);
+	}
+
+	public void createPoints() {
+		_Points = new ArrayList<Point3D>();
+		for(int i=0; i<_Blocks.size(); i++) {
+			Data block = new Data(_Blocks.get(i));
+			Point3D temp = new Point3D(block.getiX(), block.getiY());
+			_Points.add(temp);
+
+			temp = new Point3D(block.getiX()+_Blocks.get(i).getWidth(), block.getiY());
+			_Points.add(temp);
+
+			temp = new Point3D(block.getiX(), block.getiY()+ _Blocks.get(i).getHeight());
+			_Points.add(temp);
+
+			temp = new Point3D(block.getiX()+_Blocks.get(i).getWidth(), block.getiY()+ _Blocks.get(i).getHeight());
+			_Points.add(temp);
+		}
+	}
+
+	public void movePlayerAlgo() {
+		Point3D temp = new Point3D(0,0);
+		Data player = new Data(_Player);
+		Data data = new Data();
+		double distance = Integer.MAX_VALUE;
+		for(int i=0; i<_Pacmans.size(); i++) {
+			data = new Data(_Pacmans.get(i));
+			double dist = _Map.distanceBetween2Points(new Point3D(data.getiX(), data.getiY()),
+					new Point3D(player.getiX(), player.getiY()));
+			if(dist < distance) {
+				distance = dist;
+				temp = new Point3D(data.getiX(), data.getiY());
+			}
+		}
+		for(int i=0; i<_Fruits.size(); i++) {
+			data = new Data(_Fruits.get(i));
+			double dist = _Map.distanceBetween2Points(new Point3D(data.getiX(), data.getiY()),
+					new Point3D(player.getiX(), player.getiY()));
+			if(dist < distance) {
+				distance = dist;
+				temp = new Point3D(data.getiX(), data.getiY());
+			}
+		}
+		for(int i=0; i<_Points.size(); i++) {
+			double dist = _Map.distanceBetween2Points(_Points.get(i),
+					new Point3D(player.getX(), player.getY()));
+			if(dist < distance) {
+				distance = dist;
+				temp = _Points.get(i);
+			}
+		}
+		int x = temp.ix();
+		int y = temp.iy();
+		Point3D vec = new Point3D(temp.ix()-player.getiX(), temp.iy()-player.getiY());
+		if(distance > Double.parseDouble(_Player.getSpeed())) {
+			x = (int) (player.getiX() + vec.x()/distance*Double.parseDouble(_Player.getSpeed()));
+			y = (int) (player.getiY() + vec.y()/distance*Double.parseDouble(_Player.getSpeed()));
+		}
+		if(_Mat[y][x] == true) {
+			if(temp.ix() == x && temp.iy() == y) {
+				_Points.remove(temp);
+				x = (int) (temp.ix() + vec.x()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
+				y = (int) (temp.iy() + vec.y()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
+			}
+			_Player.setPoint(x+","+y+","+0);
+			return;
+		}
+		else{
+			movePlayerAlgo1();
+		}
+	}
+
+	public void movePlayerAlgo1() {
+		if(_Points.size() == 0) 
+			createPoints();
+		Point3D temp = new Point3D(0,0);
+		Data player = new Data(_Player);
+		double distance = Integer.MAX_VALUE;
+		for(int i=0; i<_Points.size(); i++) {
+			double dist = _Map.distanceBetween2Points(_Points.get(i),
+					new Point3D(player.getX(), player.getY()));
+			if(dist < distance) {
+				distance = dist;
+				temp = _Points.get(i);
+			}
+		}
+		int x = temp.ix();
+		int y = temp.iy();
+		Point3D vec = new Point3D(temp.ix()-player.getiX(), temp.iy()-player.getiY());
+		if(distance > Double.parseDouble(_Player.getSpeed())) {
+			x = (int) (player.getiX() + vec.x()/distance*Double.parseDouble(_Player.getSpeed()));
+			y = (int) (player.getiY() + vec.y()/distance*Double.parseDouble(_Player.getSpeed()));
+		}
+		if(_Mat[y][x] == true) {
+			if(temp.ix() == x && temp.iy() == y) {
+				_Points.remove(temp);
+				x = (int) (temp.ix() + vec.x()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
+				y = (int) (temp.iy() + vec.y()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
+			}
+			_Player.setPoint(x+","+y+","+0);
+			return;
+		}
+		else {
+			_Points.remove(temp);
+			movePlayerAlgo1();
+		}
 	}
 
 	/**
@@ -1627,6 +1736,11 @@ public class MyFrame extends JPanel implements MouseListener {
 
 		if (instructions == true) {
 			g.drawImage(_Map.getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
+			//			g.setColor(Color.BLACK);
+			//			g.fillRect(0, 0, this.getWidth(), 1);
+			//			g.fillRect(0, 0, 1, this.getHeight());
+			//			g.fillRect(0, this.getHeight()-1, this.getWidth(), 1);
+			//			g.fillRect(this.getWidth()-1, 0, 1, this.getHeight());
 		} 
 		else {
 			Image start = Toolkit.getDefaultToolkit().getImage("newdata/Instructions.jpeg");
@@ -1652,8 +1766,6 @@ public class MyFrame extends JPanel implements MouseListener {
 			createGhostsIconList(_Ghosts.size());
 		}
 
-		setMat(_Map.image2Matrix(_Map.matImg(this.getHeight(), this.getWidth(), _Blocks)));
-		
 		newW = 32*this.getWidth()/W;
 		newH = 32*this.getHeight()/H;
 
@@ -1665,12 +1777,6 @@ public class MyFrame extends JPanel implements MouseListener {
 			g.setFont(new Font("Monospaced", Font.BOLD, 14));
 			g.setColor(Color.WHITE);
 			g.drawString("(" + String.valueOf(x1) + "," + String.valueOf(y1) + ")", x1+newW/3, y1+newH/2);
-			if(isDemo == true) {
-				if(_Mat[y1][x1] == false) {
-					_Player.setScore(-1);
-					_Player.wrongLocation();
-				}
-			}
 		}
 
 		for (int i = 0; i < _Fruits.size(); i++) {
@@ -1698,7 +1804,8 @@ public class MyFrame extends JPanel implements MouseListener {
 			int blockWidth = _Blocks.get(i).getWidth() * this.getWidth() / W;
 			int blockHeight = _Blocks.get(i).getHeight() * this.getHeight() / H;
 			g.setColor(Color.BLACK);
-			g.fillRect(x1, y1, blockWidth, blockHeight);
+			g.fillRect(x1+1, y1+1, blockWidth-1, blockHeight-1);
+
 		}
 		if (isDemo == false) {
 			for (int i = 0; i < _Pacmans.size(); i++) {
@@ -1756,6 +1863,7 @@ public class MyFrame extends JPanel implements MouseListener {
 			}
 			p++;
 		}
+		setMat(_Map.image2Matrix(_Map.matImg(this.getHeight(), this.getWidth(), _Blocks)));
 	}
 
 	/**
@@ -2001,7 +2109,12 @@ public class MyFrame extends JPanel implements MouseListener {
 		}
 
 		else if(isDemo == true && isClicked == false && _Player.getTime() < MaxTime) {
-			_Path.movePlayer(x, y, _Player);
+			if(_Mat[y][x] == true)
+				_Path.movePlayer(x, y, _Player);
+			else {
+				_Player.setScore(-1);
+				_Player.wrongLocation();
+			}
 			isClicked = true;
 		}
 

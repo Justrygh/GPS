@@ -1,6 +1,7 @@
 package Structure;
 
 import java.util.ArrayList;
+
 import Geom.Point3D;
 import Players.Fruit;
 import Players.Game;
@@ -17,7 +18,7 @@ public class Path{
 	private ArrayList<Game> Paths;
 	private String _Point;
 	//private double _Angel;
-	private Map _Map = new Map();
+	private MyMap _Map = new MyMap();
 
 	//Default Constructor.
 	public Path() {
@@ -85,7 +86,7 @@ public class Path{
 		}
 		return newgList;
 	}
-	
+
 	public Player movePlayer2Fruit(ArrayList<Fruit> list, Player player) {
 		Fruit temp = new Fruit();
 		double distance = Integer.MAX_VALUE;
@@ -105,7 +106,7 @@ public class Path{
 		player = movePlayer((int)Double.parseDouble(Fruit[0]), (int)Double.parseDouble(Fruit[1]), player);
 		return player;
 	}
-	
+
 	public Player movePlayer2Pacman(ArrayList<Pacman> list, Player player) {
 		Pacman temp = new Pacman();
 		double distance = Integer.MAX_VALUE;
@@ -125,7 +126,7 @@ public class Path{
 		player = movePlayer((int)Double.parseDouble(Pacman[0]), (int)Double.parseDouble(Pacman[1]), player);
 		return player;
 	}
-	
+
 	public Player movePlayer(int x, int y, Player player) {
 		String[] Data = player.getPoint().split(",");
 		Point3D oldPlayer = new Point3D(Double.parseDouble(Data[0]), Double.parseDouble(Data[1]));
@@ -137,6 +138,7 @@ public class Path{
 		player.setPoint(newPoint.ix()+","+newPoint.iy()+","+0);
 		return player;
 	}
+	
 	/**
 	 * This method gets ArrayList of Path and returns a new ArrayList of the Path to Print.
 	 * @param pList List of paths.

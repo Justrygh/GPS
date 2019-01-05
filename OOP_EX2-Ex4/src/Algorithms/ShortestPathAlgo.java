@@ -1,9 +1,10 @@
 package Algorithms;
 import java.util.ArrayList;
+
 import Geom.Point3D;
 import Players.Fruit;
 import Players.Pacman;
-import Structure.Map;
+import Structure.MyMap;
 import Players.Game;
 /**
  * 
@@ -128,7 +129,7 @@ public class ShortestPathAlgo {
 	private double _Distance;
 	private double _Time;
 	private double _Angel;
-	private Map Map = new Map();
+	private MyMap Map = new MyMap();
 	private ArrayList<Fruit> _Fruits = new ArrayList<Fruit>();
 	private ArrayList<Pacman> _Pacmans = new ArrayList<Pacman>();
 	private ArrayList<Game> _List = new ArrayList<Game>();
