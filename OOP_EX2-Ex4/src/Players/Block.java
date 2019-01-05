@@ -1,6 +1,7 @@
 package Players;
 
 public class Block {
+//*********Private variables *********//
 
 	private String _Point;
 	private String _Type;
@@ -8,8 +9,19 @@ public class Block {
 	private int _Width;
 	private int _Height;
 	
+/**
+ * Default Constructor
+ */
 	public Block() {}
 	
+       /**
+	 * This class is For the Black- Boxes in the game.
+	 * @param type the type 
+	 * @param point the Point of the Box.
+	 * @param width the width of the Box.
+	 * @param height height the width of the Box.
+	 * @param id the ID for each Box.
+	 */
 	public Block(String type, String point, int width, int height, String id) {
 		this._iD = id;
 		this._Type = type;
@@ -17,7 +29,8 @@ public class Block {
 		this._Width = width;
 		this._Height = height;
 	}
-	
+	//***********SETTERS & GETTERS**********//
+
 	public int getWidth() {
 		return _Width;
 	}
