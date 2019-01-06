@@ -1325,13 +1325,13 @@ public class MyFrame extends JPanel implements MouseListener {
 		}
 	}
        /**
-	 * in this Function We make our Algorithm for calculating the Path 
-	 * for each Point like(Fruit/Pacman) , Especially this Algorithm
-	 * The Player that We Place it in our Game , can Go Randomly for 
+	 * in this function we make our algorithm for calculating the path 
+	 * for the shortest point like(Fruit/Pacman).
+	 * The Player that we Place it in our Game , can go randomly for 
 	 * Pacman / Fruit 
 	 * **************************ATTENTION********************************
 	 * The Player goes Randomly This means that he can go to fruit first *
-	 * or to the Pacman.                                                 *
+	 * or to the Pacman (Depends on which one is closer to him).                                                 *
 	 * *******************************************************************
 	 */
 	public void movePlayerAlgo() {
@@ -1377,8 +1377,8 @@ public class MyFrame extends JPanel implements MouseListener {
 		}
 	}
 /**
- * This Function is the same Algo Function But with some
- *  rules in Addition to make the Path that we create better.
+ * If our player found a close fruit/pacman but he is unable to move towards him
+ * (Because there's a block in between) he will go to the nearest block corner.
  */
 	public void movePlayerAlgo1() {
 		if(_Points.size() == 0) 
