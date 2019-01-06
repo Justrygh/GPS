@@ -620,13 +620,13 @@ public class MyFrame extends JPanel implements MouseListener {
 				b.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						if (textfield.getText().length() > 1 || textfield.getText().length() < 1
-								|| textfield.getText().length() == 1 && Integer.parseInt(textfield.getText()) <= 0)
-							return;
 						for(int i=0; i<textfield.getText().length(); i++) {
 							if(textfield.getText().charAt(i) < 48 || textfield.getText().charAt(i) > 57)
 								return;
 						}
+						if (textfield.getText().length() < 1
+								|| Integer.parseInt(textfield.getText()) <= 0)
+							return;
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							_Pacmans.get(i).setSpeed(textfield.getText());
 						}
