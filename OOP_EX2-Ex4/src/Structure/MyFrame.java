@@ -87,6 +87,7 @@ public class MyFrame extends JPanel implements MouseListener {
 	private int i = 0;
 	private int j = 0;
 	private int p = 0;
+	private int switchPlay = 0;
 	private int ghostStop = 0;
 	private final double MaxTime = 100.0;
 	private int _gameID;
@@ -1356,31 +1357,22 @@ public class MyFrame extends JPanel implements MouseListener {
 				temp = new Point3D(data.getiX(), data.getiY());
 			}
 		}
-		for(int i=0; i<_Points.size(); i++) {
-			double dist = _Map.distanceBetween2Points(_Points.get(i),
-					new Point3D(player.getX(), player.getY()));
-			if(dist < distance) {
-				distance = dist;
-				temp = _Points.get(i);
-			}
-		}
-		int x = temp.ix();
-		int y = temp.iy();
+		int x = 0; int y = 0;
 		Point3D vec = new Point3D(temp.ix()-player.getiX(), temp.iy()-player.getiY());
 		if(distance > Double.parseDouble(_Player.getSpeed())) {
 			x = (int) (player.getiX() + vec.x()/distance*Double.parseDouble(_Player.getSpeed()));
 			y = (int) (player.getiY() + vec.y()/distance*Double.parseDouble(_Player.getSpeed()));
 		}
+		else {
+			x = (int) (temp.ix() + vec.x()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
+			y = (int) (temp.iy() + vec.y()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
+		}
 		if(_Mat[y][x] == true) {
-			if(temp.ix() == x && temp.iy() == y) {
-				_Points.remove(temp);
-				x = (int) (temp.ix() + vec.x()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
-				y = (int) (temp.iy() + vec.y()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
-			}
 			_Player.setPoint(x+","+y+","+0);
 			return;
 		}
 		else{
+			switchPlay = 1;
 			movePlayerAlgo1();
 		}
 	}
@@ -1409,12 +1401,13 @@ public class MyFrame extends JPanel implements MouseListener {
 			x = (int) (player.getiX() + vec.x()/distance*Double.parseDouble(_Player.getSpeed()));
 			y = (int) (player.getiY() + vec.y()/distance*Double.parseDouble(_Player.getSpeed()));
 		}
+		else {
+			_Points.remove(temp);
+			switchPlay = 0;
+			x = (int) (temp.ix() + vec.x()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
+			y = (int) (temp.iy() + vec.y()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
+		}
 		if(_Mat[y][x] == true) {
-			if(temp.ix() == x && temp.iy() == y) {
-				_Points.remove(temp);
-				x = (int) (temp.ix() + vec.x()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
-				y = (int) (temp.iy() + vec.y()/distance*(Double.parseDouble(_Player.getSpeed())-distance));
-			}
 			_Player.setPoint(x+","+y+","+0);
 			return;
 		}
@@ -2117,7 +2110,7 @@ public class MyFrame extends JPanel implements MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+public void mouseClicked(MouseEvent e) {
 		x = e.getX();
 		y = e.getY();
 
@@ -2132,11 +2125,13 @@ public class MyFrame extends JPanel implements MouseListener {
 		}
 
 		else if(isDemo == true && isClicked == false && _Player.getTime() < MaxTime) {
-			if(_Mat[y][x] == true)
-				_Path.movePlayer(x, y, _Player);
-			else {
+			String point = _Player.getPoint();
+			_Path.movePlayer(x, y, _Player);
+			Data player = new Data(_Player);
+			if(_Mat[player.getiY()][player.getiX()] == false){
 				_Player.setScore(-1);
 				_Player.wrongLocation();
+				_Player.setPoint(point);
 			}
 			isClicked = true;
 		}
