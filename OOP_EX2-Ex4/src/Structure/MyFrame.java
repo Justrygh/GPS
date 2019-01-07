@@ -50,8 +50,7 @@ public class MyFrame extends JPanel implements MouseListener {
 
 	/**
 	 * @author Eli
-	 * @author Qusai 
-	 * This class is the main Class that represents our GUI + Game.
+	 * @author Qusai This class is the main Class that represents our GUI + Game.
 	 */
 
 	// **********Private Variables**********//
@@ -73,6 +72,7 @@ public class MyFrame extends JPanel implements MouseListener {
 	private boolean isSaved = false;
 	private boolean isDemo = false;
 	private boolean instructions = false;
+	private boolean instructions1 = false;
 	private boolean Stop = false;
 	private boolean isPlayer = false;
 	private boolean isClicked = false;
@@ -94,6 +94,7 @@ public class MyFrame extends JPanel implements MouseListener {
 	//	private int k = 0;
 	//	private int b = 0;
 
+	private Menu menu9;
 	private MyMap _Map;
 	private Player _Player;
 	private Path _Path;
@@ -222,7 +223,7 @@ public class MyFrame extends JPanel implements MouseListener {
 
 		MenuBar menuBar = new MenuBar();
 		Menu menu1 = new Menu("File");
-		MenuItem here = new MenuItem("   New   ");
+		MenuItem here = new MenuItem("   Click Here   ");
 		MenuItem open = new MenuItem("   Open File...   ");
 		MenuItem edit = new MenuItem("   Open & Edit   ");
 		MenuItem save = new MenuItem("   Save ");
@@ -261,19 +262,16 @@ public class MyFrame extends JPanel implements MouseListener {
 		Menu menu7 = new Menu("   Switch   ");
 		MenuItem online = new MenuItem("   Online   ");
 		MenuItem offline = new MenuItem("   Offline   ");
+		menu9 = new Menu("   Let's start!   ");
 		JPopupMenu popup = new JPopupMenu();
 
-		menuBar.add(menu1);
-		menuBar.add(menu2);
-		menuBar.add(menu3);
-		menuBar.add(menu4);
 		menuBar.setHelpMenu(menu7);
 
-		menu1.add(here);
+		menu9.add(here);
 		here.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				instructions = true;
+				instructions1 = true;
 				repaint();
 				isPacman = true;
 				isFruit = true;
@@ -283,8 +281,11 @@ public class MyFrame extends JPanel implements MouseListener {
 				isFruit = false;
 				open.setEnabled(true);
 				edit.setEnabled(true);
-				menu1.remove(here);
-				menu2.setEnabled(true);
+				menuBar.remove(menu9);
+				menuBar.add(menu1);
+				menuBar.add(menu2);
+				menuBar.add(menu3);
+				menuBar.add(menu4);
 				menu7.setEnabled(true);
 				menu7.remove(offline);
 				helpUsNow();
@@ -980,7 +981,7 @@ public class MyFrame extends JPanel implements MouseListener {
 								Data ghost = new Data(_Ghosts.get(i));
 								Data player = new Data(_Player);
 								if (player.getiX() == ghost.getiX() && 
-										player.getiY() == ghost.getiY() && ghostStop == 0) {
+									player.getiY() == ghost.getiY() && ghostStop == 0) {
 									ghostStop = 3;
 									_Player.ghostKill();
 									_Player.setScore(-20);
@@ -1067,7 +1068,10 @@ public class MyFrame extends JPanel implements MouseListener {
 						else if(ghostStop > 0)
 							ghostStop--;
 						_Player.Time();
-						movePlayerAlgo();
+						if(switchPlay == 0)
+							movePlayerAlgo();
+						else
+							movePlayerAlgo1();
 						removeFruitIcon();
 						isPlayerAteFruit();
 						isPlayerAtePacman();
@@ -1293,20 +1297,16 @@ public class MyFrame extends JPanel implements MouseListener {
 			}
 		});
 
-		menu2.setEnabled(false);
 		menu3.setEnabled(false);
 		menu4.setEnabled(false);
 		menu5.setEnabled(false);
 		menu6.setEnabled(false);
 		menu7.setEnabled(false);
+		menu9.setEnabled(false);
 
 		setMB(menuBar);
 	}
-/**
- * in this function we Create a new ArrayList of "Points" 
- * especially Adding this Points help the Player to create the Path
- *  for reaching each (Fruit/Pacman) in Our Game/Map. 
- */
+
 	public void createPoints() {
 		_Points = new ArrayList<Point3D>();
 		for(int i=0; i<_Blocks.size(); i++) {
@@ -1324,16 +1324,7 @@ public class MyFrame extends JPanel implements MouseListener {
 			_Points.add(temp);
 		}
 	}
-       /**
-	 * in this function we make our algorithm for calculating the path 
-	 * for the shortest point like(Fruit/Pacman).
-	 * The Player that we Place it in our Game , can go randomly for 
-	 * Pacman / Fruit 
-	 * **************************ATTENTION********************************
-	 * The Player goes Randomly This means that he can go to fruit first *
-	 * or to the Pacman (Depends on which one is closer to him).                                                 *
-	 * *******************************************************************
-	 */
+
 	public void movePlayerAlgo() {
 		Point3D temp = new Point3D(0,0);
 		Data player = new Data(_Player);
@@ -1376,10 +1367,7 @@ public class MyFrame extends JPanel implements MouseListener {
 			movePlayerAlgo1();
 		}
 	}
-/**
- * If our player found a close fruit/pacman but he is unable to move towards him
- * (Because there's a block in between) he will go to the nearest block corner.
- */
+
 	public void movePlayerAlgo1() {
 		if(_Points.size() == 0) 
 			createPoints();
@@ -1469,10 +1457,7 @@ public class MyFrame extends JPanel implements MouseListener {
 		//		k = 0;
 		//		b = 0;
 	}
-/**
- * This function is For creating A POPUP massege in the end of the Game
- * @return POPUP Massege with all the Scores and the Details about the game.
- */
+
 	public JFrame createPopup() {
 		JFrame f = new JFrame("Score");
 		JLabel label1 = new JLabel();
@@ -1501,10 +1486,7 @@ public class MyFrame extends JPanel implements MouseListener {
 		f.setResizable(false);
 		return f;
 	}
-/**
-  * Send Report Function Help us to Connect to our DATA-BASE that 
-  * we add to it our Score and the ID's.
-  */
+
 	private void sendReport() { String jdbcUrl = "jdbc:mysql://ariel-oop.xyz:3306/oop?useUnicode=yes&characterEncoding=UTF-8&useSSL=false";
 	String jdbcUser = "boaz";
 	String jdbcPassword = "9125";
@@ -1750,17 +1732,21 @@ public class MyFrame extends JPanel implements MouseListener {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		if (instructions == true) {
-			g.drawImage(_Map.getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
+		if (instructions == false) {
+			Image start = Toolkit.getDefaultToolkit().getImage("newdata/Instructions.jpeg");
+			g.drawImage(start, 0, 0, this.getWidth(), this.getHeight(), this);
 			//			g.setColor(Color.BLACK);
 			//			g.fillRect(0, 0, this.getWidth(), 1);
 			//			g.fillRect(0, 0, 1, this.getHeight());
 			//			g.fillRect(0, this.getHeight()-1, this.getWidth(), 1);
 			//			g.fillRect(this.getWidth()-1, 0, 1, this.getHeight());
-		} 
-		else {
-			Image start = Toolkit.getDefaultToolkit().getImage("newdata/Instructions.jpeg");
+		}
+		else if (instructions == true && instructions1 == false) {
+			Image start = Toolkit.getDefaultToolkit().getImage("newdata/Instructions1.jpeg");
 			g.drawImage(start, 0, 0, this.getWidth(), this.getHeight(), this);
+		}
+		else {
+			g.drawImage(_Map.getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
 		}
 
 		if(isOnline == true && isTimer == true) {
@@ -2110,11 +2096,23 @@ public class MyFrame extends JPanel implements MouseListener {
 	}
 
 	@Override
-public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {
 		x = e.getX();
 		y = e.getY();
+		
+		if(instructions == false) {
+			instructions = true;
+			repaint();
+		}
+		
+		else if(instructions == true && instructions1 == false) {
+			instructions1 = true;
+			_MB.add(menu9);
+			menu9.setEnabled(true);
+			repaint();
+		}
 
-		if(_Mat[y][x] == true && isPlayer == true) {
+		else if(_Mat[y][x] == true && isPlayer == true) {
 			isTimer = true;
 			paintElement();
 			isPlayer = false;
