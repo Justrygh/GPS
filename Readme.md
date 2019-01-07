@@ -91,3 +91,17 @@ We made some Limits for the changes you can make in the game:
 
 - **Speed limit: No LIMIT, MUST be greater than 0**
 - **Radius limit: 1-9**
+
+**Offline / Online mode**
+
+So far we introduced you our game in offline mode.
+In our offline mode you could place your pacmans and fruits on the map and watch how the pacmans eat the fruits on the gui in the fastest way, without having the ability to actually play in our game. In our online mode, you can play the game and decide wherever your player will go.
+
+So how this works:
+Same as our offline mode you can open a CSV file containing the pacmans and fruits, BUT here is the catch, now you can add ghosts and blocks to your own game.
+
+So whats the purpose of the ghosts & blocks and how do you actually play?
+Before we will begin will the ghosts & blocks lets explain to you how the game works.
+
+
+
