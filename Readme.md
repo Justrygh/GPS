@@ -101,7 +101,37 @@ So how this works:
 Same as our offline mode you can open a CSV file containing the pacmans and fruits, BUT here is the catch, now you can add ghosts and blocks to your own game.
 
 So whats the purpose of the ghosts & blocks and how do you actually play?
-Before we will begin will the ghosts & blocks lets explain to you how the game works.
+Before we will begin with the ghosts & blocks lets explain to you how the game works.
+
+You have 2 types of games you can play:
+
+- Click & Play - You can choose where to move your player on the map (using your mouse) and plan your own best strategy how to eat the pacmans/fruits while trying to avoid the ghosts/blocks.
+- Autoplay - Let the computer play for you the choose the best strategy based on our algorithm.
+
+
+You have 2 levels for the game Easy/Hard.
+
+
+Whats the difference? In the hard level, the ghosts will follow your player to his next location which makes it harder for you to escape them while in the easy level they will follow your player to his previous location (before you made your move), You got the idea.
+
+Now whats the purpose of the ghosts and blocks?
+
+- **Ghosts:** The ghosts purpose is to "hunt" your player, if they manage doing so, your player will lose 20 points.
+Don't worry, if you are being killed, the game is not over until all the fruits are being eaten or the time's up and you have 3 seconds of "immunity" where the ghosts won't hunt your player.
+- **Blocks:** In order to make the game a little bit harder, we added some blocks which you can't pass through them, and if you will try doing so, your player wont move, and you will lose 1 point. So don't try to fool us!
+
+
+Now all is left is to explain you how to play (make sure to follow the instructions in the exact order)
+1. Open a game (If you don't have a game, you can download one from our library in "ourdata" folder)
+2. Insert your ID/s (You can insert up to 3 different IDs, if you are playing solo, DON'T fill the rest it will automatically make it default 0)
+- **Attention**
+Make sure to write a VALID ID (9 digits)!
+3. Place your player on the map (Make sure not to place it on a block - marked as black square).
+4. Choose your game and start playing!
+
+
+Have fun!
+
 
 
 
