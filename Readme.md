@@ -39,6 +39,7 @@ This game purpose is for the Pacmans to eat all the Fruits in the shortest time.
 **Attention**:
 In order to run the game, you will need to read the instructions first! 
 When you will run the code for the first time, the instructions will pop-up on the GUI.
+Make sure to read the instructions carefully, when you finish click on the screen in order to pass to the next page.
 
 In this project, you can do the following things:
 
