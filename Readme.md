@@ -1,7 +1,6 @@
-**GPS Project!**.
-___
-
 @authors: Eli & Qusai.
+__
+**GPS Project!**.
 
 This project represent a GPS system in Object Oriented course in Ariel University.
 In this project we work with 3D/2D Points in the Sphere (In our case the planet Earth).
@@ -34,8 +33,6 @@ We have been asked to do the following assigments:
       
 ___    
 **Pacman Project!**
-
-@authors: Eli & Qusai.
 
 - **OFFLINE MODE**
 
