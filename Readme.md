@@ -81,6 +81,7 @@ In the project we have special features in order to accomplish our mission and v
 
 
 **UPDATED V1.0:** 
+
 We added some new cool features in order to improve your gaming experience:
 
 1. When you create a new game, your default Radius and Speed for all the pacmans are 1. Now you have the ability to change it! Just press "Define" Tab and choose whatever you like.
