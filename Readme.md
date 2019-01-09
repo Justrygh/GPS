@@ -1,6 +1,5 @@
 @authors: Eli & Qusai.
-
-__
+___
 **GPS Project!**.
 
 This project represent a GPS system in Object Oriented course in Ariel University.
