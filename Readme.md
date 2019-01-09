@@ -1,4 +1,5 @@
-***GPS Project!***
+**GPS Project!**.
+___
 
 @authors: Eli & Qusai.
 
@@ -31,11 +32,12 @@ We have been asked to do the following assigments:
  * 3. Create a Project that will contain all the Layers. Convert a folder with CSV files into
       One KML file containing all the details of the CSV files.
       
-___
-      
-***Pacman Project***
+___    
+**Pacman Project!**
 
-**OFFLINE MODE**
+@authors: Eli & Qusai.
+
+- **OFFLINE MODE**
 
 This Project represents a Pacman Game.
 This game purpose is for the Pacmans to eat all the Fruits in the shortest time.
@@ -97,7 +99,7 @@ We made some Limits for the changes you can make in the game:
 - **Speed limit: No LIMIT, MUST be greater than 0**
 - **Radius limit: 1-9**
 
-**ONLINE MODE**
+- **ONLINE MODE**
 
 So far we introduced you our game in offline mode.
 In our offline mode you could place your pacmans and fruits on the map and watch how the pacmans eat the fruits on the gui in the fastest way, without having the ability to actually play in our game. In our online mode, you can play the game and decide wherever your player will go.
