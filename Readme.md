@@ -80,7 +80,7 @@ In the project we have special features in order to accomplish our mission and v
                   which allows the player to view the game in Google-Earth.
 
 
-**UPDATED:** 
+**UPDATED V1.0:** 
 We added some new cool features in order to improve your gaming experience:
 
 1. When you create a new game, your default Radius and Speed for all the pacmans are 1. Now you have the ability to change it! Just press "Define" Tab and choose whatever you like.
@@ -93,8 +93,10 @@ With the Open tab you can *ONLY* open a saved game but you can't change anything
 
 We made some Limits for the changes you can make in the game:
 
-- **Speed limit: No LIMIT, MUST be greater than 0**
+- **Speed limit: MUST be greater than 0**
 - **Radius limit: 1-9**
+
+**UPDATED V2.0:**
 
 - **ONLINE MODE**
 
