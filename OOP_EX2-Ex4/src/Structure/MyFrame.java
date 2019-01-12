@@ -266,8 +266,8 @@ public class MyFrame extends JPanel implements MouseListener {
 		MenuItem offline = new MenuItem("   Offline   ");
 		menu9 = new Menu("   Let's start!   ");
 		JPopupMenu popup = new JPopupMenu();
-
-		menuBar.setHelpMenu(menu7);
+		
+		menuBar.add(menu9);
 
 		menu9.add(here);
 		here.addActionListener(new ActionListener() {
@@ -288,6 +288,7 @@ public class MyFrame extends JPanel implements MouseListener {
 				menuBar.add(menu2);
 				menuBar.add(menu3);
 				menuBar.add(menu4);
+				menuBar.setHelpMenu(menu7);
 				menu7.setEnabled(true);
 				menu7.remove(offline);
 				helpUsNow();
@@ -2117,7 +2118,6 @@ public class MyFrame extends JPanel implements MouseListener {
 		
 		else if(instructions == true && instructions1 == false && x >= nextX && y<= nextY) {
 			instructions1 = true;
-			_MB.add(menu9);
 			menu9.setEnabled(true);
 			repaint();
 		}
