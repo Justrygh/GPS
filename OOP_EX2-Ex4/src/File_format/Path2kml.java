@@ -45,10 +45,10 @@ public class Path2kml {
 		Builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		Builder.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
 		Builder.append("<Document>");
-		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>newdata/Pacman.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>newdata/Fruit.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>newdata/Apple.png</href></Icon></IconStyle></Style>");
-		Builder.append("<Style id=\"Done\"><IconStyle><Icon><href>newdata/Done.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Pacman\"><IconStyle><Icon><href>images/Pacman.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Fruit\"><IconStyle><Icon><href>images/Fruit.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Apple\"><IconStyle><Icon><href>images/Apple.png</href></Icon></IconStyle></Style>");
+		Builder.append("<Style id=\"Done\"><IconStyle><Icon><href>images/Done.png</href></Icon></IconStyle></Style>");
 		Print.write(Builder.toString());
 	}
 

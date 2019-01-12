@@ -31,7 +31,7 @@ public class MyMap {
 	//Default Constructor that Draws the Ariel University MAP at First Pop-up.
 	public MyMap() {
 		try {
-			this._Img = ImageIO.read(new File("newdata/Ariel1.png"));
+			this._Img = ImageIO.read(new File("images/Ariel1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

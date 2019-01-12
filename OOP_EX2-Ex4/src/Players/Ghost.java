@@ -1,7 +1,6 @@
 package Players;
 
 public class Ghost {
-//*********Private variables *********//
 
 	private String _Speed;
 	private String _Radius;
@@ -9,14 +8,7 @@ public class Ghost {
 	private String _Point;
 	private String _Pic;
 	private String _iD;
-	/**
-	 * This Class is For the Ghost's .
-	 * @param type the type of the Ghosts
-	 * @param point the Point for each Ghost
-	 * @param speed the Speed for the Ghost
-	 * @param radius  the radius for each Ghost 
-	 * @param id      the ID for each Ghost
-	 */
+	
 	public Ghost(String type, String point, String speed, String radius, String id) {
 		this._Type = type;
 		this._Point = point;
@@ -24,12 +16,9 @@ public class Ghost {
 		this._Radius = radius;
 		this._iD = id;
 	}
-	/**
-	 * Default Constructor
-	 */
+	
 	public Ghost() {}
 	
-	//***********SETTERS & GETTERS**********//
 	public void setType(String type) {
 		this._Type = type;
 	}

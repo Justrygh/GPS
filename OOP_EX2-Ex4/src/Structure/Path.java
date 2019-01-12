@@ -59,14 +59,6 @@ public class Path{
 		}
 		return _PList;
 	}
-       /**
-	 * This function is for chase player,we got ArrayList of Ghost's and a Player
-	 * and with some Mathmatic's rules we make the Ghost's chasing the player in 
-	 * each movment.
-	 * @param list ArrayList of Ghost's.
-	 * @param player Player in Our Game.
-	 * @return returns ArrayList of Point's to Identify the Player Position.  
-	 */
 
 	public ArrayList<Ghost> chasePlayer(ArrayList<Ghost> list, Player player){
 		for(int i=0; i<list.size(); i++) {
@@ -94,13 +86,7 @@ public class Path{
 		}
 		return newgList;
 	}
-/**
- * This Function moves our Player to Fruit , this mean that the Player 
- * eat each fruit (by our Algorithm that we make).
- * @param list ArrayList of Fruit's.
- * @param player Player in Our Game.
- * @return returns a Player.
- */
+
 	public Player movePlayer2Fruit(ArrayList<Fruit> list, Player player) {
 		Fruit temp = new Fruit();
 		double distance = Integer.MAX_VALUE;
@@ -120,12 +106,7 @@ public class Path{
 		player = movePlayer((int)Double.parseDouble(Fruit[0]), (int)Double.parseDouble(Fruit[1]), player);
 		return player;
 	}
-/**
- * This function is For moving our Player to Pacmans (By the Algorithm that we make).
- * @param list ArrayList of Pacmans
- * @param player Player in Our Game.
- * @return returns A Player.
- */
+
 	public Player movePlayer2Pacman(ArrayList<Pacman> list, Player player) {
 		Pacman temp = new Pacman();
 		double distance = Integer.MAX_VALUE;
@@ -145,13 +126,7 @@ public class Path{
 		player = movePlayer((int)Double.parseDouble(Pacman[0]), (int)Double.parseDouble(Pacman[1]), player);
 		return player;
 	}
-/**
- * This Function To move our Player in the Map/Game.
- * @param x The x Position For the Player.
- * @param y The Y Position For the Player.
- * @param player Our Player in the Game.
- * @return Player.
- */
+
 	public Player movePlayer(int x, int y, Player player) {
 		String[] Data = player.getPoint().split(",");
 		Point3D oldPlayer = new Point3D(Double.parseDouble(Data[0]), Double.parseDouble(Data[1]));

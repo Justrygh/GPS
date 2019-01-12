@@ -62,6 +62,8 @@ public class MyFrame extends JPanel implements MouseListener {
 	private int W = 1299;
 	private int newH = 32;
 	private int newW = 32;
+	private int nextX = 0;
+	private int nextY = 0;
 	//	private int Bx1;
 	//	private int By1;
 	//	private int Bx2;
@@ -1714,7 +1716,7 @@ public class MyFrame extends JPanel implements MouseListener {
 			int y1 = Data1.getiY() * this.getHeight() / H;
 			int x2 = Data2.getiX() * this.getWidth() / W;
 			int y2 = Data2.getiY() * this.getHeight() / H;
-			Image img = Toolkit.getDefaultToolkit().getImage("newdata/Done.png");
+			Image img = Toolkit.getDefaultToolkit().getImage("images/Done.png");
 			g.drawImage(img, x2 - 16, y2 - 16, null);
 			g.drawLine(x1, y1, x2, y2);
 		}
@@ -1733,8 +1735,12 @@ public class MyFrame extends JPanel implements MouseListener {
 		super.paintComponent(g);
 
 		if (instructions == false) {
-			Image start = Toolkit.getDefaultToolkit().getImage("newdata/Instructions.jpeg");
+			Image start = Toolkit.getDefaultToolkit().getImage("images/Instructions.jpeg");
+			Image next = Toolkit.getDefaultToolkit().getImage("images/next.png");
 			g.drawImage(start, 0, 0, this.getWidth(), this.getHeight(), this);
+			g.drawImage(next, this.getWidth()-120, 0, this);
+			nextX = this.getWidth()-120;
+			nextY = next.getHeight(this);
 			//			g.setColor(Color.BLACK);
 			//			g.fillRect(0, 0, this.getWidth(), 1);
 			//			g.fillRect(0, 0, 1, this.getHeight());
@@ -1742,8 +1748,12 @@ public class MyFrame extends JPanel implements MouseListener {
 			//			g.fillRect(this.getWidth()-1, 0, 1, this.getHeight());
 		}
 		else if (instructions == true && instructions1 == false) {
-			Image start = Toolkit.getDefaultToolkit().getImage("newdata/Instructions1.jpeg");
+			Image start = Toolkit.getDefaultToolkit().getImage("images/Instructions1.jpeg");
+			Image next = Toolkit.getDefaultToolkit().getImage("images/next.png");
 			g.drawImage(start, 0, 0, this.getWidth(), this.getHeight(), this);
+			g.drawImage(next, this.getWidth()-120, 0, this);
+			nextX = this.getWidth()-120;
+			nextY = next.getHeight(this);	
 		}
 		else {
 			g.drawImage(_Map.getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
@@ -1757,8 +1767,8 @@ public class MyFrame extends JPanel implements MouseListener {
 			g.drawString("Time Left: " + Double.parseDouble(new DecimalFormat("##.#").format(MaxTime - _Player.getTime())), 10, 20);
 		}
 
-		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
-		Image img = Toolkit.getDefaultToolkit().getImage("newdata/Done.png");
+		Image Pacman = Toolkit.getDefaultToolkit().getImage("images/Pacman.png");
+		Image img = Toolkit.getDefaultToolkit().getImage("images/Done.png");
 
 		if (_Icons.size() < _Fruits.size()) {
 			createFruitsIconList(_Fruits.size());
@@ -1875,8 +1885,8 @@ public class MyFrame extends JPanel implements MouseListener {
 	 */
 
 	public Image randomFruitsIcon() {
-		Image Apple = Toolkit.getDefaultToolkit().getImage("newdata/Apple.png");
-		Image Fruit = Toolkit.getDefaultToolkit().getImage("newdata/Fruit.png");
+		Image Apple = Toolkit.getDefaultToolkit().getImage("images/Apple.png");
+		Image Fruit = Toolkit.getDefaultToolkit().getImage("images/Fruit.png");
 		Image[] Fruits = {Fruit, Apple};
 		Random random = new Random();
 		int Select = random.nextInt(Fruits.length);
@@ -1892,10 +1902,10 @@ public class MyFrame extends JPanel implements MouseListener {
 	 */
 
 	public Image randomGhostsIcon() {
-		Image redGhost = Toolkit.getDefaultToolkit().getImage("ourdata/RGhost.png");
-		Image orangeGhost = Toolkit.getDefaultToolkit().getImage("ourdata/OGhost.png");
-		Image blueGhost = Toolkit.getDefaultToolkit().getImage("ourdata/BGhost.png");
-		Image pinkGhost = Toolkit.getDefaultToolkit().getImage("ourdata/PGhost.png");
+		Image redGhost = Toolkit.getDefaultToolkit().getImage("images/RGhost.png");
+		Image orangeGhost = Toolkit.getDefaultToolkit().getImage("images/OGhost.png");
+		Image blueGhost = Toolkit.getDefaultToolkit().getImage("images/BGhost.png");
+		Image pinkGhost = Toolkit.getDefaultToolkit().getImage("images/PGhost.png");
 		Image[] Ghosts = {redGhost, orangeGhost, blueGhost, pinkGhost};
 		Random random = new Random();
 		int Select = random.nextInt(Ghosts.length);
@@ -1937,10 +1947,10 @@ public class MyFrame extends JPanel implements MouseListener {
 
 	public Image pacmanIcon(double angel) {
 		Image test = null;
-		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
-		Image Pacman1 = Toolkit.getDefaultToolkit().getImage("newdata/Pacman1.png");
-		Image Pacman180 = Toolkit.getDefaultToolkit().getImage("newdata/Pacman180.png");
-		Image Pacman1_180 = Toolkit.getDefaultToolkit().getImage("newdata/Pacman1-180.png");
+		Image Pacman = Toolkit.getDefaultToolkit().getImage("images/Pacman.png");
+		Image Pacman1 = Toolkit.getDefaultToolkit().getImage("images/Pacman1.png");
+		Image Pacman180 = Toolkit.getDefaultToolkit().getImage("images/Pacman180.png");
+		Image Pacman1_180 = Toolkit.getDefaultToolkit().getImage("images/Pacman1-180.png");
 		if (p % 2 == 1 && angel == 0) {
 			test = Pacman1;
 		} else if (p % 2 == 0 && angel == 0) {
@@ -1961,7 +1971,7 @@ public class MyFrame extends JPanel implements MouseListener {
 	protected void paintElement() {
 		Graphics g = getGraphics();
 		// The method getGraphics is called to obtain a Graphics object
-		Image Pacman = Toolkit.getDefaultToolkit().getImage("newdata/Pacman.png");
+		Image Pacman = Toolkit.getDefaultToolkit().getImage("images/Pacman.png");
 
 		//Image Ghost = randomGhostsIcon();
 		Image Fruit = randomFruitsIcon();
@@ -2100,12 +2110,12 @@ public class MyFrame extends JPanel implements MouseListener {
 		x = e.getX();
 		y = e.getY();
 		
-		if(instructions == false) {
+		if(instructions == false && x >= nextX && y<= nextY) {
 			instructions = true;
 			repaint();
 		}
 		
-		else if(instructions == true && instructions1 == false) {
+		else if(instructions == true && instructions1 == false && x >= nextX && y<= nextY) {
 			instructions1 = true;
 			_MB.add(menu9);
 			menu9.setEnabled(true);
