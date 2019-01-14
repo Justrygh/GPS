@@ -1,6 +1,7 @@
 package Algorithms;
 import java.util.ArrayList;
 
+import Declaration.Data;
 import Geom.Point3D;
 import Players.Fruit;
 import Players.Pacman;
@@ -49,16 +50,16 @@ public class ShortestPathAlgo {
 		for(int i=0; i<_Pacmans.size(); i++) {
 			for(int j=0; j<_Fruits.size(); j++) {
 				double speed = Double.parseDouble(_Pacmans.get(i).getSpeed());
-				String[] arrP = (_Pacmans.get(i).getPoint().split(","));
-				String[] arrF = (_Fruits.get(j).getPoint().split(","));
-				Point3D Pac = new Point3D(Double.parseDouble(arrP[0]), Double.parseDouble(arrP[1]));
-				Point3D Fru = new Point3D(Double.parseDouble(arrF[0]), Double.parseDouble(arrF[1]));
-				double distance = Map.distanceBetween2Points(Pac, Fru) 
+				Data Pac = new Data(_Pacmans.get(i));
+				Data Fru = new Data(_Fruits.get(j));
+				double distance = Map.distanceBetween2Points(new Point3D(Pac.getX(), Pac.getY()), 
+						new Point3D(Fru.getX(), Fru.getY())) 
 						- Double.parseDouble(_Pacmans.get(i).getRadius());
 				if(distance < 0)
 					distance = 0;
 				double temp = distance/speed;
-				double angel = Map.angelBetween2Points(Pac, Fru);
+				double angel = Map.angelBetween2Points(new Point3D(Pac.getX(), Pac.getY()), 
+						new Point3D(Fru.getX(), Fru.getY()));
 				if(this._Pacman != null) {
 					if(temp < time && (_Pacmans.get(i).getTime() + temp) < (this._Pacman.getTime() + this._Time)) {
 						time = temp;

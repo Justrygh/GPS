@@ -2,6 +2,7 @@ package Structure;
 
 import java.util.ArrayList;
 
+import Declaration.Data;
 import Geom.Point3D;
 import Players.Fruit;
 import Players.Game;
@@ -62,21 +63,20 @@ public class Path{
 
 	public ArrayList<Ghost> chasePlayer(ArrayList<Ghost> list, Player player){
 		for(int i=0; i<list.size(); i++) {
-			String[] ghostData = list.get(i).getPoint().split(",");
-			String[] playerData = player.getPoint().split(",");
-			Point3D Ghost = new Point3D(Double.parseDouble(ghostData[0]), Double.parseDouble(ghostData[1]));
-			Point3D Player = new Point3D(Double.parseDouble(playerData[0]), Double.parseDouble(playerData[1]));
-			Point3D vec = new Point3D(Player.x() - Ghost.x(), Player.y() - Ghost.y());
-			double distance = _Map.distanceBetween2Points(Ghost, Player)
+			Data Ghost = new Data(list.get(i));
+			Data Player = new Data(player);
+			Point3D vec = new Point3D(Player.getX() - Ghost.getX(), Player.getY() - Ghost.getY());
+			double distance = _Map.distanceBetween2Points(new Point3D(Ghost.getX(), Ghost.getY()),
+					new Point3D(Player.getX(), Player.getY()))
 					- Double.parseDouble(list.get(i).getRadius());
 			double time = distance / Double.parseDouble(list.get(i).getSpeed());
 			if (time > 1) {
-				double x = Ghost.x() + (vec.x() / time);
-				double y = Ghost.y() + (vec.y() / time);
+				double x = Ghost.getX() + (vec.x() / time);
+				double y = Ghost.getY() + (vec.y() / time);
 				_Point = (x + "," + y + "," + 0);
 			}
 			else {
-				_Point = (Player.x() + "," + Player.y() + "," + 0);
+				_Point = (Player.getX() + "," + Player.getY() + "," + 0);
 			}
 			list.get(i).setPoint(_Point);
 		}
@@ -91,19 +91,17 @@ public class Path{
 		Fruit temp = new Fruit();
 		double distance = Integer.MAX_VALUE;
 		for(int i=0; i<list.size(); i++) {
-			String[] Fruit = (list.get(i).getPoint().split(","));
-			String[] Player = (player.getPoint().split(","));
-			Point3D Fru = new Point3D(Double.parseDouble(Fruit[0]), Double.parseDouble(Fruit[1]));
-			Point3D Pla = new Point3D(Double.parseDouble(Player[0]), Double.parseDouble(Player[1]));
-			double tempdistance = _Map.distanceBetween2Points(Fru, Pla) 
-					- Double.parseDouble(player.getRadius());
+			Data Fruit = new Data(list.get(i));
+			Data Player = new Data(player);
+			double tempdistance = _Map.distanceBetween2Points(new Point3D(Fruit.getX(), Fruit.getY()),
+					new Point3D(Player.getX(), Player.getY())) - Double.parseDouble(player.getRadius());
 			if(tempdistance < distance) {
 				distance = tempdistance;
 				temp = list.get(i);
 			}
 		}
-		String[] Fruit = (temp.getPoint().split(","));
-		player = movePlayer((int)Double.parseDouble(Fruit[0]), (int)Double.parseDouble(Fruit[1]), player);
+		Data Fruit = new Data(temp);
+		player = movePlayer(Fruit.getiX(), Fruit.getiY(), player);
 		return player;
 	}
 
@@ -111,30 +109,27 @@ public class Path{
 		Pacman temp = new Pacman();
 		double distance = Integer.MAX_VALUE;
 		for(int i=0; i<list.size(); i++) {
-			String[] Pacman = (list.get(i).getPoint().split(","));
-			String[] Player = (player.getPoint().split(","));
-			Point3D Pac = new Point3D(Double.parseDouble(Pacman[0]), Double.parseDouble(Pacman[1]));
-			Point3D Pla = new Point3D(Double.parseDouble(Player[0]), Double.parseDouble(Player[1]));
-			double tempdistance = _Map.distanceBetween2Points(Pac, Pla) 
-					- Double.parseDouble(player.getRadius());
+			Data Pacman = new Data(list.get(i));
+			Data Player = new Data(player);
+			double tempdistance = _Map.distanceBetween2Points(new Point3D(Pacman.getX(), Pacman.getY()),
+					new Point3D(Player.getX(), Player.getY())) - Double.parseDouble(player.getRadius());
 			if(tempdistance < distance) {
 				distance = tempdistance;
 				temp = list.get(i);
 			}
 		}
-		String[] Pacman = (temp.getPoint().split(","));
-		player = movePlayer((int)Double.parseDouble(Pacman[0]), (int)Double.parseDouble(Pacman[1]), player);
+		Data Pacman = new Data(temp);
+		player = movePlayer(Pacman.getiX(), Pacman.getiY(), player);
 		return player;
 	}
 
 	public Player movePlayer(int x, int y, Player player) {
-		String[] Data = player.getPoint().split(",");
-		Point3D oldPlayer = new Point3D(Double.parseDouble(Data[0]), Double.parseDouble(Data[1]));
-		Point3D newPlayer = new Point3D(x, y);
-		Point3D vec = new Point3D(newPlayer.x() - oldPlayer.x(), newPlayer.y() - oldPlayer.y());
-		double distance = _Map.distanceBetween2Points(oldPlayer, newPlayer) - Double.parseDouble(player.getRadius());
-		Point3D newPoint =  new Point3D(oldPlayer.x() + (vec.x()/distance*Double.parseDouble(player.getSpeed())), 
-				oldPlayer.y() + (vec.y()/distance*Double.parseDouble(player.getSpeed())));
+		Data Data = new Data(player);
+		Point3D vec = new Point3D(x - Data.getX(), y - Data.getY());
+		double distance = _Map.distanceBetween2Points(new Point3D(Data.getX(),Data.getY()), new Point3D(x, y)) 
+				- Double.parseDouble(player.getRadius());
+		Point3D newPoint =  new Point3D(Data.getX() + (vec.x()/distance*Double.parseDouble(player.getSpeed())), 
+				Data.getY() + (vec.y()/distance*Double.parseDouble(player.getSpeed())));
 		player.setPoint(newPoint.ix()+","+newPoint.iy()+","+0);
 		return player;
 	}
@@ -153,21 +148,20 @@ public class Path{
 				}
 			}
 			if (pList.get(i).getList().size() > 1) {
-				String[] pacData = pList.get(i).getList().get(0).getPoint().split(",");
-				String[] fruData = pList.get(i).getList().get(1).getPoint().split(",");
-				Point3D Pac = new Point3D(Double.parseDouble(pacData[0]), Double.parseDouble(pacData[1]));
-				Point3D Fru = new Point3D(Double.parseDouble(fruData[0]), Double.parseDouble(fruData[1]));
-				Point3D vec = new Point3D(Fru.x() - Pac.x(), Fru.y() - Pac.y());
-				double distance = _Map.distanceBetween2Points(Pac, Fru)
+				Data Pac = new Data(pList.get(i).getList().get(0));
+				Data Fru = new Data(pList.get(i).getList().get(1));
+				Point3D vec = new Point3D(Fru.getX() - Pac.getX(), Fru.getY() - Pac.getY());
+				double distance = _Map.distanceBetween2Points(new Point3D(Pac.getX(), Pac.getY()), 
+						new Point3D(Fru.getX(), Fru.getY())) 
 						- Double.parseDouble(pList.get(i).getList().get(0).getRadius());
 				double time = distance / Double.parseDouble(pList.get(i).getList().get(0).getSpeed());
 				if (time > 1) {
-					double x = Pac.x() + (vec.x() / time);
-					double y = Pac.y() + (vec.y() / time);
+					double x = Pac.getX() + (vec.x() / time);
+					double y = Pac.getY() + (vec.y() / time);
 					_Point = (x + "," + y + "," + 0);
 					//	_Angel = pList.get(i).getList().get(1).getAngel();
 				} else {
-					_Point = (Fru.x() + "," + Fru.y() + "," + 0);
+					_Point = (Fru.getX() + "," + Fru.getY() + "," + 0);
 					//	_Angel = pList.get(i).getList().get(1).getAngel();
 					pList.get(i).getList().remove(1);
 				}
@@ -184,5 +178,4 @@ public class Path{
 		}
 		return newpList;
 	}
-
 }

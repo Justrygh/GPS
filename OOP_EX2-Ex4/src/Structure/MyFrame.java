@@ -283,6 +283,8 @@ public class MyFrame extends JPanel implements MouseListener {
 				isFruit = false;
 				open.setEnabled(true);
 				edit.setEnabled(true);
+				pacman.setEnabled(true);
+				fruit.setEnabled(true);
 				menuBar.remove(menu9);
 				menuBar.add(menu1);
 				menuBar.add(menu2);
@@ -472,7 +474,7 @@ public class MyFrame extends JPanel implements MouseListener {
 				removeFruitIcon();
 				Thread t1 = new Thread(new Runnable() {
 					public void run() {
-						pList = _Path.Print(pList);
+						_Path.Print(pList);
 						for (int i = 0; i < _Pacmans.size(); i++) {
 							for (int j = 0; j < pList.size(); j++) {
 								if (_Pacmans.get(i).getiD().equals(pList.get(j).getList().get(0).getiD())) {
@@ -484,7 +486,7 @@ public class MyFrame extends JPanel implements MouseListener {
 									//										angel-=360;
 									//									}
 									Data pac = new Data(_Pacmans.get(i));
-									Data fru = new Data(pList.get(i).getList().get(0));
+									Data fru = new Data(pList.get(j).getList().get(0));
 									Point3D Pac = new Point3D(pac.getX(), pac.getY());
 									Point3D Fru = new Point3D(fru.getX(), fru.getY());
 									double angel = rotatePac(Pac, Fru);
@@ -2132,7 +2134,7 @@ public class MyFrame extends JPanel implements MouseListener {
 			paintElement();
 		}
 
-		else if(isDemo == true && isClicked == false && _Player.getTime() < MaxTime) {
+		else if(isDemo == true && isClicked == false && isOnline == true && _Player.getTime() < MaxTime) {
 			String point = _Player.getPoint();
 			_Path.movePlayer(x, y, _Player);
 			Data player = new Data(_Player);
